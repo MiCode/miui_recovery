@@ -1,0 +1,2 @@
+call miui_font( "0", "ttf/DroidSans.ttf;ttf/DroidSansArabic.ttf;ttf/DroidSansFallback.ttf;", "12" )
+call miui_selectbox(6, "select", "plesase", "@lang.default", "test.prop", "测试", "测试", "1")

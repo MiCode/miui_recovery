@@ -1,0 +1,161 @@
+import init.herring.usb.rc
+
+on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+    setprop ro.build.product herring
+    setprop ro.product.device herring
+    setprop ro.radio.noril yes
+    setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
+
+    setprop ro.crypto.keyfile.userdata /efs/userdata_footer
+
+# fake some battery state
+    setprop status.battery.state Slow
+    setprop status.battery.level 5
+    setprop status.battery.level_raw  50
+    setprop status.battery.level_scale 9
+
+# phone
+    setprop ro.telephony.call_ring.multiple 0
+
+# change permission for uart_switch
+    chown radio radio /sys/class/sec/uart_switch/UART_SEL/value
+    chmod 660 /sys/class/sec/uart_switch/UART_SEL/value
+
+# create data/gps for GPS demon
+    mkdir /data/gps 770 gps system
+    chown gps system /data/gps
+    chown gps root /sys/class/sec/gps/GPS_PWR_EN/value
+    chmod 660 /sys/class/sec/gps/GPS_PWR_EN/value
+
+# cpufreq, set ondemand governor
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+
+on fs
+    mkdir /efs 0775 radio radio
+    mount yaffs2 mtd@efs /efs noatime nosuid nodev
+    chmod 770 /efs/bluetooth
+    chmod 770 /efs/imei
+    mount ext4 /dev/block/platform/s3c-sdhci.0/by-name/system /system wait ro
+    mount ext4 /dev/block/platform/s3c-sdhci.0/by-name/userdata /data wait noatime nosuid nodev nomblk_io_submit
+
+    export EXTERNAL_STORAGE /mnt/sdcard
+    mkdir /mnt/sdcard 0000 system system
+    symlink /mnt/sdcard /sdcard
+
+# permissions for bluetooth.
+    chown bluetooth bluetooth /efs/bluetooth
+    chown bluetooth bluetooth ro.bt.bdaddr_path
+    chown bluetooth bluetooth /dev/s3c2410_serial0
+    chmod 0600 /dev/s3c2410_serial0
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+
+# We chown/chmod /efs because mount is run as root + defaults
+    chown radio radio /efs
+    chmod 0775 /efs
+
+# permissions for NFC
+    setprop ro.nfc.port "I2C"
+    chmod 0600 /dev/pn544
+    chown nfc nfc /dev/pn544
+
+# Permissions for System Server and daemons.
+    chown system system /sys/class/backlight/s5p_bl/brightness
+
+on post-fs-data
+# wi-fi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+
+# create radio & log for ril daemon
+    mkdir /data/radio 0775 radio radio
+    mkdir /data/radio/log 0775 radio radio
+
+    setprop vold.post_fs_data_done 1
+
+service gpsd /system/vendor/bin/gpsd -c /vendor/etc/gps.xml
+    class main
+    socket gps seqpacket 0660 gps system
+    user gps
+    group system inet
+
+# create filesystems if necessary
+service setup_fs /system/bin/setup_fs /dev/block/platform/s3c-sdhci.0/by-name/userdata
+    class core
+    user root
+    group root
+    oneshot
+
+# 3D init
+service pvrsrvinit /system/vendor/bin/pvrsrvinit
+    class core
+    user root
+    group root
+    oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -iwlan0
+    class main
+    socket wpa_wlan0 dgram 0660 wifi wifi
+    disabled
+    oneshot
+
+# DHCPCD
+# wi-fi
+service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+# wimax
+service dhcpcd_uwbr0 /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+# bluetooth
+service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+# IP Renew
+# wi-fi
+service iprenew_wlan0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+# wimax
+service iprenew_uwbr0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+# bluetooth
+service iprenew_bnep0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm \
+    --baudrate 3000000 --patchram /vendor/firmware/bcm4329.hcd /dev/s3c2410_serial0
+    class main
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/bugmailer.sh -v
+    class main
+    disabled
+    oneshot
+    keycodes 114 115 116
+
+service wimax_route /system/bin/route add default dev uwbr0
+    class main
+    disabled
+    oneshot

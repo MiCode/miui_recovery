@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Display settings. Available colors for breathing LED -->
+    <string-array name="led_color_entries">
+        <item>Green</item>
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+        <item>Cyan</item>
+        <item>Magenta</item>
+        <item>Pink</item>
+        <item>Orange</item>
+    </string-array>
+
+    <!-- Do not translate. -->
+    <string-array name="led_color_values" translatable="false">
+        <item>green</item>
+        <item>red</item>
+        <item>blue</item>
+        <item>yellow</item>
+        <item>cyan</item>
+        <item>#800080</item>
+        <item>#ffc0cb</item>
+        <item>#ffa500</item>
+    </string-array>
+</resources>

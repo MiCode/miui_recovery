@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Display settings. Available colors for breathing LED -->
+    <string-array name="led_color_entries">
+        <item>绿色</item>
+        <item>红色</item>
+        <item>蓝色</item>
+        <item>黄色</item>
+        <item>青色</item>
+        <item>红紫色</item>
+        <item>粉红色</item>
+        <item>橙色</item>
+    </string-array>
+</resources>
