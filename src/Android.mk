@@ -45,7 +45,6 @@ LOCAL_MODULE_TAGS := optional
 #LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 #LOCAL_LDLIBS += $(LOCAL_PATH)/lib
 
-LOCAL_STATIC_LIBRARIES += $(TARGET_RECOVERY_UI_LIB)
 LOCAL_STATIC_LIBRARIES += libext4_utils libz
 LOCAL_STATIC_LIBRARIES += libminzip libunz libmtdutils libmincrypt
 #add static libraries

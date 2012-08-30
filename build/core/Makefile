@@ -33,13 +33,6 @@ $(foreach cf,$(PRODUCT_COPY_FILES), \
         $(eval unique_product_copy_files_destinations += $(_dest))))
 unique_product_copy_files_destinations :=
 
-# -----------------------------------------------------------------
-# docs/index.html
-gen := $(OUT_DOCS)/index.html
-ALL_DOCS += $(gen)
-$(gen): frameworks/base/docs/docs-redirect-index.html
-	@mkdir -p $(dir $@)
-	@cp -f $< $@
 
 # -----------------------------------------------------------------
 # default.prop
@@ -270,62 +263,6 @@ ifdef CREATE_MODULE_INFO_FILE
 	"BUILT=\"$(strip $(ALL_MODULES.$(m).BUILT))\"" \
 	"INSTALLED=\"$(strip $(ALL_MODULES.$(m).INSTALLED))\"" >> $(MODULE_INFO_FILE)))
 endif
-
-# -----------------------------------------------------------------
-
-# The dev key is used to sign this package, and as the key required
-# for future OTA packages installed by this system.  Actual product
-# deliverables will be re-signed by hand.  We expect this file to
-# exist with the suffixes ".x509.pem" and ".pk8".
-DEFAULT_KEY_CERT_PAIR := $(DEFAULT_SYSTEM_DEV_CERTIFICATE)
-
-
-# Rules that need to be present for the all targets, even
-# if they don't do anything.
-.PHONY: systemimage
-systemimage:
-
-# -----------------------------------------------------------------
-
-.PHONY: event-log-tags
-
-# Produce an event logs tag file for everything we know about, in order
-# to properly allocate numbers.  Then produce a file that's filtered
-# for what's going to be installed.
-
-all_event_log_tags_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/all-event-log-tags.txt
-
-# Include tags from all packages that we know about
-all_event_log_tags_src := \
-    $(sort $(foreach m, $(ALL_MODULES), $(ALL_MODULES.$(m).EVENT_LOG_TAGS)))
-
-$(all_event_log_tags_file): PRIVATE_SRC_FILES := $(all_event_log_tags_src)
-$(all_event_log_tags_file): $(all_event_log_tags_src)
-	$(hide) mkdir -p $(dir $@)
-	$(hide) build/tools/merge-event-log-tags.py -o $@ $(PRIVATE_SRC_FILES)
-
-
-event_log_tags_file := $(TARGET_OUT)/etc/event-log-tags
-
-# Include tags from all packages included in this product, plus all
-# tags that are part of the system (ie, not in a vendor/ or device/
-# directory).
-event_log_tags_src := \
-    $(sort $(foreach m,\
-      $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PACKAGES) \
-      $(call module-names-for-tag-list,user), \
-      $(ALL_MODULES.$(m).EVENT_LOG_TAGS)) \
-      $(filter-out vendor/% device/% out/%,$(all_event_log_tags_src)))
-
-$(event_log_tags_file): PRIVATE_SRC_FILES := $(event_log_tags_src)
-$(event_log_tags_file): PRIVATE_MERGED_FILE := $(all_event_log_tags_file)
-$(event_log_tags_file): $(event_log_tags_src) $(all_event_log_tags_file)
-	$(hide) mkdir -p $(dir $@)
-	$(hide) build/tools/merge-event-log-tags.py -o $@ -m $(PRIVATE_MERGED_FILE) $(PRIVATE_SRC_FILES)
-
-event-log-tags: $(event_log_tags_file)
-
-ALL_DEFAULT_INSTALLED_MODULES += $(event_log_tags_file)
 
 
 # #################################################################
@@ -560,64 +497,7 @@ $(kernel_notice_file): \
 	$(hide) $(ACP) $< $@
 
 
-# -----------------------------------------------------------------
-# Build a keystore with the authorized keys in it, used to verify the
-# authenticity of downloaded OTA packages.
-#
-# This rule adds to ALL_DEFAULT_INSTALLED_MODULES, so it needs to come
-# before the rules that use that variable to build the image.
-ALL_DEFAULT_INSTALLED_MODULES += $(TARGET_OUT_ETC)/security/otacerts.zip
-$(TARGET_OUT_ETC)/security/otacerts.zip: KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
-$(TARGET_OUT_ETC)/security/otacerts.zip: $(addsuffix .x509.pem,$(DEFAULT_KEY_CERT_PAIR))
-	$(hide) rm -f $@
-	$(hide) mkdir -p $(dir $@)
-	$(hide) zip -qj $@ $<
 
-.PHONY: otacerts
-otacerts: $(TARGET_OUT_ETC)/security/otacerts.zip
-
-
-# #################################################################
-# Targets for user images
-# #################################################################
-
-INTERNAL_USERIMAGES_EXT_VARIANT :=
-ifeq ($(TARGET_USERIMAGES_USE_EXT2),true)
-INTERNAL_USERIMAGES_USE_EXT := true
-INTERNAL_USERIMAGES_EXT_VARIANT := ext2
-else
-ifeq ($(TARGET_USERIMAGES_USE_EXT3),true)
-INTERNAL_USERIMAGES_USE_EXT := true
-INTERNAL_USERIMAGES_EXT_VARIANT := ext3
-else
-ifeq ($(TARGET_USERIMAGES_USE_EXT4),true)
-INTERNAL_USERIMAGES_USE_EXT := true
-INTERNAL_USERIMAGES_EXT_VARIANT := ext4
-endif
-endif
-endif
-
-ifneq (true,$(TARGET_USERIMAGES_SPARSE_EXT_DISABLED))
-  INTERNAL_USERIMAGES_SPARSE_EXT_FLAG := -s
-endif
-
-ifeq ($(INTERNAL_USERIMAGES_USE_EXT),true)
-INTERNAL_USERIMAGES_DEPS := $(MKEXTUSERIMG) $(MAKE_EXT4FS)
-INTERNAL_USERIMAGES_BINARY_PATHS := $(sort $(dir $(INTERNAL_USERIMAGES_DEPS)))
-
-# $(1): src directory
-# $(2): output file
-# $(3): mount point
-# $(4): ext variant (ext2, ext3, ext4)
-# $(5): size of the partition
-define build-userimage-ext-target
-  @mkdir -p $(dir $(2))
-  $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH \
-	  $(MKEXTUSERIMG) $(INTERNAL_USERIMAGES_SPARSE_EXT_FLAG) $(1) $(2) $(4) $(3) $(5)
-endef
-else
-INTERNAL_USERIMAGES_DEPS := $(MKYAFFS2)
-endif
 
 # -----------------------------------------------------------------
 # Recovery image
@@ -735,126 +615,6 @@ else
 BOARD_NAND_SPARE_SIZE := 64
 endif
 
-# -----------------------------------------------------------------
-# system image
-#
-
-INTERNAL_SYSTEMIMAGE_FILES := $(filter $(TARGET_OUT)/%, \
-	$(ALL_PREBUILT) \
-	$(ALL_COPIED_HEADERS) \
-	$(ALL_GENERATED_SOURCES) \
-	$(ALL_DEFAULT_INSTALLED_MODULES))
-
-FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS)
-# -----------------------------------------------------------------
-# installed file list
-# Depending on anything that $(BUILT_SYSTEMIMAGE) depends on.
-# We put installed-files.txt ahead of image itself in the dependency graph
-# so that we can get the size stat even if the build fails due to too large
-# system image.
-INSTALLED_FILES_FILE := $(PRODUCT_OUT)/installed-files.txt
-$(INSTALLED_FILES_FILE): $(FULL_SYSTEMIMAGE_DEPS)
-	@echo Installed file list: $@
-	@mkdir -p $(dir $@)
-	@rm -f $@
-	$(hide) build/tools/fileslist.py $(TARGET_OUT) > $@
-
-.PHONY: installed-file-list
-installed-file-list: $(INSTALLED_FILES_FILE)
-ifneq ($(filter sdk win_sdk,$(MAKECMDGOALS)),)
-$(call dist-for-goals, sdk win_sdk, $(INSTALLED_FILES_FILE))
-endif
-ifneq ($(filter sdk_addon,$(MAKECMDGOALS)),)
-$(call dist-for-goals, sdk_addon, $(INSTALLED_FILES_FILE))
-endif
-
-systemimage_intermediates := \
-	$(call intermediates-dir-for,PACKAGING,systemimage)
-BUILT_SYSTEMIMAGE := $(systemimage_intermediates)/system.img
-
-ifeq ($(INTERNAL_USERIMAGES_USE_EXT),true)
-## generate an ext image
-# $(1): output file
-define build-systemimage-target
-    @echo "Target system fs image: $(1)"
-    $(call build-userimage-ext-target,$(TARGET_OUT),$(1),system,$(INTERNAL_USERIMAGES_EXT_VARIANT),$(BOARD_SYSTEMIMAGE_PARTITION_SIZE))
-endef
-
-else # INTERNAL_USERIMAGES_USE_EXT != true
-
-## generate a yaffs2 image
-# $(1): output file
-define build-systemimage-target
-    @echo "Target system fs image: $(1)"
-    @mkdir -p $(dir $(1))
-    $(hide) $(MKYAFFS2) -f $(mkyaffs2_extra_flags) $(TARGET_OUT) $(1)
-endef
-endif # INTERNAL_USERIMAGES_USE_EXT
-
-$(BUILT_SYSTEMIMAGE): $(FULL_SYSTEMIMAGE_DEPS) $(INSTALLED_FILES_FILE)
-	$(call build-systemimage-target,$@)
-
-INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
-SYSTEMIMAGE_SOURCE_DIR := $(TARGET_OUT)
-
-# The system partition needs room for the recovery image as well.  We
-# now store the recovery image as a binary patch using the boot image
-# as the source (since they are very similar).  Generate the patch so
-# we can see how big it's going to be, and include that in the system
-# image size check calculation.
-ifneq ($(INSTALLED_RECOVERYIMAGE_TARGET),)
-intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
-RECOVERY_FROM_BOOT_PATCH := $(intermediates)/recovery_from_boot.p
-$(RECOVERY_FROM_BOOT_PATCH): $(INSTALLED_RECOVERYIMAGE_TARGET) \
-                             $(INSTALLED_BOOTIMAGE_TARGET) \
-			     $(HOST_OUT_EXECUTABLES)/imgdiff \
-	                     $(HOST_OUT_EXECUTABLES)/bsdiff
-	@echo "Construct recovery from boot"
-	mkdir -p $(dir $@)
-	PATH=$(HOST_OUT_EXECUTABLES):$$PATH $(HOST_OUT_EXECUTABLES)/imgdiff $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_RECOVERYIMAGE_TARGET) $@
-endif
-
-
-$(INSTALLED_SYSTEMIMAGE): $(BUILT_SYSTEMIMAGE) $(RECOVERY_FROM_BOOT_PATCH) | $(ACP)
-	@echo "Install system fs image: $@"
-	$(copy-file-to-target)
-	$(hide) $(call assert-max-image-size,$@ $(RECOVERY_FROM_BOOT_PATCH),$(BOARD_SYSTEMIMAGE_PARTITION_SIZE),yaffs)
-
-systemimage: $(INSTALLED_SYSTEMIMAGE)
-
-.PHONY: systemimage-nodeps snod
-systemimage-nodeps snod: $(filter-out systemimage-nodeps snod,$(MAKECMDGOALS)) \
-	            | $(INTERNAL_USERIMAGES_DEPS)
-	@echo "make $@: ignoring dependencies"
-	$(call build-systemimage-target,$(INSTALLED_SYSTEMIMAGE))
-	$(hide) $(call assert-max-image-size,$(INSTALLED_SYSTEMIMAGE),$(BOARD_SYSTEMIMAGE_PARTITION_SIZE),yaffs)
-
-#######
-## system tarball
-define build-systemtarball-target
-    $(call pretty,"Target system fs tarball: $(INSTALLED_SYSTEMTARBALL_TARGET)")
-    $(MKTARBALL) $(FS_GET_STATS) \
-		$(PRODUCT_OUT) system $(PRIVATE_SYSTEM_TAR) \
-		$(INSTALLED_SYSTEMTARBALL_TARGET)
-endef
-
-ifndef SYSTEM_TARBALL_FORMAT
-    SYSTEM_TARBALL_FORMAT := bz2
-endif
-
-system_tar := $(PRODUCT_OUT)/system.tar
-INSTALLED_SYSTEMTARBALL_TARGET := $(system_tar).$(SYSTEM_TARBALL_FORMAT)
-$(INSTALLED_SYSTEMTARBALL_TARGET): PRIVATE_SYSTEM_TAR := $(system_tar)
-$(INSTALLED_SYSTEMTARBALL_TARGET): $(FS_GET_STATS) $(INTERNAL_SYSTEMIMAGE_FILES)
-	$(build-systemtarball-target)
-
-.PHONY: systemtarball-nodeps
-systemtarball-nodeps: $(FS_GET_STATS) \
-                      $(filter-out systemtarball-nodeps stnod,$(MAKECMDGOALS))
-	$(build-systemtarball-target)
-
-.PHONY: stnod
-stnod: systemtarball-nodeps
 
 
 #######
@@ -918,29 +678,6 @@ $(INSTALLED_USERDATAIMAGE_TARGET): $(INTERNAL_USERIMAGES_DEPS) \
                                    $(INTERNAL_USERDATAIMAGE_FILES)
 	$(build-userdataimage-target)
 
-.PHONY: userdataimage-nodeps
-userdataimage-nodeps: | $(INTERNAL_USERIMAGES_DEPS)
-	$(build-userdataimage-target)
-
-#######
-## data partition tarball
-define build-userdatatarball-target
-    $(call pretty,"Target userdata fs tarball: " \
-                  "$(INSTALLED_USERDATATARBALL_TARGET)")
-    $(MKTARBALL) $(FS_GET_STATS) \
-		$(PRODUCT_OUT) data $(PRIVATE_USERDATA_TAR) \
-		$(INSTALLED_USERDATATARBALL_TARGET)
-endef
-
-userdata_tar := $(PRODUCT_OUT)/userdata.tar
-INSTALLED_USERDATATARBALL_TARGET := $(userdata_tar).bz2
-$(INSTALLED_USERDATATARBALL_TARGET): PRIVATE_USERDATA_TAR := $(userdata_tar)
-$(INSTALLED_USERDATATARBALL_TARGET): $(FS_GET_STATS) $(INTERNAL_USERDATAIMAGE_FILES)
-	$(build-userdatatarball-target)
-
-.PHONY: userdatatarball-nodeps
-userdatatarball-nodeps: $(FS_GET_STATS)
-	$(build-userdatatarball-target)
 
 
 # -----------------------------------------------------------------

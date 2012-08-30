@@ -246,8 +246,6 @@ $(full_classes_compiled_jar): PRIVATE_JAVACFLAGS := $(LOCAL_JAVACFLAGS)
 $(full_classes_compiled_jar): $(java_sources) $(java_resource_sources) $(full_java_lib_deps) $(jar_manifest_file) \
 	$(RenderScript_file_stamp) $(proto_java_sources_file_stamp)
 	$(transform-java-to-classes.jar)
-	@echo "check if internal resources are used by miui code at $(PRIVATE_MODULE) ..."
-	@build/tools/check_internal_resource.sh $(PRIVATE_MODULE)
 
 # All of the rules after full_classes_compiled_jar are very unlikely
 # to fail except for bugs in their respective tools.  If you would

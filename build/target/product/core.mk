@@ -60,7 +60,6 @@ PRODUCT_PACKAGES := \
     ext \
     filterfw \
     framework-res \
-    framework-miui-res \
     hprof-conv \
     icu.dat \
     installd \

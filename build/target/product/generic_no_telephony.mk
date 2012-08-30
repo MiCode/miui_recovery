@@ -19,47 +19,6 @@
 
 PRODUCT_POLICY := android.policy_phone
 
-PRODUCT_PACKAGES := \
-    AntiSpam \
-    Backup \
-    DeskClock \
-    AlarmProvider \
-    Bluetooth \
-    BugReport \
-    Calculator \
-    Calendar \
-    CertInstaller \
-    CloudService \
-    DrmProvider \
-    Email \
-    Exchange \
-    FileExplorer \
-    MiuiGallery \
-    LatinIME \
-    MiuiHome \
-    MiuiCompass \
-    Music \
-    MusicFX \
-    Notes \
-    Provision \
-    Phone \
-    QuickSearchBox \
-    Settings \
-    Sync \
-    SuperMarket \
-    ThemeManager \
-    MiuiSystemUI \
-    Updater \
-    UserbookProvider \
-    CalendarProvider \
-    SyncProvider \
-    TelocationProvider \
-    WeatherProvider \
-    XiaomiServiceFramework \
-    bluetooth-health \
-    hostapd \
-    wpa_supplicant.conf
-
 PRODUCT_PACKAGES += \
     icu.dat
 
@@ -73,21 +32,7 @@ PRODUCT_PACKAGES += \
     audio.primary.default \
     audio_policy.default
 
-PRODUCT_COPY_FILES := \
-        system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
-        system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
-        system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
-        system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
-        system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
-        frameworks/base/media/libeffects/data/audio_effects.conf:system/etc/audio_effects.conf
 
-# MIUI specific overlays
-PRODUCT_PACKAGE_OVERLAYS := frameworks/miui/overlay
-
-$(call inherit-product-if-exists, frameworks/base/data/fonts/fonts.mk)
-$(call inherit-product-if-exists, external/lohit-fonts/fonts.mk)
-$(call inherit-product-if-exists, frameworks/base/data/keyboards/keyboards.mk)
-$(call inherit-product-if-exists, frameworks/miui/data/data.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core.mk)
 
 # Overrides

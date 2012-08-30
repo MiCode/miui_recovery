@@ -395,7 +395,6 @@ GRANDFATHERED_USER_MODULES += \
 	make_ve_grammar \
 	mediaserver \
 	minigzip \
-	miui-framework \
 	mkbootfs \
 	mkbootimg \
 	mke2fs \

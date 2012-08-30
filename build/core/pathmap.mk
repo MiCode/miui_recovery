@@ -33,10 +33,8 @@ pathmap_INCL := \
     bootloader:bootable/bootloader/legacy/include \
     corecg:external/skia/include/core \
     dbus:external/dbus \
-    frameworks-base:frameworks/base/include \
     graphics:external/skia/include/core \
     libc:bionic/libc/include \
-    libdrm1:frameworks/base/media/libdrm/mobile1/include \
     libhardware:hardware/libhardware/include \
     libhardware_legacy:hardware/libhardware_legacy/include \
     libhost:build/libs/host/include \
@@ -47,7 +45,7 @@ pathmap_INCL := \
     libstdc++:bionic/libstdc++/include \
     libthread_db:bionic/libthread_db/include \
     mkbootimg:system/core/mkbootimg \
-    recovery:bootable/recovery \
+    recovery:src \
     system-core:system/core/include \
     speex:external/speex/include
 
@@ -62,57 +60,3 @@ define include-path-for
 $(foreach n,$(1),$(patsubst $(n):%,%,$(filter $(n):%,$(pathmap_INCL))))
 endef
 
-#
-# Many modules expect to be able to say "#include <jni.h>",
-# so make it easy for them to find the correct path.
-#
-JNI_H_INCLUDE := $(call include-path-for,libnativehelper)/nativehelper
-
-#
-# A list of all source roots under frameworks/base, which will be
-# built into the android.jar.
-#
-# Note - "common" is included here, even though it is also built
-# into a static library (android-common) for unbundled use.  This
-# is so common and the other framework libraries can have mutual
-# interdependencies.
-#
-FRAMEWORKS_BASE_SUBDIRS := \
-	$(addsuffix /java, \
-	    core \
-	    graphics \
-	    location \
-	    media \
-	    drm \
-	    opengl \
-	    sax \
-	    telephony \
-	    wifi \
-	    keystore \
-	    icu4j \
-	    voip \
-	    ../miui/core \
-	 )
-
-#
-# A version of FRAMEWORKS_BASE_SUBDIRS that is expanded to full paths from
-# the root of the tree.  This currently needs to be here so that other libraries
-# and apps can find the .aidl files in the framework, though we should really
-# figure out a better way to do this.
-#
-FRAMEWORKS_BASE_JAVA_SRC_DIRS := \
-	$(addprefix frameworks/base/,$(FRAMEWORKS_BASE_SUBDIRS))
-
-#
-# A list of all source roots under frameworks/support.
-#
-FRAMEWORKS_SUPPORT_SUBDIRS := \
-	v4 \
-	v13 \
-
-#
-# A version of FRAMEWORKS_SUPPORT_SUBDIRS that is expanded to full paths from
-# the root of the tree.
-#
-FRAMEWORKS_SUPPORT_JAVA_SRC_DIRS := \
-	$(addprefix frameworks/support/,$(FRAMEWORKS_SUPPORT_SUBDIRS))

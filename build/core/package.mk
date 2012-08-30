@@ -274,24 +274,7 @@ framework_res_package_export := \
 # corresponding R.stamp file, which lists the export.apk as a dependency.
 framework_res_package_export_deps := \
     $(dir $(framework_res_package_export))src/R.stamp
-# We would do the same thing for framework-miui-res just like framework-res, but when
-# build framework-miui-res, we need framework-res but not itself, so introduce this
-# LOCAL_USE_MIUI_RES variable. Only framework-miui-res needs to define this variable
-# as false
-ifeq ($(LOCAL_USE_MIUI_RES),true)
-framework_miui_res_package_export := \
-        $(call intermediates-dir-for,APPS,framework-miui-res,,COMMON)/package-export.apk
-framework_miui_res_package_export_deps := \
-        $(dir $(framework_miui_res_package_export))src/R.stamp
-else
-framework_miui_res_package_export := frameworks/miui/core/res/vendor-res.apk
-$(LOCAL_BUILT_MODULE): $(framework_res_package_export_deps)
-framework_miui_res_package_export_deps := frameworks/miui/core/res/vendor-res.apk
-endif
 endif # LOCAL_SDK_VERSION
-$(R_file_stamp): $(framework_res_package_export_deps) $(framework_miui_res_package_export_deps)
-$(LOCAL_INTERMEDIATE_TARGETS): \
-    PRIVATE_AAPT_INCLUDES := $(framework_res_package_export) $(framework_miui_res_package_export)
 endif # LOCAL_NO_STANDARD_LIBRARIES
 
 ifneq ($(full_classes_jar),)

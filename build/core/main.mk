@@ -53,8 +53,8 @@ TOPDIR :=
 BUILD_SYSTEM := $(TOPDIR)build/core
 
 # This is the default target.  It must be the first declared target.
-.PHONY: droid
-DEFAULT_GOAL := droid
+.PHONY: recoveryimage
+DEFAULT_GOAL := recoveryimage
 $(DEFAULT_GOAL):
 
 # Used to force goals to build.  Only use for conditionally defined goals.
@@ -264,7 +264,6 @@ ifeq (true,$(strip $(enable_target_debugging)))
   INCLUDE_TEST_OTA_KEYS := true
 else # !enable_target_debugging
   # Target is less debuggable and adbd is off by default
-  # Turn on debuggable for MIUI development
   ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1
 endif # !enable_target_debugging
 
@@ -306,32 +305,6 @@ endif
 
 BUILD_WITHOUT_PV := true
 
-## precise GC ##
-
-ifneq ($(filter dalvik.gc.type-precise,$(PRODUCT_TAGS)),)
-  # Enabling type-precise GC results in larger optimized DEX files.  The
-  # additional storage requirements for ".odex" files can cause /system
-  # to overflow on some devices, so this is configured separately for
-  # each product.
-  ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.dexopt-flags=m=y
-endif
-
-ifneq ($(BUILD_TINY_ANDROID),true)
-# Install an apns-conf.xml file if one's not already being installed.
-ifeq (,$(filter %:system/etc/apns-conf.xml, $(PRODUCT_COPY_FILES)))
-  PRODUCT_COPY_FILES += \
-        development/data/etc/apns-conf_sdk.xml:system/etc/apns-conf.xml
-  ifeq ($(filter eng tests,$(TARGET_BUILD_VARIANT)),)
-    $(warning implicitly installing apns-conf_sdk.xml)
-  endif
-endif
-endif
-
-ADDITIONAL_BUILD_PROPERTIES += net.bt.name=Android
-
-# enable vm tracing in files for now to help track
-# the cause of ANRs in the content process
-ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.stack-trace-file=/data/anr/traces.txt
 
 # Timezone
 ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.timezone=Asia/Shanghai
