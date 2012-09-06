@@ -1,0 +1,10 @@
+LOCAL_PATH := $(call my-dir)
+include $(MIUI_CLEAR)
+MIUI_PRODUCT := maguro
+MIUI_KERNEL := $(LOCAL_PATH)/kernel
+
+MIUI_KERNEL_BASE := 0x80000000
+
+MIUI_PRODUCT_ROOT := $(LOCAL_PATH)/root
+MIUI_DEVICE_CONFIG := $(LOCAL_PATH)/device.conf
+include $(MIUI_RECOVERY)

@@ -336,7 +336,7 @@ void aw_show(AWINDOWP win){
   win->isActived    = 1;
   
   //-- Find First Focus
-#if 0
+#if 1
   if (win->controln>0){
     int i;
     for (i=0;i<win->controln;i++){

@@ -29,7 +29,6 @@
 #include <linux/input.h>
 #include <pthread.h>
 #include "../miui_inter.h"
-#undef DEBUG
 
 //-- DEFINED
 #define MAX_DEVICES 16
