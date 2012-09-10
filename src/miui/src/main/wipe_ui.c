@@ -73,8 +73,7 @@ STATUS wipe_menu_show(menuUnit *p)
         temp = temp->nextSilbing;
     }
     selindex = miui_mainmenu(p->name, menu_item, NULL, NULL, n);
-    if (selindex == n) p->result = MENU_BACK;
-    else p->result = selindex;
+    p->result = selindex;
     if (menu_item != NULL) free(menu_item);
     return p->result;
 }

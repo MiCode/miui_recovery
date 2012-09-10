@@ -182,7 +182,7 @@ void acsdmenu_redraw(ACONTROLP ctl){
 int acsdmenu_getselectedindex(ACONTROLP ctl){
   ACMAINMENUDP d = (ACMAINMENUDP) ctl->d;
   if (d->acheck_signature != 144) return -1; //-- Not Valid Signature
-  return d->selectedIndex;
+  return d->selectedIndex < 0 ?0:d->selectedIndex;
 }
 //-- Add Item Into Control
 byte acsdmenu_add(ACONTROLP ctl,char * title, char * desc, char * img){

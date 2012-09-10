@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Ahmad Amarullah ( http://amarullz.com/ )
+ * Copyright (C) 2011 Ahmad Amarullah ( http://www.micode.net )
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -177,9 +177,12 @@ static void *miui_install_package(void *cookie){
         ret = pmiui_install->pfun(pmiui_install->path, &pmiui_install->wipe_cache, pmiui_install->install_file);
         if (pmiui_install->wipe_cache)
             miuiIntent_send(INTENT_WIPE, 1 , "/cache");
-        assert_if_fail(ret ==  0);
         miuiInstall_set_progress(1);
-        aw_post(aw_msg(15, 0, 0, 0));
+        if (ret == 0)
+        {
+            aw_post(aw_msg(15, 0, 0, 0));
+        }
+        else aw_post(aw_msg(16, 0, 0, 0));
         return NULL;
     }
   int vp=0;
@@ -412,40 +415,15 @@ int miui_start_install(
   while(ondispatch){
     dword msg=aw_dispatch(hWin);
     switch (aw_gm(msg)){
+      case 16:{
+        ondispatch = 0;
+        ai_return_status = -1;
+
+      }
+         break;
       case 15:{
-        sleep(1);
-        ai_run = 0;
-        hWin->isActived = 0;
-        pthread_join(threadProgress,NULL);
-        pthread_join(threadInstaller,NULL);
-        pthread_detach(threadProgress);
-        pthread_detach(threadInstaller);
-        
-        // Draw Navigation
-        int pad         = agdp() * 4;
-        miui_drawnav(bg, 0, py-pad, agw(), ph+(pad*2));
-        
-        ag_draw_ex(bg,cvf,0,imgY,0,0,cvf->w,cvf->h);
-        ag_draw(&hWin->c,bg,0,0);
-        
-        // Update Textbox
-        ai_rebuildtxt(cx,chkFY,cw,chkFH);
-        
-        // Show Next Button
-        ACONTROLP nxtbtn=acbutton(
-          hWin,
-          pad+(agdp()*2)+(cw/2),py,(cw/2)-(agdp()*2),ph,acfg()->text_next,0,
-          6
-        );
-        
-        // Show Dump Button
-        acbutton(
-          hWin,
-          pad,py,(cw/2)-(agdp()*2),ph,"<~sd.log.save>",0,
-          8
-        );
-        aw_show(hWin);
-        aw_setfocus(hWin,nxtbtn);
+        ai_return_status = 0;
+        ondispatch = 0;
       }
       break;
       case 6:{
@@ -458,6 +436,12 @@ int miui_start_install(
       break;
     }
   }
+  ai_run = 0;
+  hWin->isActived = 0;
+  pthread_join(threadProgress,NULL);
+  pthread_join(threadInstaller,NULL);
+  pthread_detach(threadProgress);
+  pthread_detach(threadInstaller);
   aw_set_on_dialog(0);
   aw_destroy(hWin);
   

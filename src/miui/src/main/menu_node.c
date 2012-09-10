@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2012 xiaomi MIUI ( http://www.xiaomi.com/ )
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "../miui_inter.h"
 #include "../miui.h"
 /*
@@ -10,9 +26,7 @@
 struct _menuUnit * menuNode_init(struct _menuUnit *node)
 {
     return_null_if_fail(node != NULL)
-    struct _menuUnit *back = back_ui_init();
-    return_null_if_fail(back != NULL);
-    node->child = back;
+    node->child = NULL;
     return node;
 }
 
@@ -21,24 +35,18 @@ STATUS menuNode_add(struct _menuUnit *parent, struct _menuUnit *child)
     return_val_if_fail(parent != NULL, RET_FAIL);
     return_val_if_fail(child != NULL, RET_FAIL);
     return_val_if_fail(parent->get_child_count(parent) < ITEM_COUNT, RET_FAIL);
-    struct _menuUnit *temp = parent->child;
-    return_val_if_fail(temp != NULL, RET_FAIL);
-    struct _menuUnit *temp_next = temp->nextSilbing;
-    if (temp_next == NULL)
-    {
+    if (parent->child == NULL) {
         parent->child = child;
         child->parent = parent;
-        child->nextSilbing = temp;
         return RET_OK;
     }
-    while (temp_next->nextSilbing != NULL)
+    struct _menuUnit *temp = parent->child;
+    while (temp->nextSilbing != NULL)
     {
-        temp = temp_next;
-        temp_next = temp->nextSilbing;
+        temp = temp->nextSilbing;
     }
     temp->nextSilbing = child;
     child->parent = parent;
-    child->nextSilbing = temp_next;
     return RET_OK;
 }
 

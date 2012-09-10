@@ -51,7 +51,7 @@ struct _menuUnit * power_ui_init()
     strncpy(p->name, "<~power.name>", MENU_LEN);
     menuUnit_set_title(p, "<~power.title>");
     menuUnit_set_icon(p,"@power");
-    menuUnit_set_show(p, &common_ui_show);
+    menuUnit_set_show(p, &common_menu_show);
     p->result = 0;
     assert_if_fail(menuNode_init(p) != NULL);
     //reboot

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 xiaomi MIUI ( http://www.xiaomi.com/ )
+ * Copyright (C) 2012 xiaomi MIUI ( http://www.xiaomi.com/ )
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1404,38 +1404,16 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Draw Navigation Bar
   int chkY= miui_setbg_title() + pad;
      
-  //-- Load Icon
-  PNGCANVAS ap;
-  byte imgE       = 0;
-  int  imgA       = 0;
-  int  imgW       = 0;
-  int  imgH       = 0;
-  int  tifX       = pad*2;
-  int  imgX       = pad;
-  int  tifY       = chkY;
-  int  imgY       = chkY;
-  if (apng_load(&ap,title_icon)){
-    imgE  = 1;
-    imgW  = min(ap.w,agdp()*30);
-    imgH  = min(ap.h,agdp()*30);
-    imgA  = imgW;
-    tifX += imgX +  imgA + pad; 
-  }
-  int txtH        = ag_txtheight(chkW-((pad*2)+imgA),text,0);
-  if (imgE){
-    if (txtH<imgH){
-      tifY+= (imgH-txtH)/2;
-      txtH=imgH;
-    }
-    apng_draw_ex(&miui_win_bg,&ap,imgX,imgY,0,0,imgW,imgH);
-    apng_close(&ap);
-  }
+  int const_pad = agdp() * 24;
+  int txtH        = ag_txtheight(chkW-((pad*2)+const_pad),text,0);
   
+  int tifX = 2*pad + const_pad;
+  int tifY = chkY + (const_pad - txtH)/2;
   //-- Draw Text
-  ag_textf(&miui_win_bg,chkW-((pad*2)+imgA),tifX+1,tifY+1,text,acfg()->winbg,0);
-  ag_text(&miui_win_bg,chkW-((pad*2)+imgA),tifX,tifY,text,acfg()->winfg,0);
+  ag_textf(&miui_win_bg,chkW-((pad*2)+const_pad),tifX+1,tifY+1,text,acfg()->winbg,0);
+  ag_text(&miui_win_bg,chkW-((pad*2)+const_pad),tifX,tifY,text,acfg()->winfg,0);
   
-  chkY += imgH + pad ;
+  chkY += const_pad + pad ;
   chkH = agh() - chkY;
   //-- Create Window
   AWINDOWP hWin   = aw(&miui_win_bg);
@@ -1443,8 +1421,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎到recovery", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to recovery", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎到MIUI Recovery", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);
@@ -1455,6 +1433,7 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
     switch (aw_gm(msg)){
       case 6:{
             ondispatch = 0;
+            onback = 0;
       }
       break;
       case 5:{
@@ -1474,7 +1453,7 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   
   int selindex;
   if (onback == 0)
-      selindex = acmenu_getselectedindex(menu1)+1;
+      selindex = acsdmenu_getselectedindex(menu1);
    else selindex = 0;
   
   //-- Destroy Window
@@ -1740,7 +1719,7 @@ STATUS miui_sdmenu(char *title_name, char **item, char **item_sub, int item_cnt)
     }
   }
   
-  int selindex = acsdmenu_getselectedindex(menu1);
+  int selindex = acsdmenu_getselectedindex(menu1) ;
   
   //-- Destroy Window
   aw_destroy(hWin);
@@ -1976,7 +1955,7 @@ STATUS miui_install(char *name, char *icon) {
   snprintf(text,256,"%i",ret_status);
   
   //-- Installer Not Return OK
-  return RET_OK;
+  return ret_status;
 }
 #if 0
 static int time_echo_enable = 1;
@@ -2006,6 +1985,78 @@ static void *time_echo_thread(void *cookie){
           int freearg_i; \
           for (freearg_i=0;freearg_i<argc;++freearg_i) free(args[freearg_i]); \
           free(args);
+
+Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
+  if (argc != 2) {
+    miui_error("%s() expects 2 args(config name, config value in string), got %d", name, argc);
+    return StringValue(strdup(""));
+  }
+  
+  //-- This is Busy Function
+  ag_setbusy();
+  
+  //-- Get Arguments
+  MIUI_INITARGS();
+  //-- Convert Arguments
+  byte valint = (byte) min(atoi(args[1]),255);
+  int  valkey = (int) atoi(args[1]);
+  
+  //-- Set Property
+  if      (strcmp(args[0],"roundsize") == 0)          acfg()->roundsz=valint;
+  else if (strcmp(args[0],"button_roundsize") == 0)   acfg()->btnroundsz=valint;
+  else if (strcmp(args[0],"window_roundsize") == 0)   acfg()->winroundsz=valint;
+  else if (strcmp(args[0],"transition_frame") == 0)   acfg()->fadeframes=valint;
+
+  else if (strcmp(args[0],"text_ok") == 0)            snprintf(acfg()->text_ok,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_next") == 0)          snprintf(acfg()->text_next,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_back") == 0)          snprintf(acfg()->text_back,64,"%s", args[1]);
+
+  else if (strcmp(args[0],"text_yes") == 0)           snprintf(acfg()->text_yes,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_no") == 0)            snprintf(acfg()->text_no,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_about") == 0)         snprintf(acfg()->text_about,64, "%s", args[1]);
+  else if (strcmp(args[0],"text_calibrating") == 0)   snprintf(acfg()->text_calibrating,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_quit") == 0)          snprintf(acfg()->text_quit,64,"%s", args[1]);
+  else if (strcmp(args[0],"text_quit_msg") == 0)      snprintf(acfg()->text_quit_msg,128,"%s", args[1]);
+    
+  else if (strcmp(args[0],"rom_name") == 0)           snprintf(acfg()->rom_name,128,"%s", args[1]);
+  else if (strcmp(args[0],"rom_version") == 0)        snprintf(acfg()->rom_version,128,"%s", args[1]);
+  else if (strcmp(args[0],"rom_author") == 0)         snprintf(acfg()->rom_author,128,"%s", args[1]);
+  else if (strcmp(args[0],"rom_device") == 0)         snprintf(acfg()->rom_device,128,"%s", args[1]);
+  else if (strcmp(args[0],"rom_date") == 0)           snprintf(acfg()->rom_date,128,"%s", args[1]);
+  
+  
+  else if (strcmp(args[0],"customkeycode_up")==0)     acfg()->ckey_up=valkey;
+  else if (strcmp(args[0],"customkeycode_down")==0)   acfg()->ckey_down=valkey;
+  else if (strcmp(args[0],"customkeycode_select")==0) acfg()->ckey_select=valkey;
+  else if (strcmp(args[0],"customkeycode_back") == 0) acfg()->ckey_back=valkey;
+  else if (strcmp(args[0],"customkeycode_menu") == 0) acfg()->ckey_menu=valkey;
+    
+  //-- Force Color Space  
+  else if (strcmp(args[0],"force_colorspace") == 0){
+    if (strcasecmp(args[1],"rgba")==0){
+      ag_changecolorspace(0,8,16,24);
+    }
+    else if(strcasecmp(args[1],"abgr")==0){
+      ag_changecolorspace(24,16,8,0);
+    }
+    else if(strcasecmp(args[1],"argb")==0){
+      ag_changecolorspace(8,16,24,0);
+    }
+    else if(strcasecmp(args[1],"bgra")==0){
+      ag_changecolorspace(16,8,0,24);
+    }
+  }
+  else if (strcmp(args[0],"dp") == 0){
+    set_agdp(valint);
+  }
+  
+  miui_isbgredraw = 1;
+  //-- Release Arguments
+  MIUI_FREEARGS();
+
+  //-- Return
+  return StringValue(strdup(""));
+}
 
 Value* MIUI_CALIBRATE(const char* name, State* state, int argc, Expr* argv[]) {
   if ((argc != 4)&&(argc != 5)) {
@@ -2042,6 +2093,8 @@ void miui_ui_register()
 {
 //todo
     //--CONFIG FUNCTIONS
+    //
+    RegisterFunction("ini_set",       MIUI_INI_SET);       //-- SET INI CONFIGURATION
     RegisterFunction("calibrate", MIUI_CALIBRATE);
     //RegisterFunction("calibtool", MIUI_CALIB);
 }

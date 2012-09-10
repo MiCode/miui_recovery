@@ -51,13 +51,14 @@ static struct _menuUnit *tree_init()
     g_main_menu = common_ui_init();
     return_null_if_fail(g_main_menu != NULL);
     strncpy(g_main_menu->name, "<~mainmenu.name>", MENU_LEN);
+    menuUnit_set_show(g_main_menu, &common_ui_show);
     g_root_menu->child = g_main_menu;
     g_main_menu->parent = g_root_menu;
     //add back operation
     g_main_menu = menuNode_init(g_main_menu);
     //inital mainmenu 
-    //add reboot
-    assert_if_fail(menuNode_add(g_main_menu, reboot_ui_init()) == RET_OK);
+    //cancel reboot
+    //assert_if_fail(menuNode_add(g_main_menu, reboot_ui_init()) == RET_OK);
     //add sd operation 
     assert_if_fail(menuNode_add(g_main_menu, sd_ui_init()) == RET_OK);
     //add wipe

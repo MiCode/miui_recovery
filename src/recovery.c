@@ -611,7 +611,8 @@ main(int argc, char **argv) {
     int status = INSTALL_SUCCESS;
 
     if (update_package != NULL) {
-        status = install_package(update_package, &wipe_cache, TEMPORARY_INSTALL_FILE);
+        miuiInstall_init(&install_package, update_package, &wipe_cache,TEMPORARY_INSTALL_FILE);
+        status = miui_install("<~sd.install.name>", "@sd.install");
         if (status == INSTALL_SUCCESS && wipe_cache) {
             if (erase_volume("/cache")) {
                 LOGE("Cache wipe (requested by package) failed.");

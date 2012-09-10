@@ -53,7 +53,7 @@ color.border          = #666666
 color.border_g        = #666666
 color.progressglow    = #ff7e00
 
-config.roundsize             = 1
+config.roundsize             = 2
 config.button_roundsize      = 1
 config.window_roundsize      = 1
 config.transition_frame      = 5

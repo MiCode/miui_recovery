@@ -14,14 +14,14 @@ static STATUS lang_menu_show(menuUnit *p)
     */
     int ret = miui_langmenu(p->title_name, p->icon);
 
-    if (1 == ret)
+    if (0 == ret)
     {
         miui_loadlang("langs/cn.lang");
         miui_font( "0", "ttf/DroidSansFallback.ttf;ttf/DroidSans.ttf", "12" );
         miui_font( "1", "ttf/DroidSansFallback.ttf;ttf/DroidSans.ttf", "18" );
         p->result = 1;
     }
-    else if (2 == ret)
+    else if (1 == ret)
     {
         miui_loadlang("langs/en.lang");
         miui_font( "0", "ttf/DroidSans.ttf", "12" );

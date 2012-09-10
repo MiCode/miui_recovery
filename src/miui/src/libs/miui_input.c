@@ -212,9 +212,6 @@ void ev_input_callback(int fd, short revents){
       switch (ev.type){
         //-- Real Key Input Event
         case EV_KEY:{
-	   #if 0
-               input_event_dump("EV_KEY", &ev);
-	   #endif
           if ((ev.code==330)&&(evtouch_alreadyu==0)&&(ev.value==0)){
             if (!evtouch_thack){
               evtouch_alreadyu=1;
@@ -322,7 +319,7 @@ void ev_input_callback(int fd, short revents){
         
         //-- Touch Input Event
         case EV_ABS:{
-	   #if DEBUG
+	   #if 0
                input_event_dump("EV_ABS", &ev);
 	   #endif
           evtouch_lastick = alib_tick();

@@ -62,8 +62,7 @@ STATUS common_ui_show(menuUnit *p)
         temp = temp->nextSilbing;
     }
     selindex = miui_mainmenu(p->name, menu_item,  icon_item, NULL,  n);
-    if (selindex == n) p->result = MENU_BACK;
-    else p->result = selindex;
+    p->result = selindex;
     if (menu_item != NULL) free(menu_item);
     if (title_item != NULL) free(title_item);
     if (icon_item != NULL) free(icon_item);
@@ -95,8 +94,7 @@ STATUS common_menu_show(menuUnit *p)
         temp = temp->nextSilbing;
     }
     selindex = miui_menubox(p->name, menu_item, n);
-    if (selindex == n) p->result = MENU_BACK;
-    else p->result = selindex;
+    p->result = selindex;
     if (menu_item != NULL) free(menu_item);
     if (title_item != NULL) free(title_item);
     if (icon_item != NULL) free(icon_item);
@@ -113,7 +111,7 @@ STATUS menu_default_init(struct _menuUnit *p)
     p->child = NULL;
     p->nextSilbing = NULL;
     p->parent = NULL;
-    p->show = &common_ui_show;
+    p->show = &common_menu_show;
     p->get_child_count = &common_get_child_count;
     p->get_child_by_index = &common_get_child_by_index;
     return RET_OK;

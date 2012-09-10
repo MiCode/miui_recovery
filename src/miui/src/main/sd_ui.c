@@ -97,6 +97,7 @@ static STATUS _sd_dir_show(struct _menuUnit *p, char *path)
        chosen_item = miui_sdmenu(sd_menu->name, zips, zips_desc, z_size);
        return_val_if_fail(chosen_item >= 0, RET_FAIL);
        char * item = zips[chosen_item];
+       return_val_if_fail(item != NULL, RET_FAIL);
        int item_len = strlen(item);
        if ( chosen_item == 0) {
            //go up but continue browsing

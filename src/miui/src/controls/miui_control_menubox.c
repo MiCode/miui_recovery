@@ -206,13 +206,20 @@ byte acmenu_add(ACONTROLP ctl,char * title, char * img, char *img_append){
   //-- Load Image
   if (img != NULL)
   {
+      d->clientTextX  = (agdp()*32) + (agdp()*acfg()->btnroundsz*2);
+      d->clientTextW  = d->clientWidth - ((agdp()*26 * 2) + (agdp()*acfg()->btnroundsz*2));
       newip->img      = (PNGCANVAS *) malloc(sizeof(PNGCANVAS));
       memset(newip->img,0,sizeof(PNGCANVAS));
       if (!apng_load(newip->img,img)){
         free(newip->img);
         newip->img=NULL;
       }
-  }else newip->img = NULL;
+  }else 
+  {
+      d->clientTextX  = agdp()*2 + (agdp()*acfg()->btnroundsz*2);
+      d->clientTextW  = d->clientWidth - ((agdp()*26) + (agdp()*acfg()->btnroundsz*2));
+      newip->img = NULL;
+  }
   if (img_append != NULL)
   {
       newip->img_append = (PNGCANVAS *) malloc(sizeof(PNGCANVAS));
@@ -259,7 +266,7 @@ void acmenu_ondraw(void * x){
   }
   
   //-- Init Device Pixel Size
-  int minpadding = max(acfg()->roundsz,4);
+  int minpadding = min(acfg()->roundsz,4);
   int agdp3 = (agdp()*minpadding);
   int agdp6 = (agdp()*(minpadding*2));
   int agdpX = agdp6;
@@ -564,7 +571,7 @@ ACONTROLP acmenu(
   ag_canvas(&d->control,w,h);
   ag_canvas(&d->control_focused,w,h);
   
-  int minpadding = max(acfg()->roundsz,4);
+  int minpadding = min(acfg()->roundsz,4);
   
   //-- Initializing Client Size
   d->clientWidth  = w - (agdp()*minpadding*2);
@@ -575,17 +582,17 @@ ACONTROLP acmenu(
   
   //-- Draw Control
   ag_draw_ex(&d->control,&win->c,0,0,x,y,w,h);
-#if 0
+
   ag_roundgrad(&d->control,0,0,w,h,acfg()->border,acfg()->border_g,(agdp()*acfg()->roundsz));
   ag_roundgrad(&d->control,1,1,w-2,h-2,acfg()->textbg,acfg()->textbg,(agdp()*acfg()->roundsz)-1);
   
-#endif
+
   //-- Draw Focused Control
   ag_draw_ex(&d->control_focused,&win->c,0,0,x,y,w,h);
-#if 0
+
   ag_roundgrad(&d->control_focused,0,0,w,h,acfg()->selectbg,acfg()->selectbg_g,(agdp()*acfg()->roundsz));
   ag_roundgrad(&d->control_focused,agdp(),agdp(),w-(agdp()*2),h-(agdp()*2),acfg()->textbg,acfg()->textbg,(agdp()*(acfg()->roundsz-1)));
-#endif
+
   
   //-- Set Scroll Value
   d->scrollY     = 0;

@@ -108,6 +108,7 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
     sprintf(args[2], "%d", pipefd[1]);
     args[3] = (char*)path;
     args[4] = NULL;
+    char tmpbuf[256];
 
     pid_t pid = fork();
     if (pid == 0) {
@@ -145,7 +146,6 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
             ui_set_progress(fraction);
         } else if (strcmp(command, "ui_print") == 0) {
             char* str = strtok(NULL, "\n");
-            char tmpbuf[256];
             if (str)
                 snprintf(tmpbuf, 255, "<#selectbg_g><b>%s</b></#>", str);
             else 
@@ -163,6 +163,8 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
     waitpid(pid, &status, 0);
     if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
         LOGE("Error in %s\n(Status %d)\n", path, WEXITSTATUS(status));
+        snprintf(tmpbuf, 255, "<#selectbg_g><b>Error in%s\n(Status %d)\n</b></#>", path, WEXITSTATUS(status));
+        miuiInstall_set_text(tmpbuf);
         return INSTALL_ERROR;
     }
 

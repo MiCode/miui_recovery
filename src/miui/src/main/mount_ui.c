@@ -90,8 +90,7 @@ static STATUS mount_menu_show(menuUnit *p)
         temp = temp->nextSilbing;
     }
     selindex = miui_mainmenu(p->name, menu_item, NULL, icon_item, n);
-    if (selindex == n) p->result = MENU_BACK;
-    else p->result = selindex;
+    p->result = selindex;
     if (menu_item != NULL) free(menu_item);
     if (title_item != NULL) free(title_item);
     if (icon_item != NULL) free(icon_item);
