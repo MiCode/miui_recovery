@@ -106,4 +106,7 @@ info.mount.name=storage info
 info.log.name=log
 info.about.name=about miui recovery
 
-
+about.device=Device:
+about.name=Name:
+about.version=Version:
+about.date=Date:

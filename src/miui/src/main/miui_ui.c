@@ -147,6 +147,7 @@ static int read_int(const char* path) {
     }
     return value;
 }
+/*
 static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
   pthread_mutex_lock(&title_mutex);
   static char bg_title[64];
@@ -166,6 +167,56 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
   ag_draw(win, bg,0,0);
   ag_textf(win,titW,((agw()/2)-(titW/2))+1,elmP+1,bg_title,acfg()->titlebg_g,0);
   ag_text(win,titW,(agw()/2)-(titW/2),elmP,bg_title,acfg()->titlefg,0);
+  pthread_mutex_unlock(&title_mutex);
+  return 2*elmP + ag_fontheight(0);
+}
+*/
+
+static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
+{
+    char batt_name[8];
+    snprintf(batt_name, 8, "%02d", read_int(BATTERY_CAPACITY_PATH));
+    int txtX = x + 4;
+    int txtY = y;
+    int txtH = ag_fontheight(0);
+    int txtW = ag_fontwidth(batt_name, 0);
+    int battW = 10*agdp();
+    ag_rect(win, txtX - 2, y+1, battW, txtH-3, fg);
+    ag_rect(win, txtX - 1, y+2, battW - 2, txtH-5, bg);
+    txtX += agdp();
+    ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
+    ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
+    int rectH = agdp() * 3;
+    int rectW = agdp();
+    txtY += (txtH - rectH)/2;
+    ag_rect(win, txtX - 3* agdp(), txtY, rectW, rectH, fg);
+    return txtH + 2*agdp();
+}
+
+static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
+  pthread_mutex_lock(&title_mutex);
+  static char bg_title[64];
+  static time_t timep;
+  static struct tm *p;
+  time(&timep);
+  p = gmtime(&timep);
+  miui_redraw();
+  int elmP  = agdp()*4;
+  snprintf(bg_title, 64, "%s", MIUI_NAME); 
+  miui_debug("bg_title is %s\n", bg_title);
+  int titW  = ag_txtwidth(bg_title,0);
+  ag_draw(win, bg,0,0);
+  //draw title name
+  ag_textf(win,titW,elmP + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
+  ag_text(win,titW,elmP,elmP,bg_title,acfg()->titlefg,0);
+  //draw battery
+  _miui_draw_battery(win, agw()/2 + 12*elmP, elmP, acfg()->titlefg, acfg()->titlebg_g);
+  //draw time
+  snprintf(bg_title, 64, "%02d:%02d", (p->tm_hour + 8) % 24, p->tm_min);
+  titW = ag_txtwidth(bg_title, 0);
+  int timeX = agw() - titW - elmP;
+  ag_textf(win,titW,timeX + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
+  ag_text(win,titW,timeX,elmP,bg_title,acfg()->titlefg,0);
   pthread_mutex_unlock(&title_mutex);
   return 2*elmP + ag_fontheight(0);
 }
@@ -1495,7 +1546,7 @@ STATUS miui_mainmenu(char *title_name, char **item, char **item_icon, char **ite
   AWINDOWP hWin   = aw(&miui_win_bg);
   
   //-- Check Box
-  ACONTROLP backmenu = actitle(hWin, 0, chkY, chkW, &chkH, title_name, 0, 5);
+  ACONTROLP backmenu = actitle(hWin, 0, chkY, chkW, &chkH, title_name, 1, 5);
   chkY = chkY + chkH;
   chkH = agh() - chkY;
   ACONTROLP menu1  = acmenu(hWin,0,chkY,chkW,chkH,6);
@@ -1726,6 +1777,63 @@ STATUS miui_sdmenu(char *title_name, char **item, char **item_sub, int item_cnt)
   
   //-- Finish
   return selindex;
+}
+
+/*
+ *show aboutmenu  
+ */
+STATUS miui_aboutmenu(char *title, char *icon, char *content)
+{
+    return_val_if_fail(title != NULL, RET_FAIL);
+    return_val_if_fail(icon != NULL, RET_FAIL);
+    return_val_if_fail(content != NULL, RET_FAIL);
+    ag_setbusy();
+    miui_isbgredraw = 1;
+
+    int chkY= miui_setbg_title();
+    int chkX = 0;
+    int chkW = agw();
+    int chkH = agh();
+    //Create Window 
+    AWINDOWP hWin = aw(&miui_win_bg);
+    
+    ACONTROLP backmenu = actitle(hWin, chkX, chkY, chkW, &chkH, title, 1, 5);
+    chkY += chkH;
+    chkH = agh() - chkY;
+    CANVAS *about_canvas = &hWin->c;
+    //--load icon
+    PNGCANVAS ap;
+    int imgW = 0;
+    int imgH = 0;
+    if (apng_load(&ap, icon)){
+        imgW = min(ap.w, agw());
+        if (imgW >= agw()) chkX = 0;
+        else chkX = (agw() - imgW)/2;
+        imgH = min(ap.h, agh());
+    }
+    else miui_error("can not load %s\n", icon); 
+    ag_rect(about_canvas, 0, chkY, agw(), chkH, acfg()->textbg); 
+    apng_draw_ex(about_canvas, &ap, chkX, chkY, 0, 0, imgW, imgH);
+    apng_close(&ap);
+    chkY += imgH;
+    chkX = agdp() *4;
+   
+    ag_textf(about_canvas,agw(), chkX+1, chkY+1, content, acfg()->textbg, 0);
+    ag_text(about_canvas, agw(), chkX, chkY, content, acfg()->textfg, 0);
+
+    aw_show(hWin);
+    byte ondispatch = 1;
+    while(ondispatch) {
+        dword msg = aw_dispatch(hWin);
+        switch (aw_gm(msg)) {
+            //back menu
+            case 5:ondispatch = 0;break;
+        }
+    }
+    //finally
+    miui_isbgredraw = 0;
+    aw_destroy(hWin);
+    return RET_OK;
 }
 //* 
 //* alert

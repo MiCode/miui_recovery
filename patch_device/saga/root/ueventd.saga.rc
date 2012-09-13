@@ -1,0 +1,16 @@
+#for audio
+/dev/msm_acdb	          0660   system     audio
+/dev/codec_aic3254        0660   system     audio
+/dev/msm_audio_dev_ctrl   0660   system     audio
+/dev/control0             0660   system     audio
+/dev/msm_mp3              0660   system     audio
+/dev/msm_mp3_lp           0660   system     audio
+/dev/msm_pcm_in           0660   system     audio
+/dev/msm_pcm_lp_dec       0660   system     audio
+/dev/msm_pcm_out          0660   system     audio
+/dev/htc-acdb             0660   system     audio
+/dev/htc-acoustic         0660   system     audio
+/dev/controlC0            0660   system     audio
+/dev/adsp                 0660   system     audio
+/dev/pmem_audio	          0660   system     audio
+/dev/tpa2051d3	          0660   system     audio

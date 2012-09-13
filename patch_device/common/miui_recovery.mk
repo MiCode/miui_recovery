@@ -43,16 +43,18 @@ $(MIUI_PRODUCT): $(MKBOOTFS) $(MINIGZIP) \
 		$(MKBOOTIMG) \
 		recoveryimage
 	@echo make $(MIUI_PRODUCT) 
+	rm -rf $(miui_recovery_product)
 	mkdir -p $(miui_recovery_out)
 	mkdir -p $(miui_recovery_product)
 	mkdir -p $(miui_recovery_root)
 	cp -rf $(MIUI_PRODUCT_ROOT) $(miui_recovery_product)/
 	cp -rf $(MIUI_KERNEL) $(miui_recovery_product)/
-	#-rm -rf $(miui_recovery_root)/sbin
 	cp -rf $(miui_recovery_sbin) $(miui_recovery_root)/
 	cp -f $(miui_recovery_binary) $(miui_recovery_root)/sbin/
 	cp -rf $(miui_recovery_resource) $(miui_recovery_root)/
+ifneq ($(MIUI_DEVICE_CONFIG),)
 	-cp -f $(MIUI_DEVICE_CONFIG) $(miui_recovery_root)/res/
+endif
 	@echo make recovery image $(miui_recovery_target)
 	$(MKBOOTFS) $(miui_recovery_root) | $(MINIGZIP) > $(miui_recovery_ramdisk)
 	$(MKBOOTIMG) $(miui_recoveryimage_args) --output $(miui_recovery_target)

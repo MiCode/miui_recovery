@@ -415,20 +415,6 @@ dword aw_dispatch(AWINDOWP win){
         msg = atev.msg;
       }
       break;
-      case ATEV_MENU:{
-        if (!atev.d){
-          if (!on_dialog_window){
-            byte resmenu = aw_showmenu(win);
-            if (resmenu==2){
-              msg = aw_msg(4,0,0,0);
-            }
-          }
-          else if (on_dialog_window==2){
-            msg = aw_msg(5,0,0,0);
-          }
-        }
-      }
-      break;
       case ATEV_BACK:{
         if (!atev.d){
           msg = aw_msg(5,0,0,0);
@@ -481,6 +467,9 @@ dword aw_dispatch(AWINDOWP win){
           }
         }
       break;
+      case ATEV_MENU:
+      case ATEV_SEARCH:
+      case ATEV_HOME:
       case ATEV_SELECT:{
         if (win->focusIndex!=-1){
           ACONTROLP ctl = (ACONTROLP) win->controls[win->focusIndex];
@@ -920,8 +909,7 @@ byte aw_confirm(AWINDOWP parent, char * titlev,char * textv,char * img,char * ye
   aw_unmuteparent(parent,tmpc);
   return res;
 }
-void aw_help_dialog(AWINDOWP parent){
-}
+
 byte aw_calibdraw(CANVAS * c,
   int id,int * xpos,int * ypos,int * xtch,int * ytch){
   ag_draw(agc(),c,0,0);
@@ -1055,6 +1043,7 @@ void aw_calibtools(AWINDOWP parent){
   }
   else{
     atouch_sethack(0);
+    return;
   }
   
   //-- Set Mask
@@ -1165,109 +1154,4 @@ doneit:
     atouch_sethack(current_hack);
     atouch_restorecalibrate();
   }
-}
-void aw_about_dialog(AWINDOWP parent){
-  char unchkmsg[512];
-  
-  snprintf(unchkmsg,512,
-    "<b>%s %s</b>\n"
-    "%s\n\n"
-    "  <#selectbg_g>Build <u>%s</u></#> (<b>%s</b>)\n"
-    "  %s\n"
-    "  %s\n"
-    "  <u>%s</u>\n\n"
-    "ROM Name:\n  <b><#selectbg_g>%s</#></b>\n"
-    "ROM Version:\n  <b><#selectbg_g>%s</#></b>\n"
-    "ROM Author:\n  <b><#selectbg_g>%s</#></b>\n"
-    "Device:\n  <b><#selectbg_g>%s</#></b>\n"
-    "Update:\n  <b><#selectbg_g>%s</#></b>"
-    ,
-    MIUI_NAME,
-    MIUI_VERSION,
-    MIUI_COPY,
-    
-    MIUI_BUILD,
-    MIUI_BUILD_CN,
-    MIUI_BUILD_L,
-    MIUI_BUILD_A,
-    MIUI_BUILD_URL,
-    
-    acfg()->rom_name,
-    acfg()->rom_version,
-    acfg()->rom_author,
-    acfg()->rom_device,
-    acfg()->rom_date
-  );
-  aw_alert(parent,
-    MIUI_NAME " " MIUI_VERSION,
-    unchkmsg,
-    "@install",
-    NULL);
-}
-byte aw_showmenu(AWINDOWP parent){
-  CANVAS * tmpc = aw_muteparent(parent);
-  //-- Set Mask
-  on_dialog_window = 2;
-  ag_rectopa(agc(),0,0,agw(),agh(),0x0000,180);
-  ag_sync();
-  
-  int btnH  = agdp()*20;
-  int pad   = agdp()*4;
-  int vpad  = agdp()*2;
-  int winH  = ((btnH+vpad) * 3) + pad;
-  int winW  = agw()-(pad*2);
-  int winX  = pad;
-  int winY  = agh()-winH;
-  int btnY  = winY + pad;
-  int btnX  = winX + pad;
-  int btnW  = winW - (pad*2);
-  
-  //-- Initializing Canvas
-  CANVAS alertbg;
-  ag_canvas(&alertbg,agw(),agh());
-  ag_draw(&alertbg,agc(),0,0);
-  
-  //-- Draw Window Background
-  ag_roundgrad_ex(&alertbg,winX-1,winY-1,winW+2,winH+2,acfg_var.border,acfg_var.border_g,(acfg_var.roundsz*agdp())+1,1,1,0,0);
-  ag_roundgrad_ex(&alertbg,winX,winY,winW,winH,acfg_var.navbg,acfg_var.navbg_g,acfg_var.roundsz*agdp(),1,1,0,0);
-  
-  //-- Create Window
-  AWINDOWP hWin   = aw(&alertbg);
-  acbutton(hWin,btnX,btnY,btnW,btnH,acfg_var.text_about,0,11);
-  //acbutton(hWin,btnX,btnY+((btnH+vpad)*1),btnW,btnH,"Help",0,12);
-  acbutton(hWin,btnX,btnY+((btnH+vpad)*1),btnW,btnH,acfg_var.text_calibrating,0,13);
-  acbutton(hWin,btnX,btnY+((btnH+vpad)*2),btnW,btnH,acfg_var.text_quit,0,14);
-  
-  aw_show(hWin);
-  byte ondispatch = 1;
-  byte res        = 0;
-  while(ondispatch){
-    dword msg=aw_dispatch(hWin);
-    switch (aw_gm(msg)){
-      case 5: ondispatch = 0; break;
-      case 11: res=1; ondispatch = 0; break;
-      case 12: res=2; ondispatch = 0; break;
-      case 13: res=3; ondispatch = 0; break;
-      case 14: res=4; ondispatch = 0; break;
-    }
-  }
-  aw_destroy(hWin);
-  ag_ccanvas(&alertbg);
-  on_dialog_window = 0;
-  aw_unmuteparent(parent,tmpc);
-  
-  if (res==1){
-    aw_about_dialog(parent);
-  }
-  else if (res==2){
-    aw_help_dialog(parent);
-  }
-  else if (res==3){
-    aw_calibtools(parent);
-  }
-  else if (res==4){
-    byte res = aw_confirm(parent, MIUI_NAME " " MIUI_VERSION, acfg_var.text_quit_msg,"@alert",NULL,NULL);
-    if (res) return 2;
-  }
-  return 0;
 }

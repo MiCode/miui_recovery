@@ -29,5 +29,3 @@ PRODUCT_COPY_FILES := \
 
 PRODUCT_PACKAGES := \
     audio.primary.goldfish
-
-PRODUCT_AAPT_CONFIG += hdpi xhdpi

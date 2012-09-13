@@ -107,3 +107,8 @@ info.title=关于MIUI RECOVERY的信息
 info.mount.name=存储信息
 info.log.name=运行日志
 info.about.name=关于MIUI RECOVERY
+
+about.device=设备：
+about.name=名称：
+about.version=版本：
+about.date=日期：

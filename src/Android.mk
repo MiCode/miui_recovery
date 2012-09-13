@@ -22,8 +22,8 @@ RECOVERY_API_VERSION := 3
 MYDEFINE_CFLAGS :=  -D_GLIBCXX_DEBUG_PEDANTIC \
                   -DFT2_BUILD_LIBRARY=1 \
                   -D_MIUI_NODEBUG=1 \
-                  -DDARWIN_NO_CARBON 
-                # -g -O0 -DDEBUG=1
+                  -DDARWIN_NO_CARBON
+                 -g -O0 -DDEBUG=1
 LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION) 
 LOCAL_CFLAGS += $(MYDEFINE_CFLAGS)
 #LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION)
@@ -81,13 +81,16 @@ exclude := tune2fs mke2fs
 RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
 $(RECOVERY_BUSYBOX_SYMLINKS): BUSYBOX_BINARY := busybox
 $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
-	@cp $(BUSYBOX_PATH)/busybox $(TARGET_ROOT_OUT)/sbin/ -f
 	@echo "Symlink: $@ -> $(BUSYBOX_BINARY)"
 	@mkdir -p $(dir $@)
 	@rm -rf $@
 	$(hide) ln -sf $(BUSYBOX_BINARY) $@
 
-ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_BUSYBOX_SYMLINKS)
+copy_busybox:
+	@cp $(BUSYBOX_PATH)/busybox $(TARGET_ROOT_OUT)/sbin/ -f
+	#@cp $(BUSYBOX_PATH)/adbd $(TARGET_ROOT_OUT)/sbin/
+
+ALL_DEFAULT_INSTALLED_MODULES += copy_busybox $(RECOVERY_BUSYBOX_SYMLINKS)
 copy_file_operation:
 	@cp $(LOCAL_PATH)/obj/sbin/fix_permissions $(TARGET_ROOT_OUT)/sbin/ -f
 	@echo "copy fix_permissions to recovery"

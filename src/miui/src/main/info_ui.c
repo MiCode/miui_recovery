@@ -35,36 +35,24 @@ STATUS info_log_show(struct _menuUnit* p)
 STATUS info_about_show(struct _menuUnit* p)
 {
     char message[512];
-    snprintf(message,512,
-    "<b>%s %s</b>\n"
-    "%s\n\n"
-    "  <#selectbg_g>Build <u>%s</u></#> (<b>%s</b>)\n"
-    "  %s\n"
-    "  %s\n"
-    "  <u>%s</u>\n\n"
-    "ROM Name:\n  <b><#selectbg_g>%s</#></b>\n"
-    "ROM Version:\n  <b><#selectbg_g>%s</#></b>\n"
-    "ROM Author:\n  <b><#selectbg_g>%s</#></b>\n"
-    "Device:\n  <b><#selectbg_g>%s</#></b>\n"
-    "Update:\n  <b><#selectbg_g>%s</#></b>"
+    snprintf(message, 512,
+    "<~about.name>\n   <b><#selectbg_g>%s</#></b>\n"
+    "<~about.version>\n  <b><#selectbg_g>%s</#></b>\n"
+    "<~about.device>\n  <b><#selectbg_g>%s</#></b>\n"
+    "<~about.date>\n  <b><#selectbg_g>%s</#></b>\n"
     ,
-    MIUI_NAME,
-    MIUI_VERSION,
-    MIUI_COPY,
-    
-    MIUI_BUILD,
-    MIUI_BUILD_CN,
-    MIUI_BUILD_L,
-    MIUI_BUILD_A,
-    MIUI_BUILD_URL,
-    
     acfg()->rom_name,
     acfg()->rom_version,
-    acfg()->rom_author,
     acfg()->rom_device,
     acfg()->rom_date
-  );
-    miui_alert(3, MIUI_NAME " " MIUI_VERSION, message, "@default");
+    );
+
+    miui_aboutmenu(
+    MIUI_NAME " " MIUI_VERSION,
+    "@install",
+    message
+            );
+
     return MENU_BACK;
 }
 

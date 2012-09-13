@@ -26,13 +26,13 @@ static STATUS lang_menu_show(menuUnit *p)
         miui_loadlang("langs/en.lang");
         miui_font( "0", "ttf/DroidSans.ttf", "12" );
         miui_font( "1", "ttf/DroidSans.ttf", "18" );
-        p->result = 2;
+        p->result = 1;
     }
     else {
         miui_error("should not be here");
         p->result = 0;
     }
-    return 1;
+    return p->result;
 }
 
 struct _menuUnit * lang_ui_init()

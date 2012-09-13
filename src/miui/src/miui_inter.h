@@ -106,7 +106,7 @@
 //
 // MIUI Main Configurations
 //
-#define MIUI_NAME        "MIUI RECOVERY"
+#define MIUI_NAME        "MIUI Recovery"
 #define MIUI_VERSION     "1.00"
 #define MIUI_BUILD       "120820-010"
 #define MIUI_BUILD_CN    "Weekend"

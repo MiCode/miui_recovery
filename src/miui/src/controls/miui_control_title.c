@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 xiaomi MIUI ( http://xiaomi.com/ )
+ * Copyright (C) 2012 xiaomi MIUI ( http://www.micode.net/ )
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +176,7 @@ ACONTROLP actitle(
   imgH = image->h;
   *ph = (txth > imgH)?txth:imgH;
   int h = *ph;
-  int txtx     = imgW + agdp() *20;
+  int txtx     = imgW + agdp() *8;
   int txty     = round(h/2) - round(txth/2);
   //-- Initializing Canvas
   ag_canvas(&d->control,w,h);
