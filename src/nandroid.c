@@ -25,6 +25,7 @@
 #include "common.h"
 #include "libcrecovery/common.h"
 #include "cutils/properties.h"
+#include "firmware.h"
 #include "install.h"
 #include "minzip/DirUtil.h"
 #include "roots.h"
@@ -236,6 +237,8 @@ int nandroid_backup_partition(const char* backup_path, const char* root) {
 
     // see if we need a raw backup (mtd)
     char tmp[PATH_MAX];
+    sprintf(tmp, "mkdir -p %s", backup_path);
+    __system(tmp);
     int ret;
     if (strcmp(vol->fs_type, "mtd") == 0 ||
             strcmp(vol->fs_type, "bml") == 0 ||
@@ -632,3 +635,34 @@ int nandroid_restore(const char* backup_path, int restore_boot, int restore_syst
     return 0;
 }
 
+int nandroid_usage()
+{
+    printf("Usage: nandroid backup\n");
+    printf("Usage: nandroid restore <directory>\n");
+    return 1;
+}
+
+int nandroid_main(int argc, char** argv)
+{
+    if (argc > 3 || argc < 2)
+        return nandroid_usage();
+    
+    if (strcmp("backup", argv[1]) == 0)
+    {
+        if (argc != 2)
+            return nandroid_usage();
+        
+        char backup_path[PATH_MAX];
+        nandroid_generate_timestamp_path(backup_path);
+        return nandroid_backup(backup_path);
+    }
+
+    if (strcmp("restore", argv[1]) == 0)
+    {
+        if (argc != 3)
+            return nandroid_usage();
+        return nandroid_restore(argv[2], 1, 1, 1, 1, 1, 0);
+    }
+    
+    return nandroid_usage();
+}

@@ -11,7 +11,7 @@
 # the tests.
 
 EMULATOR_PORT=5580
-DATA_DIR=$ANDROID_BUILD_TOP/bootable/recovery/testdata
+DATA_DIR=$ANDROID_BUILD_TOP/src/testdata
 
 WORK_DIR=/data/local/tmp
 

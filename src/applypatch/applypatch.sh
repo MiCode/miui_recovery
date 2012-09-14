@@ -11,7 +11,7 @@
 # the tests.
 
 EMULATOR_PORT=5580
-DATA_DIR=$ANDROID_BUILD_TOP/bootable/recovery/applypatch/testdata
+DATA_DIR=$ANDROID_BUILD_TOP/src/applypatch/testdata
 
 # This must be the filename that applypatch uses for its copies.
 CACHE_TEMP_SOURCE=/cache/saved.file
