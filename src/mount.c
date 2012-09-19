@@ -30,11 +30,14 @@
 #include "mtdutils/mtdutils.h"
 #include "cutils/properties.h"
 #include "roots.h"
+#include "miui/src/miui.h"
 #include "miui_intent.h"
 
 
 #ifndef MASS_STORAGE_FILE_PATH
-#define MASS_STORAGE_FILE_PATH  "/sys/class/android_usb/android0/f_mass_storage/lun/file"
+//#define MASS_STORAGE_FILE_PATH  "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
+//#define MASS_STORAGE_FILE_PATH "/sys/devices/platform/usb_mass_storage/lun0/file"
+#define MASS_STORAGE_FILE_PATH "/sys/devices/platform/s3c-usbgadget/gadget/lun0/file"
 #endif
 
 #ifndef BOARD_USB_CONFIG_FILE
@@ -64,7 +67,7 @@ static int is_usb_connected() {
     LOGE("%s: state=%s\n", __func__, state);
 
     close(fd);
-    return !strncmp(state, "CONFIGURED", 10);
+    return state[0] == 'C';
 }
 
 static int mount_usb() {
@@ -127,15 +130,27 @@ out:
 intentResult* intent_toggle(int argc, char *argv[])
 {
 
+    assert_ui_if_fail(argc == 1);
+    assert_ui_if_fail(argv[0] != NULL);
+    int intent_type = atoi(argv[0]);
     int result = 0;
-    if (is_usb_connected())
+    if (intent_type == 0)
     {
         umount_usb();
         ensure_path_unmounted("/sdcard");
         return miuiIntent_result_set(result, "ok");
     }
-    mount_usb();
-    return miuiIntent_result_set(result, "mounted");
+    //wait for usb connected
+    //while (is_usb_connected()) ;
+    if (is_usb_connected())
+    {
+        mount_usb();
+        return miuiIntent_result_set(result, "mounted");
+    }
+    LOGE("USB not connect\n");
+    umount_usb();
+    ensure_path_unmounted("/sdcard");
+    return miuiIntent_result_set(result, "ok");
 }
 
 

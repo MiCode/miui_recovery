@@ -115,8 +115,15 @@ static STATUS mount_child_show(menuUnit *p)
             miuiIntent_send(intent_type, 1, "/sdcard");
             break;
         case MOUNT_TOGGLE:
-            miuiIntent_send(INTENT_TOGGLE, 1, "usb");
+        {
+            if (intent_type == INTENT_MOUNT)
+                //mount 
+                miuiIntent_send(INTENT_TOGGLE, 1, "1");
+            else 
+                //untoggle
+                miuiIntent_send(INTENT_TOGGLE, 1, "0");
             break;
+        }
         default:
             break;
     }

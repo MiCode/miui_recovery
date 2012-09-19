@@ -180,7 +180,17 @@ byte ag_init(){
     ag_fbsz  = (ag_fbv.xres * ag_fbv.yres * ((agclp==3)?4:agclp));
     
     //-- Init Frame Buffer
+    miui_debug("ag_fbv.bits_per_pixel = %d\n", ag_fbv.bits_per_pixel);
     if (ag_fbv.bits_per_pixel==16){
+     /*RGB565*/
+      ag_fbv.red.offset        = 11;
+      ag_fbv.red.length        = 5;
+      ag_fbv.green.offset      = 5;
+      ag_fbv.green.length      = 6;
+      ag_fbv.blue.offset       = 0;
+      ag_fbv.blue.length       = 5;
+      ag_fbv.transp.offset     = 0;
+      ag_fbv.transp.length     = 0;
       ag_32   = 0;
       ag_fbuf = (word*) mmap(0,ag_fbf.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,ag_fb,0);
       ag_b    = (word*) malloc(ag_fbsz);

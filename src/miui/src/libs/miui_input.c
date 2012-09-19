@@ -511,7 +511,7 @@ static void atev_dump(ATEV *atev, int key){
 }
 int atouch_wait(ATEV *atev){
   int ret = atouch_wait_ex(atev,0);
-#if DEBUG
+#if 0
   atev_dump(atev, ret);
 #endif
   return ret;

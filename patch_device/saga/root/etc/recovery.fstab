@@ -1,0 +1,8 @@
+# mount point	fstype		device
+
+/recovery	emmc		/dev/block/mmcblk0p21
+/boot		emmc		/dev/block/mmcblk0p22
+/cache		ext4		/dev/block/mmcblk0p27
+/data		ext4		/dev/block/mmcblk0p26	length=-16384
+/sdcard		vfat		/dev/block/mmcblk1p1
+/system		ext4		/dev/block/mmcblk0p25
