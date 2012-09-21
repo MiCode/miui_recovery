@@ -191,6 +191,7 @@ struct _menuUnit *mount_ui_init()
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
     mount_sd_node = temp;
     //toggle usb stroage
+#if 0
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     return_null_if_fail(menuUnit_set_name(temp, "<~mount.toggle.name>") == RET_OK);
@@ -198,6 +199,7 @@ struct _menuUnit *mount_ui_init()
     return_null_if_fail(menuUnit_set_icon(temp, ICON_DISABLE) == RET_OK);
     return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
+#endif
     mount_node = p;
     return p;
 
