@@ -1,0 +1,5 @@
+# Script to start "send_bug" on the device
+#
+base=/system
+export CLASSPATH=$base/framework/send_bug.jar
+exec app_process $base/bin com.android.commands.sendbug.SendBug "$@"
