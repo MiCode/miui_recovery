@@ -1,5 +1,5 @@
 ############same as android###############
-MIUI_PRODUCTS := crespo honor ville vivo saga
+MIUI_PRODUCTS := crespo ville sensation vivo 
 MIUI_PRODUCTS := $(strip $(MIUI_PRODUCTS))
 
 .PHONY: default

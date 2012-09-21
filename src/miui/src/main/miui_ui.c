@@ -113,8 +113,6 @@ int miui_setbg(char * titlev){
   pthread_mutex_unlock(&title_mutex);
   return 2*elmP + ag_fontheight(1);
 }
-#define BATT_NAME "<~batt.name>"
-#define TIME_NAME "<~time.name>"
 #define BATTERY_CAPACITY_PATH "/sys/class/power_supply/battery/capacity"
 
 static int read_from_file(const char* path, char* buf, size_t size) {
@@ -175,7 +173,7 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
 static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 {
     char batt_name[8];
-    snprintf(batt_name, 8, "%02d", read_int(BATTERY_CAPACITY_PATH));
+    snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
     int txtX = x + 4;
     int txtY = y;
     int txtH = ag_fontheight(0);
