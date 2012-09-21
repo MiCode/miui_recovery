@@ -4,6 +4,7 @@
     $. build/envsetup.sh
     $make crespo
   please see the out/patch_device/crespo/ , find recovery.img 
+4 please check Makefile to obtain the supported devices;
 
  
 

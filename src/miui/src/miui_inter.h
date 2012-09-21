@@ -107,12 +107,12 @@
 // MIUI Main Configurations
 //
 #define MIUI_NAME        "MIUI Recovery"
-#define MIUI_VERSION     "1.00"
-#define MIUI_BUILD       "120820-010"
+#define MIUI_VERSION     "1.01"
+#define MIUI_BUILD       "2012-0921"
 #define MIUI_BUILD_CN    "Weekend"
 #define MIUI_BUILD_L     "Dennis"
-#define MIUI_BUILD_A     "<support@xiaomi.com>"
-#define MIUI_BUILD_URL   "http://www.xiaomi.com/"
+#define MIUI_BUILD_A     "<yanhao@xiaomi.com>"
+#define MIUI_BUILD_URL   "http://www.micode.net/"
 #define MIUI_COPY        "(c) 2012 by xiaomi MIUI developers"
 
 //-- Temporary Dir - Move from /tmp/miui-data to /tmp/miui symlink to /tmp/miui-data for backward compatibility
