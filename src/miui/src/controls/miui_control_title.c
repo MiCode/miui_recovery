@@ -63,7 +63,7 @@ dword actitle_oninput(void * x,int action,ATEV * atev){
   miui_debug("*****%s entry******\n", __FUNCTION__);
 #endif
   dword msg = 0;
-  if (actitle_touchoncontrol(x, atev->x, atev->y)){
+  if (atev->k != 888 || actitle_touchoncontrol(x, atev->x, atev->y)){
       switch (action){
         case ATEV_MOUSEDN:
           {
