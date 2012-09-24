@@ -54,7 +54,7 @@ static  int       evtouch_sx      = 0;  //-- Saved X
 static  int       evtouch_sy      = 0;  //-- Saved Y
 static  int       evtouch_x       = 0;  //-- Translated X (Ready to use)
 static  int       evtouch_y       = 0;  //-- Translated Y (Ready to use)
-const static  int       evtouch_code    = 888;//-- Touch Virtual Code
+static  const int       evtouch_code    = 888;//-- Touch Virtual Code
 static  int       evtouch_tx      = 0;  //-- Temporary Translated X
 static  int       evtouch_ty      = 0;  //-- Temporary Translated Y
 static  byte      evtouch_locked  = 0;
@@ -66,7 +66,7 @@ static  int       evrel_size      = 0;
 
 //-- MIUI CUSTOM MESSAGE
 static  dword     atouch_message_value      = 0;
-const static  int       atouch_message_code       = 889;
+static  const int       atouch_message_code       = 889;
 
 //-- KEY QUEUE
 static  int       key_queue[256];
@@ -207,7 +207,9 @@ void ev_input_callback(int fd, short revents){
     struct input_event ev;
     int         r = read(fd, &ev, sizeof(ev));
     if (r == sizeof(ev)){
+     #if DEBUG
         input_event_dump("input event", &ev);
+     #endif
       //-- OK ITS READY FOR HANDLING
       
       switch (ev.type){

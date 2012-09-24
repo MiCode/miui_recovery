@@ -300,7 +300,11 @@ byte az_readmem(AZMEM *out, const char *name, byte bytesafe){
   struct stat st;
   return_val_if_fail(out != NULL, 0);
   return_val_if_fail(name != NULL, 0);
-  return_val_if_fail(stat(name, &st) >= 0, 0);
+  if (stat(name, &st) < 0)
+  {
+      miui_printf("[%s]:%s is not exist.\n", __FUNCTION__, name);
+      return 0;
+  }
   out->sz = st.st_size + (bytesafe?0:1);
   out->data = malloc(out->sz);
   if (out->data == NULL) goto done;

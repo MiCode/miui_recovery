@@ -177,7 +177,7 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
     int txtX = x + 4;
     int txtY = y;
     int txtH = ag_fontheight(0);
-    int txtW = ag_fontwidth(batt_name, 0);
+    int txtW = ag_fontheight(0) * 2;
     int battW = 10*agdp();
     ag_rect(win, txtX - 2, y+1, battW, txtH-3, fg);
     ag_rect(win, txtX - 1, y+2, battW - 2, txtH-5, bg);
@@ -559,28 +559,7 @@ STATUS  miui_theme(char *theme) {
     
     //printf("PASS THEME V\n");
     
-    //-- LOAD SMALL FONT
-    char * font = miui_parsepropstring(propstr,"font.small");
-    if (font!=NULL){
-      if (!ag_isfreetype(0)){
-        snprintf(themename,256,"themes/%s/%s",theme,font);
-        if (!ag_loadsmallfont(themename,0,NULL))
-          ag_loadsmallfont("fonts/small",0,NULL);
-      }
-      free(font);
-    }
     
-    //-- LOAD BIG FONT
-    font = miui_parsepropstring(propstr,"font.big");
-    if (font!=NULL){
-      if (!ag_isfreetype(0)){
-        snprintf(themename,256,"themes/%s/%s",theme,font);
-        if (!ag_loadbigfont(themename,0,NULL))
-          ag_loadbigfont("fonts/big",0,NULL);
-      }
-      free(font);
-    }
-
     free(propstr);
   }
   else{
