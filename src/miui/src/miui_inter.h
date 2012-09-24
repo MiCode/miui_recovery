@@ -107,8 +107,8 @@
 // MIUI Main Configurations
 //
 #define MIUI_NAME        "MIUI Recovery"
-#define MIUI_VERSION     "1.01"
-#define MIUI_BUILD       "2012-0921"
+#define MIUI_VERSION     "1.02"
+#define MIUI_BUILD       "2012-0928"
 #define MIUI_BUILD_CN    "Weekend"
 #define MIUI_BUILD_L     "Dennis"
 #define MIUI_BUILD_A     "<yanhao@xiaomi.com>"

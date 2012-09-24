@@ -1,3 +1,8 @@
+version 1.02:
+     1 add maguro devics;
+     2 fix bug that mount in ville;
+     3 fix push bug since add prebuilt adb
+     Build Date:2012-09-28
 version 1.01:
      1 add device HTC One S, G11, Sensation;
      2 fix bug that it can not work when press power key in back_icon focued
@@ -5,5 +10,4 @@ version 1.01:
 version 1.00:
      1 miui_recovery released , only support crespo(Nexus S);
      2 USB toggle not work;
-     Buid Date:2012-09-14
-
+     Build Date:2012-09-14

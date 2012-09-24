@@ -138,7 +138,7 @@ static STATUS sd_menu_show(menuUnit *p)
 {
     //ensure_mounte sd path
     struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
-    return_val_if_fail(miuiIntent_result_get_int() == 0, MENU_BACK);
+    assert_if_fail(miuiIntent_result_get_int() == 0);
     int ret ;
     ret = _sd_dir_show(p, "/sdcard");
     if (ret == -1) return MENU_BACK;
