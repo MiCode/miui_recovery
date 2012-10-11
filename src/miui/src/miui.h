@@ -19,8 +19,6 @@ typedef int STATUS;
 #define MENU_BACK ITEM_COUNT 
 #define MENU_QUIT ITEM_COUNT + 1
 
-#define MIUI_INSTALL_LOG "/tmp/last_install"
-#define MIUI_INSTALL_TXT MIUI_INSTALL_LOG
 #define MIUI_LOG_FILE "/tmp/miui_recovery.log"
 #define RECOVERY_PATH "/sdcard/miui_recovery"
 
@@ -157,7 +155,7 @@ STATUS miui_loadlang(char * name);
 //* lang
 //*
 char * miui_lang(char *name);
-STATUS miui_install(char *name, char *icon);
+STATUS miui_install(int echo);
 STATUS miui_ui_start();
 STATUS miui_ui_end();
 
@@ -226,8 +224,9 @@ typedef struct _miuiInstall {
 STATUS miuiInstall_init(miuiInstall_fun fun, char *path, int wipe_cache, char* install_file);
 
 void miuiInstall_show_progress(float portion, int seconds);
-inline void miuiInstall_set_progress(float fraction);
-inline void miuiInstall_set_text(char *str);
+void miuiInstall_set_progress(float fraction);
+void miuiInstall_set_text(char *str);
+void miuiInstall_set_info(char *file_name);
 //menuNode operation
 struct _menuUnit * menuNode_init(struct _menuUnit *node);
 STATUS menuNode_add(struct _menuUnit *parent, struct _menuUnit *child);

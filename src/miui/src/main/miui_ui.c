@@ -1530,7 +1530,7 @@ STATUS miui_mainmenu(char *title_name, char **item, char **item_icon, char **ite
 
   //-- Populate Checkbox Items
   for (i=0;i<item_cnt;i++) {
-    if (strcmp(item[i],"")!=0){
+    if (item[i] != NULL && strcmp(item[i],"")!=0){
       if (item_icon != NULL && item_icon_append != NULL)
            acmenu_add(menu1, item[i], item_icon[i], item_icon_append[i]);
       else {
@@ -1617,7 +1617,7 @@ STATUS miui_menubox(char *title_name, char **item,  int item_cnt) {
 
   //-- Populate Checkbox Items
   for (i = 0; i < item_cnt; i++) {
-    if (strcmp(item[i],"")!=0)
+    if (item[i] != NULL && strcmp(item[i],"")!=0)
       acmenu_add(menu1,item[i], NULL, NULL);
   }
 
@@ -1944,7 +1944,9 @@ char * miui_lang(char *name){
   return out;
 }
 
-STATUS miui_install(char *name, char *icon) {
+#define INSTALL_NAME "<~sd.install.name>"
+#define INSTALL_ICON "@sd.install"
+STATUS miui_install(int echo) {
   //-- Set Busy before everythings ready
   ag_setbusy();
   
@@ -1956,8 +1958,8 @@ STATUS miui_install(char *name, char *icon) {
   //-- Init Strings
   char text[256];                   //-- Text When Installing
   char finish_text[256];            //-- Text After Installing
-  snprintf(text,256,"%s", name);
-  snprintf(finish_text,256,"%s",name);
+  snprintf(text,256,"%s", INSTALL_NAME);
+  snprintf(finish_text,256,"%s", INSTALL_NAME);
   
   //-- Drawing Data
   int pad         = agdp() * 4;
@@ -1977,7 +1979,7 @@ STATUS miui_install(char *name, char *icon) {
   int  imgX       = pad;
   int  tifY       = chkY;
   int  imgY       = chkY;
-  if (apng_load(&ap,icon)){
+  if (apng_load(&ap,INSTALL_ICON)){
     imgE  = 1;
     imgW  = min(ap.w,agdp()*30);
     imgH  = min(ap.h,agdp()*30);
@@ -2024,24 +2026,25 @@ STATUS miui_install(char *name, char *icon) {
   
   
   //-- Start Installer Proccess
+  //if ret_status == 0 && echo = 1, install sucesss, make succes dialog
+  //if ret_status != 0, install failed , list error log dialog
+  //ret_status == -1; install failed
   int ret_status = miui_start_install(
     &miui_win_bg,
     pad,chkY,chkW,chkH,
     pad,btnY,chkW,bntH,
-    &cvf, imgY, chkFY, chkFH
+    &cvf, imgY, chkFY, chkFH, 
+    echo
   );
   
   //-- Release Finished Canvas
   ag_ccanvas(&cvf);
 
-  //-- Set Installer already Runned
-  
-  //-- Installer OK
-  snprintf(text,256,"%i",ret_status);
   
   //-- Installer Not Return OK
   return ret_status;
 }
+
 #if 0
 static int time_echo_enable = 1;
 static pthread_t time_thread_t;

@@ -12,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
+ */ 
 /*
  * Descriptions:
  * -------------
@@ -53,8 +52,19 @@ static char      ai_progress_text[64];
 static char      ai_progress_info[101];
 static AWINDOWP  ai_win;
 static ACONTROLP ai_buftxt;
-static int       ai_return_status  = 0;
 
+static pthread_mutex_t ai_progress_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t ai_canvas_mutex = PTHREAD_MUTEX_INITIALIZER;
+void ai_canvas_lock()
+{
+    pthread_mutex_lock(&ai_canvas_mutex);
+}
+void ai_canvas_unlock()
+{
+    pthread_mutex_unlock(&ai_canvas_mutex);
+}
+
+#define MIUI_INSTALL_LOG "/tmp/install.log"
 
 static struct _miuiInstall miui_install_struct ={
     .pfun = NULL,
@@ -64,13 +74,14 @@ static struct _miuiInstall miui_install_struct ={
 };
 static struct _miuiInstall* pmiui_install = &miui_install_struct;
 
+//echo text when install failed
 void ai_rebuildtxt(int cx,int cy,int cw,int ch){
   char* buffer = NULL;
   struct stat st;
-  if (stat(MIUI_INSTALL_TXT,&st) < 0) return;
+  if (stat(MIUI_INSTALL_LOG,&st) < 0) return;
   buffer = malloc(st.st_size+1);
   if (buffer == NULL) goto done;  
-  FILE* f = fopen(MIUI_INSTALL_TXT, "rb");
+  FILE* f = fopen(MIUI_INSTALL_LOG, "rb");
   if (f == NULL) goto done;
   if (fread(buffer, 1, st.st_size, f) != st.st_size){
       fclose(f);
@@ -87,38 +98,7 @@ done:
   free(buffer);
   
 }
-char * ai_fixlen(char * str,char * addstr){
-  int maxw=ai_prog_w-(ai_prog_or*2)-ag_txtwidth(addstr,0);
-  int clen=ag_txtwidth(str,0);
-  if (clen<maxw) return NULL;
-  int basepos = 0;
-  int i=0;
-  char basestr[64];
-  char allstr[128];
-  memset(basestr,0,64);
-  for (i=strlen(str)-1;i>=0;i--){
-    if (str[i]=='/'){
-      basepos = i-2;
-      snprintf(basestr,63,"%s",&(str[i]));
-      if (i>0)
-        snprintf(allstr,127,"/%c%c..%s",str[1],str[2],basestr);
-      else
-        snprintf(allstr,127,"%s",basestr);
-      break;
-    }
-  }
-  if (basepos>50) basepos=50;
-  do{
-    if (basepos<=0) break;
-    char dirstr[64];
-    memset(dirstr,0,64);
-    memcpy(dirstr,str,basepos);
-    snprintf(allstr,127,"%s..%s",dirstr,basestr);
-    clen=ag_txtwidth(allstr,0);
-    basepos--;
-  }while(clen>=maxw);
-  return strdup(allstr);
-}
+
 void ai_actionsavelog(char * name){
   char* buffer = NULL;
   struct stat st;
@@ -136,16 +116,21 @@ void ai_actionsavelog(char * name){
   fclose(f);
   
   f = fopen(name, "wb");
-  if (f == NULL) goto done;
+  if (f == NULL) 
+  {
+      miui_error("%s open failed!\n", name);
+      goto done;
+  }
   fprintf(f,"%s", buffer);
   fclose(f);
 done:
   if (buffer!=NULL) free(buffer);
 }
+
 void ai_dump_logs(){
   char dumpname[256];
   char msgtext[256];
-  snprintf(dumpname,255,"%s.log.txt",MIUI_NAME);
+  snprintf(dumpname,255,"%s/install.log",RECOVERY_PATH);
   snprintf(msgtext,255,"Install Log will be saved into:\n\n<#060>%s</#>\n\nAre you sure you want to save it?",dumpname);
   
   byte res = aw_confirm(
@@ -174,31 +159,23 @@ static void *miui_install_package(void *cookie){
     int ret = 0;
     if (pmiui_install->pfun != NULL)
     {
+        //run install process
         ret = pmiui_install->pfun(pmiui_install->path, &pmiui_install->wipe_cache, pmiui_install->install_file);
         if (pmiui_install->wipe_cache)
             miuiIntent_send(INTENT_WIPE, 1 , "/cache");
         miuiInstall_set_progress(1);
         if (ret == 0)
         {
+            //sucecess installed
             aw_post(aw_msg(15, 0, 0, 0));
         }
+        //else installed failed
         else aw_post(aw_msg(16, 0, 0, 0));
         return NULL;
     }
-  int vp=0;
-  for (vp=0;vp<=1000;vp++){
-    if (vp==50){
-      ai_progress_fract_c = 0;
-      ai_progress_fract_l = alib_tick();
-      ai_progress_fract_n = -8000;
-      ai_progress_fract   = 0.5/abs(ai_progress_fract_n);
-    }
-    snprintf(ai_progress_text,63,"Persen: %i",vp);
-    usleep(10000);
-  }
-  return NULL;
+    miui_error("pmiui_install->pfun is NULL, force return");
+    return NULL;
 }
-    
 
 static void *ac_progressthread(void *cookie){
   //-- COLORS
@@ -212,7 +189,9 @@ static void *ac_progressthread(void *cookie){
   
   while(ai_run){
     
+    
     //-- CALCULATE PROGRESS BY TIME
+    pthread_mutex_lock(&ai_progress_mutex);
     if(ai_progress_fract_n<0){
       long curtick  = alib_tick();
       int  targetc  = abs(ai_progress_fract_n);
@@ -235,6 +214,9 @@ static void *ac_progressthread(void *cookie){
     if (ai_progress_pos<0) ai_progress_pos=0.0;
     int prog_g = ai_prog_w; //-(ai_prog_r*2);
     int prog_w = round(ai_prog_w*ai_progress_pos);
+
+    pthread_mutex_unlock(&ai_progress_mutex);
+
     
     //-- Percent Text
     float prog_percent = 100 * ai_progress_pos;
@@ -263,6 +245,7 @@ static void *ac_progressthread(void *cookie){
       ai_progress_w = (ai_prog_r*2);
     }
     
+    ai_canvas_lock();
     ag_draw_ex(ai_cv,ai_bg,0,ptxt_y,0,ptxt_y,agw(),agh()-ptxt_y);
     int curr_prog_w = round(ai_prog_ow*ai_progress_pos);
     if (!atheme_draw("img.prograss.fill",ai_cv,ai_prog_ox,ai_prog_oy,curr_prog_w,ai_prog_oh)){
@@ -339,6 +322,7 @@ static void *ac_progressthread(void *cookie){
       }
     }
     
+    ai_canvas_unlock();
     //ag_draw(NULL,ai_cv,0,0);
     //ag_sync();
     aw_draw(ai_win);
@@ -353,6 +337,8 @@ void miui_init_install(
   int px, int py, int pw, int ph
 ){
   //-- Calculate Progress Location&Size
+  
+  pthread_mutex_lock(&ai_progress_mutex);
   ai_prog_oh = agdp()*10;
   ai_prog_oy = 0;
   ai_prog_ox = px;
@@ -385,18 +371,24 @@ void miui_init_install(
   ai_prog_r = ai_prog_or-(1+hlfdp);
   snprintf(ai_progress_text,63,"Initializing...");
   snprintf(ai_progress_info,100,"");
+  pthread_mutex_unlock(&ai_progress_mutex);
   return ;
 }
+void miuiInstall_reset_progress();
 int miui_start_install(
   CANVAS * bg,
   int cx, int cy, int cw, int ch,
   int px, int py, int pw, int ph,
-  CANVAS * cvf, int imgY, int chkFY, int chkFH
+  CANVAS * cvf, int imgY, int chkFY, int chkFH,
+  int echo
 ){
   //-- Save Canvases
   ai_bg = bg;
   
+  int ai_return_status;
 
+  unlink(MIUI_INSTALL_LOG);
+  miuiInstall_reset_progress();
   miui_init_install(bg,cx,cy,cw,ch,px,py,pw,ph); 
   AWINDOWP hWin     = aw(bg);
   ai_win            = hWin;
@@ -416,22 +408,18 @@ int miui_start_install(
     dword msg=aw_dispatch(hWin);
     switch (aw_gm(msg)){
       case 16:{
+        //install failed
+        miuiInstall_set_text("Install failed!\n");
         ondispatch = 0;
         ai_return_status = -1;
 
       }
          break;
       case 15:{
+        //install ok
+        miuiInstall_set_text("Install successs!\n");
         ai_return_status = 0;
         ondispatch = 0;
-      }
-      break;
-      case 6:{
-        ondispatch = 0;
-      }
-      break;
-      case 8:{
-        ai_dump_logs();
       }
       break;
     }
@@ -442,6 +430,50 @@ int miui_start_install(
   pthread_join(threadInstaller,NULL);
   pthread_detach(threadProgress);
   pthread_detach(threadInstaller);
+  if (ai_return_status == -1 || 1 == echo)
+  {
+      int pad = agdp() * 4;
+      
+      ai_canvas_lock();
+      miui_drawnav(bg, 0, py-pad, agw(), ph+(pad * 2));
+      
+      ag_draw_ex(bg, cvf, 0, imgY, 0, 0, cvf->w, cvf->h);
+      ag_draw(&hWin->c, bg, 0, 0);
+      ai_canvas_unlock();
+
+      //Update Textbox
+      ai_rebuildtxt(cx, chkFY, cw, chkFH);
+
+      //Show Next Button
+      ACONTROLP nxtbtn=acbutton(
+        hWin,
+        pad+(agdp()*2)+(cw/2),py,(cw/2)-(agdp()*2),ph,acfg()->text_next,0,
+        6
+      );
+      
+      // Show Dump Button
+      acbutton(
+        hWin,
+        pad,py,(cw/2)-(agdp()*2),ph,"Save Logs",0,
+        8
+      );
+      
+      aw_show(hWin);
+      aw_setfocus(hWin,nxtbtn);
+      ondispatch = 1;
+      while(ondispatch){
+          dword msg = aw_dispatch(hWin);
+          switch(aw_gm(msg))
+          {
+          case 8:
+              ai_dump_logs();
+              break;
+          case 6:
+              ondispatch = 0;
+              break;
+        }
+      }
+  }
   aw_set_on_dialog(0);
   aw_destroy(hWin);
   
@@ -454,37 +486,113 @@ STATUS miuiInstall_init(miuiInstall_fun fun, char* path, int wipe_cache, char* i
     pmiui_install->wipe_cache = wipe_cache;
     pmiui_install->install_file = install_file;
     pmiui_install->pfun = fun;
-
     return RET_OK;
 }
 void miuiInstall_show_progress(float portion, int seconds)
 {
-        float progsize = portion;
-        ai_progress_fract_n = seconds;
-        ai_progress_fract_c = 0;
-        ai_progress_fract_l = alib_tick();
-        if (ai_progress_fract_n>0)
-          ai_progress_fract = progsize/ai_progress_fract_n;
-        else if(ai_progress_fract_n<0)
-          ai_progress_fract = progsize/abs(ai_progress_fract_n);
-        else{
-          ai_progress_fract = 0;
-          ai_progress_pos   += progsize;
-        }
-        return ;
+    pthread_mutex_lock(&ai_progress_mutex); 
+    float progsize = portion;
+    ai_progress_fract_n = abs(seconds);
+    ai_progress_fract_c = 0;
+    ai_progress_fract_l = alib_tick();
+    if (ai_progress_fract_n>0)
+      ai_progress_fract = progsize/ai_progress_fract_n;
+    else if(ai_progress_fract_n<0)
+      ai_progress_fract = progsize/abs(ai_progress_fract_n);
+    else{
+      ai_progress_fract = 0;
+      ai_progress_pos   += progsize;
+    }
+    pthread_mutex_unlock(&ai_progress_mutex); 
+    return ;
 }
 
-inline void miuiInstall_set_progress(float fraction)
+void miuiInstall_set_progress(float fraction)
 {
-        ai_progress_fract   = 0;
-        ai_progress_fract_n = 0;
-        ai_progress_fract_c = 0;
-        ai_progress_pos     = fraction ;
-        return ;
+    pthread_mutex_lock(&ai_progress_mutex); 
+    ai_progress_fract   = 0;
+    ai_progress_fract_n = 0;
+    ai_progress_fract_c = 0;
+    ai_progress_pos     = fraction ;
+    pthread_mutex_unlock(&ai_progress_mutex); 
+    return ;
+}
+void miuiInstall_reset_progress()
+{
+    pthread_mutex_lock(&ai_progress_mutex); 
+    ai_progani_pos      = 0;
+    ai_progress_pos     = 0;
+    ai_progress_fract   = 0;
+    ai_progress_fract_n = 0;
+    ai_progress_fract_c = 0;
+    ai_progress_fract_l = 0;
+    ai_progress_w     = 0;
+    ai_prog_x         = 0;
+    ai_prog_y         = 0;
+    ai_prog_w         = 0;
+    ai_prog_h         = 0;
+    ai_prog_r         = 0;
+    ai_prog_ox        = 0;
+    ai_prog_oy        = 0;
+    ai_prog_ow        = 0;
+    ai_prog_oh        = 0;
+    ai_prog_or        = 0;
+    pthread_mutex_unlock(&ai_progress_mutex); 
+    return ;
 }
 
-inline void miuiInstall_set_text(char *str)
+void miuiInstall_set_text(char *str)
 {
+    ai_canvas_lock();
     actext_appendtxt(ai_buftxt, str);
+    ai_canvas_unlock();
+    FILE * install_log = fopen(MIUI_INSTALL_LOG, "ab+");
+    if (install_log)
+    {
+        fputs(str, install_log);
+        fputc('\n', install_log);
+        fclose(install_log);
+    }
+    return ;
+}
+
+char * ai_fixlen(char * str,char * addstr){
+  int maxw=ai_prog_w-(ai_prog_or*2)-ag_txtwidth(addstr,0);
+  int clen=ag_txtwidth(str,0);
+  if (clen<maxw) return NULL;
+  int basepos = 0;
+  int i=0;
+  char basestr[64];
+  char allstr[128];
+  memset(basestr,0,64);
+  for (i=strlen(str)-1;i>=0;i--){
+    if (str[i]=='/'){
+      basepos = i-2;
+      snprintf(basestr,63,"%s",&(str[i]));
+      if (i>0)
+        snprintf(allstr,127,"/%c%c..%s",str[1],str[2],basestr);
+      else
+        snprintf(allstr,127,"%s",basestr);
+      break;
+    }
+  }
+  if (basepos>50) basepos=50;
+  do{
+    if (basepos<=0) break;
+    char dirstr[64];
+    memset(dirstr,0,64);
+    memcpy(dirstr,str,basepos);
+    snprintf(allstr,127,"%s..%s",dirstr,basestr);
+    clen=ag_txtwidth(allstr,0);
+    basepos--;
+  }while(clen>=maxw);
+  return strdup(allstr);
+}
+//echo text with progress item
+void miuiInstall_set_info(char* file_name)
+{
+
+    char *filename = file_name;
+    snprintf(ai_progress_info,100,"<#selectbg_g></#>%s",filename);
     return ;
 }

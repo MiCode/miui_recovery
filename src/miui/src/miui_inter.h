@@ -704,7 +704,8 @@ int miui_start_install(
   CANVAS * bg,
   int cx, int cy, int cw, int ch,
   int px, int py, int pw, int ph,
-  CANVAS * cvf, int imgY, int chkFY, int chkFH
+  CANVAS * cvf, int imgY, int chkFY, int chkFH,
+  int echo
 );
 
 //

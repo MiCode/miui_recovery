@@ -153,8 +153,24 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
             miuiInstall_set_text(tmpbuf);
         } else if (strcmp(command, "wipe_cache") == 0) {
             *wipe_cache = 1;
-        } else {
-            LOGE("unknown command [%s]\n", command);
+        } else if (strcmp(command, "minzip:") == 0) {
+            char* str = strtok(NULL, "\n");
+            miuiInstall_set_info(str);
+        } 
+        else {
+#if 0
+            snprintf(tmpbuf, 255, "%s", command);
+	        miuiInstall_set_text(tmpbuf);
+            char* str = strtok(NULL, "\n");
+            if (str)
+            {
+                snprintf(tmpbuf, 255, "%s", str);
+                miuiInstall_set_text(tmpbuf);
+            }
+#endif
+            char * str = strtok(NULL, "\n");
+            if (str)
+                LOGD("[%s]:%s\n",command, str);
         }
     }
     fclose(from_child);

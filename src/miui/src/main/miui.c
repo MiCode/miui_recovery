@@ -74,6 +74,11 @@ static struct _menuUnit *tree_init()
     //add info
     assert_if_fail(menuNode_add(g_main_menu, info_ui_init()) == RET_OK);
 
+    struct stat st;
+    if (stat(RECOVERY_PATH, &st) != 0)
+    {
+        mkdir(RECOVERY_PATH, 0755);
+    }
     return g_root_menu;
 }
 STATUS main_ui_init()

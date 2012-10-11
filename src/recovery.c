@@ -468,10 +468,12 @@ static intentResult * intent_reboot(int argc, char *argv[])
 //INTENT_INSTALL install path, wipe_cache, install_file
 static intentResult* intent_install(int argc, char *argv[])
 {
-    return_intent_result_if_fail(argc == 2);
+    return_intent_result_if_fail(argc == 3);
     return_intent_result_if_fail(argv != NULL);
     int wipe_cache = atoi(argv[1]);
+    int echo = atoi(argv[2]);
     miuiInstall_init(&install_package, argv[0], wipe_cache, TEMPORARY_INSTALL_FILE);
+    miui_install(echo);
     //echo install failed
     return miuiIntent_result_set(RET_OK, NULL);
 }
@@ -613,13 +615,9 @@ main(int argc, char **argv) {
     int status = INSTALL_SUCCESS;
 
     if (update_package != NULL) {
-        miuiInstall_init(&install_package, update_package, &wipe_cache,TEMPORARY_INSTALL_FILE);
-        status = miui_install("<~sd.install.name>", "@sd.install");
-        if (status == INSTALL_SUCCESS && wipe_cache) {
-            if (erase_volume("/cache")) {
-                LOGE("Cache wipe (requested by package) failed.");
-            }
-        }
+        miuiIntent_send(INTENT_INSTALL, 3, update_package,wipe_cache, 0);
+        //if echo 0 ,don't print success dialog 
+        status = miuiIntent_result_get_int();
         if (status != INSTALL_SUCCESS) ui_print("Installation aborted.\n");
     } else if (wipe_data) {
         if (device_wipe_data()) status = INSTALL_ERROR;

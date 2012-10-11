@@ -119,8 +119,9 @@ static STATUS _sd_dir_show(struct _menuUnit *p, char *path)
            strlcat(new_path, "/", SD_MAX_PATH);
            strlcat(new_path, item, SD_MAX_PATH);
            int wipe_cache = 0;
-           struct _intentResult* result = miuiIntent_send(INTENT_INSTALL, 2, new_path, &wipe_cache); 
-           miui_install(p->name, p->icon);
+           //if third parameter is 1, echo sucess dialog
+           miuiIntent_send(INTENT_INSTALL, 3, new_path, "0", "1"); 
+           result = -1;//back up layer
            break;
        }
    } while(1);
@@ -138,24 +139,19 @@ static STATUS sd_menu_show(menuUnit *p)
 {
     //ensure_mounte sd path
     struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
-    assert_if_fail(miuiIntent_result_get_int() == 0);
+    //whatever wether sdd is mounted, scan sdcard and go on
+    //assert_if_fail(miuiIntent_result_get_int() == 0);
     int ret ;
     ret = _sd_dir_show(p, "/sdcard");
     if (ret == -1) return MENU_BACK;
     return ret;
-    //_sd_dir_show(path);
-    //if return -1 , return MENU_BACK
 }
 
 static STATUS sd_update_show(menuUnit *p)
 {
-    char new_path[SD_MAX_PATH];
-    snprintf(new_path, SD_MAX_PATH, "%s", "/sdcard/update.zip");
+    char new_path[SD_MAX_PATH] = "/sdcard/update.zip";
     int wipe_cache = 0;
-    struct _intentResult* result = miuiIntent_send(INTENT_INSTALL, 2, new_path, &wipe_cache); 
-    if (strstr(miuiIntent_result_get_string(), "cache") != NULL)
-        miuiIntent_send(INTENT_WIPE, 1, "/cache");
-    miui_install(p->name, p->icon);
+    miuiIntent_send(INTENT_INSTALL, 3, new_path, "0", "1");
     return MENU_BACK;
 }
 struct _menuUnit * sd_ui_init()
