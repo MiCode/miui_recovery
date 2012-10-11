@@ -10,7 +10,7 @@ LOCAL_SRC_FILES := \
     bootloader.c \
     install.c \
     roots.c \
-	firmware.c \
+    firmware.c \
     nandroid.c \
     verifier.c \
     recovery.c
@@ -23,7 +23,7 @@ RECOVERY_API_VERSION := 3
 MYDEFINE_CFLAGS :=  -D_GLIBCXX_DEBUG_PEDANTIC \
                   -DFT2_BUILD_LIBRARY=1 \
                   -D_MIUI_NODEBUG=1 \
-                  -DDARWIN_NO_CARBON 
+                  -DDARWIN_NO_CARBON
 LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION) 
 LOCAL_CFLAGS += $(MYDEFINE_CFLAGS)
 #LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION)

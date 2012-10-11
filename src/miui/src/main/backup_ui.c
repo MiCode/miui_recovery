@@ -29,6 +29,7 @@ static struct _menuUnit* backup_menu = NULL;
 static STATUS backup_restore(char* path)
 {
     return_val_if_fail(p_current != NULL, RET_FAIL);
+    miui_busy_process();
     switch(p_current->result) {
         case RESTORE_ALL:
             miuiIntent_send(INTENT_RESTORE, 7, path, "1", "1", "1", "1", "0", "0");
@@ -203,6 +204,7 @@ static STATUS backup_child_show(menuUnit* p)
     time_tm = gmtime(&timep);
     return_val_if_fail(miuiIntent_result_get_int() == 0, MENU_BACK);
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+        miui_busy_process();
         switch(p->result) {
             case BACKUP_ALL:
                 snprintf(path_name,PATH_MAX, "%s/backup/backup/%02d%02d%02d-%02d%02d",

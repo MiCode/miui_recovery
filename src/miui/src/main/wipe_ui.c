@@ -15,7 +15,7 @@
 STATUS wipe_item_show(menuUnit *p)
 {
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
-        ag_setbusy();
+        miui_busy_process();
         switch(p->result) {
             case WIPE_FACTORY:
                 miuiIntent_send(INTENT_WIPE, 1, "/cache");

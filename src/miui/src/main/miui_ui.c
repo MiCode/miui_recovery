@@ -642,6 +642,29 @@ STATUS miui_pleasewait(char *message) {
 }
 
 
+STATUS miui_busy_process()
+{
+  //-- Set Busy before everythings ready
+  ag_setbusy();
+  miui_isbgredraw = 1;
+
+  int chkH        = agh();
+  int chkY        = miui_setbg_title();
+  int chkW          = agw();
+  char *text = "Please wait ....";
+
+  chkH -= chkY;
+  int big = 1;
+  int txtW = ag_txtwidth(text, big);
+  int txtH = ag_fontheight(big);
+  int txtX = (agw()/2) - (txtW/2);
+  int txtY = (agh()/2) - (txtH/2) - (agdp() *2);
+  ag_rect(&miui_win_bg, 0, chkY, chkW, chkH, acfg()->titlebg_g);
+  ag_textf(&miui_win_bg, txtW, txtX, txtY, text, acfg()->titlefg, big);
+  ag_draw(NULL, &miui_win_bg, 0, 0);
+  ag_sync();
+  return RET_OK;
+}
 
 
 //* 

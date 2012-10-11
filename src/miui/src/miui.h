@@ -135,6 +135,7 @@ STATUS miui_mainmenu(char *title_name, char **item, char **item_icon, char **ite
 STATUS miui_menubox(char *title_name, char **item, int item_cnt);
 STATUS miui_sdmenu(char *title_name, char **item, char **item_sub, int item_cnt); 
 STATUS miui_aboutmenu(char *tite, char *icon, char *content);
+STATUS miui_busy_process();
 //* 
 //* alert
 //*
