@@ -167,6 +167,7 @@ static void *miui_install_package(void *cookie){
         {
             //sucecess installed
             aw_post(aw_msg(15, 0, 0, 0));
+            miui_error("install package failed\n");
         }
         //else installed failed
         else aw_post(aw_msg(16, 0, 0, 0));

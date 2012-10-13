@@ -70,7 +70,7 @@
 
 
 #ifdef DEBUG
-#define miui_debug(fmt...) printf("(pid:%d)", getpid());printf(fmt)
+#define miui_debug(fmt...) printf("(pid:%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
 #else
 #define miui_debug(fmt...) do{}while(0)
 #endif
