@@ -47,7 +47,6 @@ libmiui_common_src_files :=libs/png/png.c \
     src/libs/miui_input.c \
     src/libs/miui_languages.c \
     src/libs/miui_libs.c \
-    src/libs/miui_memory.c \
     src/libs/miui_png.c \
     src/controls/miui_control_button.c \
     src/controls/miui_control_check.c \
@@ -62,7 +61,7 @@ libmiui_common_src_files :=libs/png/png.c \
     src/main/miui_ui.c \
     src/main/common_ui.c \
     src/main/lang_ui.c \
-    src/main/back_ui.c \
+    src/main/sd_file.c \
     src/main/sd_ui.c \
     src/main/power_ui.c \
     src/main/mount_ui.c \

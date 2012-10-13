@@ -6,14 +6,13 @@
 typedef int STATUS;
 #define RET_OK 0
 #define RET_FAIL -1
+#define RET_INVALID_ARG -1
 #define RET_YES 1
 #define RET_NO 0
 #define RET_NULL 0
 
 #define ICON_ENABLE   "@enable"
 #define ICON_DISABLE  "@disable"
-#define miui_printf printf
-#define miui_error printf
 //MAX_MENU_
 #define ITEM_COUNT 128
 #define MENU_BACK ITEM_COUNT 
@@ -22,17 +21,31 @@ typedef int STATUS;
 #define MIUI_LOG_FILE "/tmp/miui_recovery.log"
 #define RECOVERY_PATH "/sdcard/miui_recovery"
 
+#ifndef miui_printf
+#define miui_printf printf
+#endif
+
+#ifndef miui_error
+#define miui_error(fmt...) printf("(%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
+#endif
+
+#ifndef return_val_if_fail
 #define return_val_if_fail(p, val) \
     if (!(p)) { \
        miui_printf("(pid:%d)function %s(line %d) cause %s failed  return %d\n", getpid(), __FUNCTION__, __LINE__, #p,  val);return val;}	
+#endif
 
-
+#ifndef return_null_if_fail
 #define return_null_if_fail(p) \
     if (!(p)) { \
-       miui_printf("(pid:%d)function %s(line %d) " #p " \n",getpid(), __FUNCTION__, __LINE__);return NULL;}
+       miui_printf("(pid:%d)[%s]function %s(line %d) " #p " \n",getpid(), __FILE__, __FUNCTION__, __LINE__);return NULL;}
+#endif
+
+#ifndef assert_if_fail
 #define assert_if_fail(p) \
     if (!(p)) { \
-       miui_printf("(pid:%d)function %s(line %d) " #p " \n",getpid(),  __FUNCTION__, __LINE__);}
+       miui_printf("(pid:%d)[%s]function %s(line %d) " #p " \n",getpid(), __FILE__,  __FUNCTION__, __LINE__);}
+#endif
 
 
 #define MENU_LEN 32 //international, ~ or direct print string;

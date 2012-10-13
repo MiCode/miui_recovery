@@ -615,7 +615,8 @@ main(int argc, char **argv) {
     int status = INSTALL_SUCCESS;
 
     if (update_package != NULL) {
-        miuiIntent_send(INTENT_INSTALL, 3, update_package,wipe_cache, 0);
+        if (wipe_cache) erase_volume("/cache");
+        miuiIntent_send(INTENT_INSTALL, 3, update_package,"0", "0");
         //if echo 0 ,don't print success dialog 
         status = miuiIntent_result_get_int();
         if (status != INSTALL_SUCCESS) ui_print("Installation aborted.\n");

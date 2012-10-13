@@ -14,19 +14,6 @@
 #ifndef _MIUI_INTENT_H
 #define _MIUI_INTENT_H
 
-#ifndef return_val_if_fail
-#define miui_printf printf
-#define miui_error printf
-#define return_val_if_fail(p, val) \
-    if (!(p)) { \
-        miui_printf("function %s(line %d) cause %s failed  return %d\n", __FUNCTION__, __LINE__, #p,  val);return val;}	
-#define return_null_if_fail(p) \
-    if (!(p)) { \
-        miui_printf("function %s(line %d) " #p " \n", __FUNCTION__, __LINE__);return NULL;}	
-#define assert_if_fail(p) \
-    if (!(p)) { \
-        miui_printf("function %s(line %d) " #p " \n",  __FUNCTION__, __LINE__);}
-#endif
 
 typedef enum _intentType{
     INTENT_MOUNT,

@@ -31,8 +31,7 @@
 static byte      ai_run              = 0;
 static int       ai_progani_pos      = 0;
 static float     ai_progress_pos     = 0;
-static float     ai_progress_fract   = 0;
-static int       ai_progress_fract_n = 0;
+static float     ai_progress_fract   = 0; static int       ai_progress_fract_n = 0;
 static int       ai_progress_fract_c = 0;
 static long      ai_progress_fract_l = 0;
 static int       ai_progress_w     = 0;
@@ -382,13 +381,13 @@ int miui_start_install(
   CANVAS * cvf, int imgY, int chkFY, int chkFH,
   int echo
 ){
+  int ai_return_status = 0;
   //-- Save Canvases
   ai_bg = bg;
-  
-  int ai_return_status;
 
   unlink(MIUI_INSTALL_LOG);
   miuiInstall_reset_progress();
+  ai_canvas_lock();
   miui_init_install(bg,cx,cy,cw,ch,px,py,pw,ph); 
   AWINDOWP hWin     = aw(bg);
   ai_win            = hWin;
@@ -398,6 +397,8 @@ int miui_start_install(
   ai_run            = 1;
   ai_buftxt         = actext(hWin,cx,cy+(agdp()*5),cw,ch-(agdp()*15),NULL,0);
   aw_set_on_dialog(1);
+  ai_canvas_unlock();
+  
   aw_show(hWin);
   
   pthread_t threadProgress, threadInstaller;
@@ -509,12 +510,12 @@ void miuiInstall_show_progress(float portion, int seconds)
 
 void miuiInstall_set_progress(float fraction)
 {
-    pthread_mutex_lock(&ai_progress_mutex); 
+    pthread_mutex_lock(&ai_progress_mutex);
     ai_progress_fract   = 0;
     ai_progress_fract_n = 0;
     ai_progress_fract_c = 0;
     ai_progress_pos     = fraction ;
-    pthread_mutex_unlock(&ai_progress_mutex); 
+    pthread_mutex_unlock(&ai_progress_mutex);
     return ;
 }
 void miuiInstall_reset_progress()
@@ -537,7 +538,7 @@ void miuiInstall_reset_progress()
     ai_prog_ow        = 0;
     ai_prog_oh        = 0;
     ai_prog_or        = 0;
-    pthread_mutex_unlock(&ai_progress_mutex); 
+    pthread_mutex_unlock(&ai_progress_mutex);
     return ;
 }
 
@@ -593,6 +594,6 @@ void miuiInstall_set_info(char* file_name)
 {
 
     char *filename = file_name;
-    snprintf(ai_progress_info,100,"<#selectbg_g></#>%s",filename);
+    snprintf(ai_progress_info,100,"%s",filename);
     return ;
 }

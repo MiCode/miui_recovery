@@ -277,30 +277,6 @@ really_install_package(const char *path, int* wipe_cache)
     ui_print("Opening update package...\n");
 
     int err;
-#if 0
-    int numKeys;
-    RSAPublicKey* loadedKeys = load_keys(PUBLIC_KEYS_FILE, &numKeys);
-    if (loadedKeys == NULL) {
-        LOGE("Failed to load keys\n");
-        return INSTALL_CORRUPT;
-    }
-    LOGI("%d key(s) loaded from %s\n", numKeys, PUBLIC_KEYS_FILE);
-
-    // Give verification half the progress bar...
-    ui_print("Verifying update package...\n");
-    ui_show_progress(
-            VERIFICATION_PROGRESS_FRACTION,
-            VERIFICATION_PROGRESS_TIME);
-
-    err = verify_file(path, loadedKeys, numKeys);
-    free(loadedKeys);
-    LOGI("verify_file returned %d\n", err);
-    if (err != VERIFY_SUCCESS) {
-        LOGE("signature verification failed\n");
-        return INSTALL_CORRUPT;
-    }
-#endif
-
     /* Try to open the package.
      */
     ZipArchive zip;

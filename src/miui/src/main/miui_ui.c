@@ -1981,6 +1981,7 @@ STATUS miui_install(int echo) {
   //-- Init Strings
   char text[256];                   //-- Text When Installing
   char finish_text[256];            //-- Text After Installing
+  char * icon = INSTALL_ICON;
   snprintf(text,256,"%s", INSTALL_NAME);
   snprintf(finish_text,256,"%s", INSTALL_NAME);
   
@@ -2002,7 +2003,7 @@ STATUS miui_install(int echo) {
   int  imgX       = pad;
   int  tifY       = chkY;
   int  imgY       = chkY;
-  if (apng_load(&ap,INSTALL_ICON)){
+  if (apng_load(&ap,icon)){
     imgE  = 1;
     imgW  = min(ap.w,agdp()*30);
     imgH  = min(ap.h,agdp()*30);
@@ -2025,6 +2026,10 @@ STATUS miui_install(int echo) {
     }
     apng_draw_ex(&miui_win_bg,&ap,imgX,imgY,0,0,imgW,imgH);
     apng_close(&ap);
+  }
+  else 
+  {
+      miui_error("load %s icon error!\n", icon);
   }
   
   //-- Finished Text Canvas

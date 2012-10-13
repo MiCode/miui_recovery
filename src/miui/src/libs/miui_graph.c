@@ -324,7 +324,7 @@ static void *ag_thread(void *cookie){
     else{
       usleep(16600);
       if (!ag_isrun) break;
-      ag_refreshrate();
+      if (!ag_refreshlock) ag_refreshrate();
     }
   }
   return NULL;

@@ -56,11 +56,17 @@
   #include <arm_neon.h>
 #endif
 
-// Defined in build command
 //#define _MIUI_NODEBUG
+#ifndef malloc
+#define malloc(x) malloc(x)
 
-#include "miui_mem.h"
+#define realloc(x,s) realloc(x,s)
+#endif
 
+#ifndef free
+#define free(x) if(x != NULL){ \
+                   free(x);x=NULL;}
+#endif
 
 
 #ifdef DEBUG
@@ -72,7 +78,7 @@
 #define miui_printf printf
 #endif
 #ifndef miui_error
-#define miui_error printf
+#define miui_error(fmt...) printf("(%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
 #endif
 #ifndef return_val_if_fail
 #define return_val_if_fail(p, val) \
@@ -82,12 +88,12 @@
 #ifndef return_null_if_fail
 #define return_null_if_fail(p) \
 	if (!(p)) { \
-	   miui_printf("(pid:%d)function %s(line %d) " #p " \n",getpid(), __FUNCTION__, __LINE__);return NULL;}	
+	   miui_printf("(pid:%d)[%s]function %s(line %d) " #p " \n",getpid(),__FILE__,  __FUNCTION__, __LINE__);return NULL;}	
 #endif
 #ifndef assert_if_fail
 #define assert_if_fail(p) \
 	if (!(p)) { \
-	   miui_printf("(pid:%d)function %s(line %d) " #p " \n",getpid(),  __FUNCTION__, __LINE__);}	
+	   miui_printf("(pid:%d)[%s]function %s(line %d) " #p " \n",getpid(), __FILE__,  __FUNCTION__, __LINE__);}	
 #endif
 //#######################################################//
 //##                                                   ##//
@@ -866,6 +872,11 @@ ACONTROLP acmenu(
 );
 byte acmenu_add(ACONTROLP ctl,char * title, char *img, char *img_append);
 int acmenu_getselectedindex(ACONTROLP ctl);
+
+
+typedef int (*fileFun)(char * file_name, int len, void *data);
+typedef int (*fileFilterFun)(char *file, int file_len);
+int file_scan(char *path, int path_len, char * title, int title_len, fileFun fun, void* data, fileFilterFun filter_fun);
 
 //**********[ MIUI LOGGING ]**********//
 #define _MIUI_DEBUG_TAG "miui"

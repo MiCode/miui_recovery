@@ -110,7 +110,7 @@ static void *ac_pushwaitthread(void *cookie){
     if (dt->moveY[0]==-50){ isvalid=0; break; }
     usleep(10);
   }
-#if 0
+#if 1
   if ((isvalid)&&(dt->moveY[0]!=-50)){
     dt->flagpointer[0]=dt->flagvalue;
     dt->ctl->ondraw(dt->ctl);
@@ -119,6 +119,7 @@ static void *ac_pushwaitthread(void *cookie){
 #endif
   dt->ctl->win->threadnum--;
   free(dt);
+  miui_debug("pthread %s end...\n", __FUNCTION__);
   return NULL;
 }
 void ac_regpushwait(
