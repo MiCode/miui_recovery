@@ -113,7 +113,9 @@ int miui_setbg(char * titlev){
   pthread_mutex_unlock(&title_mutex);
   return 2*elmP + ag_fontheight(1);
 }
+#ifndef BATTERY_CAPACITY_PATH //Define battery capacity for different device
 #define BATTERY_CAPACITY_PATH "/sys/class/power_supply/battery/capacity"
+#endif
 
 static int read_from_file(const char* path, char* buf, size_t size) {
     int fd = open(path, O_RDONLY, 0);
