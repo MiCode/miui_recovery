@@ -44,7 +44,7 @@ time.name=时间
 sd.install.name=从SD卡选择zip包安装
 sd.update.name=安装update.zip
 
-power.name=电源
+power.name=电源菜单
 power.title=电源相关操作
 reboot.null=重启
 reboot.null.title=现在重启
@@ -75,7 +75,7 @@ format.boot.name=格式化boot分区
 format.sdcard.name=格式化sdcard
 format.all.name=全部格式化（不包括boot和sdcard）
 
-backup.name=备份
+backup.name=备份与恢复
 backup.title=备份到SD卡或者从SD卡恢复
 backup.backup.name=备份
 backup.restore.name=恢复
