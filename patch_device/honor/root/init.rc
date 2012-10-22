@@ -1,0 +1,71 @@
+on early-init
+    start ueventd
+
+on init
+    export PATH /sbin
+    export ANDROID_ROOT /system
+    export ANDROID_DATA /data
+    export EXTERNAL_STORAGE /sdcard
+    export LD_LIBRARY_PATH /vendor/lib
+
+    symlink /system/etc /etc
+
+    mkdir /cust
+    mkdir /cache
+    mkdir /data
+    mkdir /misc
+    mkdir /HWUserData
+    mkdir /system
+    mkdir /sdcard
+
+    mount /tmp /tmp tmpfs
+
+on boot
+
+    ifup lo
+    hostname localhost
+    domainname localdomain
+
+    class_start default
+
+service rmt_storage /sbin/rmt_storage
+
+service ueventd /sbin/ueventd
+    critical
+
+
+service recovery /sbin/recovery
+
+service charge	/sbin/charge
+    disabled
+
+service adbd /sbin/adbd recovery
+    disabled
+
+on property:ro.debuggable=1
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12D1
+    write /sys/class/android_usb/android0/idProduct 1037 
+    write /sys/class/android_usb/android0/iManufacturer huawei
+    write /sys/class/android_usb/android0/iProduct U8860
+    write /sys/class/android_usb/android0/iSerial cleanup 
+    write /sys/class/android_usb/android0/functions mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1037
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 3
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 2
+    write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions $sys.usb.config
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
+
+
+on property:persist.service.adb.enable=0
+    stop adbd
+
