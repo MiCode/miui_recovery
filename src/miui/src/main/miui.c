@@ -101,16 +101,6 @@ STATUS main_ui_init()
 
     //miui_ui start
     miui_ui_start();
-    //enable touch event , set calibrate
-    //aw_calibtools(NULL);
-    //atouch_set_calibrate(1, 0, 1, 0);
-    //atouch_sethack(1);
-    //for glaxy nexus 
-    //miui_calibrate(5, "2.0246", "28", "1.2555", "-3", "yes");
-    //for HTC one S
-    //miui_calibrate(5, "0.8627", "49", "0.9672", "22", "yes");
-    //for one s
-    //init tree, register touch event
     tree_init();
 
 

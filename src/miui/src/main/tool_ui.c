@@ -55,11 +55,6 @@ static STATUS log_menu_show(struct _menuUnit* p)
     }
     return MENU_BACK;
 }
-static STATUS calibrate_menu_show(struct _menuUnit* p)
-{
-    aw_calibtools(NULL);
-    return MENU_BACK;
-}
 struct _menuUnit* tool_ui_init()
 {
     struct _menuUnit *p = common_ui_init();
@@ -87,12 +82,6 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_name(temp, "<~tool.permission.name>"); 
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
-    assert_if_fail(menuNode_add(p, temp) == RET_OK);
-    //calibrate
-    temp = common_ui_init();
-    menuUnit_set_name(temp, "<~tool.calibrate.name>"); 
-    menuUnit_set_icon(temp, "@tool.calibrate");
-    menuUnit_set_show(temp, &calibrate_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     return p;
 }

@@ -667,38 +667,6 @@ STATUS miui_busy_process()
 }
 
 
-//* 
-//* calibrate
-//*
-STATUS miui_calibrate(int argc, char *format, ...) {
-  if ((argc != 4)&&(argc != 5)) {
-    return miui_error("%s() expects 4 or 5 args (div-x, add-x, div-y, add-y, usehack), got %d", __FUNCTION__, argc);
-  }
-  
-  //-- This is Busy Function
-  ag_setbusy();
-  
-  //-- Get Arguments
-  _INITARGS();
-  
-  //-- Use Touch Screen Hack, for device without touch-up event
-  if (argc==5){
-    if (strcmp(args[4],"yes")==0)
-      atouch_sethack(1);
-    else
-      atouch_sethack(0);
-  }else
-    atouch_sethack(0);
-  
-  //-- Set Calibration Data
-  atouch_set_calibrate((float) strtof(args[0],NULL),atoi(args[1]),(float) strtof(args[2],NULL),atoi(args[3]));
-  
-  //-- Release Arguments
-  _FREEARGS();
-
-  //-- Return
-  return RET_OK;
-}
 
 //* 
 //* setcolor
@@ -2089,10 +2057,6 @@ static void *time_echo_thread(void *cookie){
 }
 #endif
 
-/**************MIUI REGISTER*******************/
-//* 
-//* calibrate
-//*
 #define MIUI_INITARGS() \
           char** args = ReadVarArgs(state, argc, argv); \
           if (args==NULL) return NULL;
@@ -2175,32 +2139,6 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
 }
 
 Value* MIUI_CALIBRATE(const char* name, State* state, int argc, Expr* argv[]) {
-  if ((argc != 4)&&(argc != 5)) {
-    miui_error("%s() expects 4 or 5 args (div-x, add-x, div-y, add-y, usehack), got %d", name, argc);
-    return StringValue(strdup(""));
-  }
-  
-  //-- This is Busy Function
-  ag_setbusy();
-  
-  //-- Get Arguments
-  MIUI_INITARGS();
-  
-  //-- Use Touch Screen Hack, for device without touch-up event
-  if (argc==5){
-    if (strcmp(args[4],"yes")==0)
-      atouch_sethack(1);
-    else
-      atouch_sethack(0);
-  }else
-    atouch_sethack(0);
-  
-  //-- Set Calibration Data
-  atouch_set_calibrate((float) strtof(args[0],NULL),atoi(args[1]),(float) strtof(args[2],NULL),atoi(args[3]));
-  
-  //-- Release Arguments
-  MIUI_FREEARGS();
-
   //-- Return
   return StringValue(strdup(""));
 }
@@ -2222,7 +2160,6 @@ int miui_ui_config()
     struct stat file_stat;
     if (stat(MIUI_DEVICE_FILE, &file_stat) < 0)
     {
-        aw_calibtools(NULL);
         miui_printf("stat file error, file is not exist");
         return -1;
     }

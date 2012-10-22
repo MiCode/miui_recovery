@@ -114,7 +114,6 @@ char * miui_getprop(char *file, char *key);
 char * miui_gettmpprop(char *file, char *key);
 char * miui_resread(char *file);
 STATUS miui_pleasewait(char *message);
-STATUS miui_calibrate(int argc, char *format, ...);
 STATUS miui_setcolor(char *item, char *val);
 //* 
 //* ini_get

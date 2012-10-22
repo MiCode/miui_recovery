@@ -654,10 +654,9 @@ byte ag_text_exl(CANVAS *_b,int maxwidth,int x,int y, const char *s, color cl_de
 byte    atouch_gethack();
 void    atouch_sethack(byte t);
 struct input_event;
-void    atouch_set_calibrate(float dx, int ax, float dy, int ay);
 int     atouch_wait(ATEV *atev);
 int     atouch_wait_ex(ATEV *atev, byte calibratingtouch);
-void    atouch_send_message(dword msg);
+byte    atouch_send_message(dword msg);
 int     vibrate(int timeout_ms);
 void    ui_init();
 int     ev_init(void);
@@ -670,7 +669,6 @@ int     touchX();
 int     touchY();
 int     ontouch();
 void    set_key_pressed(int key,char val);
-int     atmsg();
 
 //
 // MIUI System Library Functions
@@ -739,10 +737,6 @@ dword     aw_dispatch(AWINDOWP win);                        // Dispatch Event, M
 byte      aw_touchoncontrol(ACONTROLP ctl, int x, int y);   // Calculate Touch Position
 byte      aw_setfocus(AWINDOWP win,ACONTROLP ctl);          // Set Focus into Control
 void      aw_set_on_dialog(byte d);
-void      atouch_plaincalibrate();
-void      atouch_restorecalibrate();
-void      aw_calibtools(AWINDOWP parent);
-//
 // MIUI Window Dialog Controls
 //
 void aw_alert(AWINDOWP parent,char * titlev,char * textv,char * img,char * ok_text);

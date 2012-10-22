@@ -98,7 +98,6 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
-tool.calibrate.name=calibrate
 
 info.name=info
 info.title=information of miui recovery
