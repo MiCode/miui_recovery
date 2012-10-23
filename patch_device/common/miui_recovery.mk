@@ -13,15 +13,15 @@ miui_recoveryimage_args := \
 	--kernel $(MIUI_KERNEL) \
 	--ramdisk $(miui_recovery_ramdisk)
 
-ifdef MIUI_KERNEL
+ifneq ($(MIUI_KERNEL_CMDLINE),)
 	miui_recoveryimage_args += --cmdline "$(MIUI_KERNEL_CMDLINE)"
 endif
 
-ifdef MIUI_KERNEL_BASE
+ifneq ($(MIUI_KERNEL_BASE),)
 	miui_recoveryimage_args += --base $(MIUI_KERNEL_BASE)
 endif
 
-ifdef MIUI_KERNEL_PAGESIZE
+ifneq ($(MIUI_KERNEL_PAGESIZE),)
 	miui_recoveryimage_args += --pagesize $(MIUI_KERNEL_PAGESIZE)
 endif
 #BUILD_RECOVERY_BEFORE := $(filter $(TARGET_ROOT_OUT)/sbin/%, $(ALL_DEFAULT_INSTALLED_MODULES))
