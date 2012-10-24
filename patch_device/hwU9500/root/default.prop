@@ -1,0 +1,13 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.secure=0
+ro.allow.mock.location=1
+ro.debuggable=1
+persist.sys.usb.config=mass_storage,adb,diag
+ro.product.device=front
+ro.product.device=front
+ro.build.product=front
+ro.build.user=Geno
+ro.build.host=genokolar@desktop
+#制作者：安智网-Genokolar
