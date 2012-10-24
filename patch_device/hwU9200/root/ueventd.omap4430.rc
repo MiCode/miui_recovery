@@ -1,0 +1,28 @@
+#for DSSCOMP
+/dev/dsscomp              0666   system     system
+/dev/tiler                0666   system     system
+
+#for SYSLINK
+/dev/rpmsg-omx0           0660   drmrpc    drmrpc
+/dev/rpmsg-omx1           0660   drmrpc    drmrpc
+/dev/rproc_user           0660   drmrpc    drmrpc
+/dev/tf_driver            0660   drmrpc    drmrpc
+/dev/tf_ctrl              0660   drmrpc    drmrpc
+
+#DTS2011120302674    z00190171   2011/12/03  modify for sensors update version.I begin
+# for Sensor HAL
+#/dev/akm8973              0660   system     system
+#/dev/accelerometer        0660   system     system
+
+/dev/akm8975_aot		  0660   system     system
+/dev/akm8975_dev      	  0660   system     system
+
+/dev/proximity		  0660   system     system
+/dev/light    	 	  0660   system     system
+#DTS2011120302674    z00190171   2011/12/03   modify for sensors update version.I end
+
+
+#DTS2011122204129    m00109739   2011/12/22  modify for dynamic gamma begin
+#for lcd_tuning
+/dev/pri_lcd              0666   system     system
+#DTS2011122204129    m00109739   2011/12/22  modify for dynamic gamma end

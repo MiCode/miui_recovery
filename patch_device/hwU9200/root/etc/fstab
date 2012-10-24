@@ -1,0 +1,4 @@
+/dev/block/platform/omap/omap_hsmmc.1/by-name/cache /cache ext4 rw
+/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata /data ext4 rw
+/dev/block/platform/omap/omap_hsmmc.1/by-name/system /system ext4 rw
+/dev/block/mmcblk1p1 /sdcard vfat rw
