@@ -321,12 +321,14 @@ int atouch_wait_ex(ATEV *atev, byte calibratingtouch){
         case KEY_F21:
         case KEY_SEND:
         case KEY_END:
-          return ATEV_SELECT; break;
+        case KEY_HOMEPAGE:
+
+        case KEY_SEARCH:
+        case KEY_MENU:
+           return ATEV_SELECT; break;
         
         /* SHOW MENU */
-        case KEY_SEARCH:
         case 229:
-        case KEY_MENU:
           return ATEV_MENU; break;
         
         /* BACK */
