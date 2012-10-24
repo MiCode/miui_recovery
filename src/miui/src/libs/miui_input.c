@@ -162,8 +162,35 @@ static void *ev_input_thread(void *cookie){
 void ui_init(){
   ev_init();
 }
+
+/*
+ *function:filter out unused input event;
+ *para:name->the file name ,execude path, no prefix
+ *ins: "input0"
+ *return value: 1 if filter out
+ *              0 filter in
+ *
+ */
+int event_filter(char *name)
+{
+    //if have filter ,return 1
+    return_val_if_fail(strncmp(name, "event", 5) == 0, 0);
+    return_val_if_fail(strlen >= 5, 0);
+    return_val_if_fail(name != NULL, 0);
+    u32 mask = acfg()->input_filter;//from acfg()->input_filter
+    char a= *(name + 5);//"inputn", extract n
+    return_val_if_fail(a >= 0x30, 0);
+    return_val_if_fail(a < 0x40, 0);
+    byte i = a - 0x30;
+    return_val_if_fail(i > 0, 0);
+    return_val_if_fail(i < 32, 0);
+    if((mask>>i) & 0x1) {
+        return 1; //filter out
+}
+    return 0;
+}
 int ev_init(){
-  aipInit();
+  aipInit(&event_filter);
   
   //-- Create Watcher Thread
   evthread_active = 1;

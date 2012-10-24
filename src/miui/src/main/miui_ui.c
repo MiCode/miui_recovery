@@ -114,6 +114,7 @@ int miui_setbg(char * titlev){
   return 2*elmP + ag_fontheight(1);
 }
 #define BATTERY_CAPACITY_PATH "/sys/class/power_supply/battery/capacity"
+#define BATTERY_CAPACITY_PATH_1 "/sys/class/power_supply/Battery/capacity"
 
 static int read_from_file(const char* path, char* buf, size_t size) {
     int fd = open(path, O_RDONLY, 0);
@@ -173,7 +174,16 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
 static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 {
     char batt_name[8];
-    snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
+    struct stat st;
+    if (stat(BATTERY_CAPACITY_PATH, &st) >= 0)
+        snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
+    else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0)
+        snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH_1));
+    else {
+        miui_error("BATTERY_CAPACITY_PATH error\n"); 
+		snprintf(batt_name, 8, "%2d", 0);
+    }
+
     int txtX = x + 4;
     int txtY = y;
     int txtH = ag_fontheight(0);
@@ -490,9 +500,6 @@ STATUS  miui_theme(char *theme) {
   //-- This is Busy Function
   ag_setbusy();
   
-  
-  acfg_init_ex(1);
-  
   if ((strcmp(theme,"")==0)||(strcmp(theme,"generic")==0)){
     //-- Background Should Be Redrawed
     miui_isbgredraw = 1;
@@ -768,80 +775,6 @@ char * miui_ini_get(char *item) {
   //-- Return
   return strdup(retval);
 }
-
-//* 
-//* ini_set
-//*
-STATUS miui_ini_set(char *item, char *value) {
-  return_val_if_fail(item != NULL, RET_FAIL);
-  return_val_if_fail(value != NULL, RET_FAIL); 
-  //-- This is Busy Function
-  ag_setbusy();
-  
-  
-  //-- Convert Arguments
-  byte valint = (byte) min(atoi(value),255);
-  int  valkey = (int) atoi(value);
-  
-  //-- Set Property
-  if      (strcmp(item,"roundsize") == 0)          acfg()->roundsz=valint;
-  else if (strcmp(item,"button_roundsize") == 0)   acfg()->btnroundsz=valint;
-  else if (strcmp(item,"window_roundsize") == 0)   acfg()->winroundsz=valint;
-  else if (strcmp(item,"transition_frame") == 0)   acfg()->fadeframes=valint;
-
-  else if (strcmp(item,"text_ok") == 0)            snprintf(acfg()->text_ok,64,"%s",value);
-  else if (strcmp(item,"text_next") == 0)          snprintf(acfg()->text_next,64,"%s",value);
-  else if (strcmp(item,"text_back") == 0)          snprintf(acfg()->text_back,64,"%s",value);
-
-  else if (strcmp(item,"text_yes") == 0)           snprintf(acfg()->text_yes,64,"%s",value);
-  else if (strcmp(item,"text_no") == 0)            snprintf(acfg()->text_no,64,"%s",value);
-  else if (strcmp(item,"text_about") == 0)         snprintf(acfg()->text_about,64,"%s",value);
-  else if (strcmp(item,"text_calibrating") == 0)   snprintf(acfg()->text_calibrating,64,"%s",value);
-  else if (strcmp(item,"text_quit") == 0)          snprintf(acfg()->text_quit,64,"%s",value);
-  else if (strcmp(item,"text_quit_msg") == 0)      snprintf(acfg()->text_quit_msg,128,"%s",value);
-    
-  else if (strcmp(item,"rom_name") == 0)           snprintf(acfg()->rom_name,128,"%s",value);
-  else if (strcmp(item,"rom_version") == 0)        snprintf(acfg()->rom_version,128,"%s",value);
-  else if (strcmp(item,"rom_author") == 0)         snprintf(acfg()->rom_author,128,"%s",value);
-  else if (strcmp(item,"rom_device") == 0)         snprintf(acfg()->rom_device,128,"%s",value);
-  else if (strcmp(item,"rom_date") == 0)           snprintf(acfg()->rom_date,128,"%s",value);
-  
-  
-  else if (strcmp(item,"customkeycode_up")==0)     acfg()->ckey_up=valkey;
-  else if (strcmp(item,"customkeycode_down")==0)   acfg()->ckey_down=valkey;
-  else if (strcmp(item,"customkeycode_select")==0) acfg()->ckey_select=valkey;
-  else if (strcmp(item,"customkeycode_back") == 0) acfg()->ckey_back=valkey;
-  else if (strcmp(item,"customkeycode_menu") == 0) acfg()->ckey_menu=valkey;
-    
-  //-- Force Color Space  
-  else if (strcmp(item,"force_colorspace") == 0){
-    if (strcasecmp(value,"rgba")==0){
-      ag_changecolorspace(0,8,16,24);
-    }
-    else if(strcasecmp(value,"abgr")==0){
-      ag_changecolorspace(24,16,8,0);
-    }
-    else if(strcasecmp(value,"argb")==0){
-      ag_changecolorspace(8,16,24,0);
-    }
-    else if(strcasecmp(value,"bgra")==0){
-      ag_changecolorspace(16,8,0,24);
-    }
-  }
-  else if (strcmp(item,"dp") == 0){
-    set_agdp(valint);
-  }
-  
-  
-  //-- Background Should Be Redrawed
-  miui_isbgredraw = 1;
-  
-
-  //-- Return
-  return RET_OK;
-}
-
-
 
 //* 
 //* viewbox
@@ -2110,6 +2043,11 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
   else if (strcmp(args[0],"customkeycode_select")==0) acfg()->ckey_select=valkey;
   else if (strcmp(args[0],"customkeycode_back") == 0) acfg()->ckey_back=valkey;
   else if (strcmp(args[0],"customkeycode_menu") == 0) acfg()->ckey_menu=valkey;
+  //add for input event filter
+  else if (strcmp(args[0], "input_filter")  == 0) {
+     acfg()->input_filter = valkey;
+	 miui_debug("input is 0x%x\n", acfg()->input_filter);
+  }
     
   //-- Force Color Space  
   else if (strcmp(args[0],"force_colorspace") == 0){
@@ -2210,13 +2148,10 @@ STATUS miui_ui_start()
     }
     ag_canvas(&miui_win_bg, agw(), agh());
     ag_canvas(&miui_bg, agw(), agh());
-    acfg_init();
     miui_theme("miui4");
     ag_loadsmallfont("fonts/small", 0, NULL);
     ag_loadbigfont("fonts/big", 0, NULL);
     alang_release();
-    //read config file and execute it
-    miui_ui_config();
     return RET_OK;
 }
 STATUS miui_ui_end()

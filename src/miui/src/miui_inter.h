@@ -70,7 +70,7 @@
 
 
 #ifdef DEBUG
-#define miui_debug(fmt...) printf("(pid:%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
+#define miui_debug(fmt...) printf("(pid:%d)[%s]%s:%d::", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
 #else
 #define miui_debug(fmt...) do{}while(0)
 #endif
@@ -78,7 +78,7 @@
 #define miui_printf printf
 #endif
 #ifndef miui_error
-#define miui_error(fmt...) printf("(%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
+#define miui_error(fmt...) printf("(%d)[%s]%s:%d::", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
 #endif
 #ifndef return_val_if_fail
 #define return_val_if_fail(p, val) \
@@ -107,6 +107,7 @@
 #define dword             unsigned int
 #define word              unsigned short
 #define color             unsigned short
+typedef int u32;
 
 
 //
@@ -385,6 +386,7 @@ typedef struct  {
   int ckey_select;
   int ckey_back;
   int ckey_menu;
+  u32 input_filter;
   
   // THEME
   PNGCANVASP theme[MIUI_THEME_CNT];

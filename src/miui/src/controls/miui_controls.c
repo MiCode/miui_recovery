@@ -62,49 +62,49 @@ void acfg_init_ex(byte themeonly){
   acfg_var.selectbg     = ag_rgb(158,228,32);
   acfg_var.selectbg_g   = ag_rgb(76,120,14);
   acfg_var.selectfg     = ag_rgb(0xff,0xff,0xff);
-  
+
   acfg_var.titlebg      = ag_rgb(0x44,0x44,0x44);
   acfg_var.titlebg_g    = ag_rgb(0x11,0x11,0x11);
   acfg_var.titlefg      = ag_rgb(0xff,0xff,0xff);
-  
+
   acfg_var.dlgtitlebg   = acfg_var.titlebg;
   acfg_var.dlgtitlebg_g = acfg_var.titlebg_g;
   acfg_var.dlgtitlefg   = acfg_var.titlefg;
-  
+
   acfg_var.navbg        = ag_rgb(0x66,0x66,0x66);
   acfg_var.navbg_g      = ag_rgb(0x33,0x33,0x33);
-  
+
   acfg_var.scrollbar    = ag_rgb(0x66,0x66,0x66);
-  
+
   acfg_var.border       = ag_rgb(0x99,0x99,0x99);
   acfg_var.border_g     = ag_rgb(0x66,0x66,0x66);
-  
+
   acfg_var.progressglow = acfg_var.selectbg;
-  
+
   acfg_var.winroundsz   = 4;
   acfg_var.roundsz      = 3;
   acfg_var.btnroundsz   = 2;
   acfg_var.fadeframes   = 5;
-  
+
   memset(acfg_var.themename, 0x00, 64);
-  
-  if (themeonly==0){
-    acfg_reset_text();
-    
-    snprintf(acfg_var.rom_name,128,MIUI_NAME);
-    snprintf(acfg_var.rom_version,128,MIUI_VERSION);
-    snprintf(acfg_var.rom_author,128,MIUI_BUILD_A);
-    snprintf(acfg_var.rom_device,128,"Not Defined");
-    snprintf(acfg_var.rom_date,128,MIUI_BUILD);
-    
-    
-    acfg_var.ckey_up      = 0;
-    acfg_var.ckey_down    = 0;
-    acfg_var.ckey_select  = 0;
-    acfg_var.ckey_back    = 0;
-    acfg_var.ckey_menu    = 0;
-  }
-  
+
+  acfg_var.input_filter = 0;
+
+  acfg_reset_text();
+
+  snprintf(acfg_var.rom_name,128,MIUI_NAME);
+  snprintf(acfg_var.rom_version,128,MIUI_VERSION);
+  snprintf(acfg_var.rom_author,128,MIUI_BUILD_A);
+  snprintf(acfg_var.rom_device,128,"Not Defined");
+  snprintf(acfg_var.rom_date,128,MIUI_BUILD);
+
+
+  acfg_var.ckey_up      = 0;
+  acfg_var.ckey_down    = 0;
+  acfg_var.ckey_select  = 0;
+  acfg_var.ckey_back    = 0;
+  acfg_var.ckey_menu    = 0;
+
   atheme_releaseall();
 }
 void acfg_init(){

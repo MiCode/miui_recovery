@@ -231,7 +231,9 @@ static byte aipInitEventDev(AIP_EVP e){
 }
 
 /* Input Events Init */
-byte aipInit(){
+//add call back function to filter input devices
+typedef int (*EventFilterFun)(char *name);
+byte aipInit(EventFilterFun filter){
   /* Open Input Device Directory */
 	DIR * dir = opendir(AIP_DEVICE);
 	
@@ -253,9 +255,11 @@ byte aipInit(){
     /* Read Input Device Directory */
     while((de = readdir(dir))) {
       /* Continue if filename not contain "event" */
+	  //filter return 0, not filt out, open it and moniter
       if(strncmp(de->d_name,"event",5)){
         continue;
       }
+	  if (filter(de->d_name)  != 0) continue;
       
       /* Open File Handler */
       fd = openat(dirfd(dir), de->d_name, O_RDONLY);
@@ -372,7 +376,7 @@ static byte aipTranslateEvent(AIP_EVP e, struct input_event * ev){
         {
           e->p.synced |= 0x01;
           e->p.x = ev->value;
-          printf("EV: %s => ABS_X  %d\n", e->device_name, ev->value);
+          miui_debug("EV: %s => ABS_X  %d\n", e->device_name, ev->value);
         }
         break;
 
@@ -380,7 +384,7 @@ static byte aipTranslateEvent(AIP_EVP e, struct input_event * ev){
         {
           e->p.synced |= 0x02;
           e->p.y = ev->value;
-          printf("EV: %s => ABS_Y  %d\n", e->device_name, ev->value);
+          miui_debug("EV: %s => ABS_Y  %d\n", e->device_name, ev->value);
         }
         break;
 

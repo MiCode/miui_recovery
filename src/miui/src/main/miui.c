@@ -94,6 +94,10 @@ STATUS main_ui_init()
     create_directory(MIUI_TMP);
     symlink(MIUI_TMP, MIUI_TMP_S);
 
+    //config init
+    acfg_init();
+    //read config file and execute it
+    miui_ui_config();
     //input thread start
     ui_init();
     //graphic thread start, print background

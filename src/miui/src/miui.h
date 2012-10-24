@@ -26,7 +26,7 @@ typedef int STATUS;
 #endif
 
 #ifndef miui_error
-#define miui_error(fmt...) printf("(%d)[%s]%s:%d", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
+#define miui_error(fmt...) printf("(%d)[%s]%s:%d::", getpid(), __FILE__, __FUNCTION__, __LINE__);printf(fmt)
 #endif
 
 #ifndef return_val_if_fail
