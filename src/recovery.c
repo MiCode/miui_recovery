@@ -543,6 +543,7 @@ main(int argc, char **argv) {
 #ifndef DEBUG
     unlink(TEMPORARY_LOG_FILE);
 #endif
+
     freopen(TEMPORARY_LOG_FILE, "a", stdout); setbuf(stdout, NULL);
     freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
     printf("Starting recovery on %s", ctime(&start));
@@ -564,6 +565,10 @@ main(int argc, char **argv) {
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);
+
+    struct bootloader_message boot;
+    memset(&boot, 0, sizeof(boot));
+    set_bootloader_message(&boot);
 
     int previous_runs = 0;
     const char *send_intent = NULL;
