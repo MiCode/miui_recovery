@@ -29,6 +29,7 @@
 #include <math.h>
 #include "../miui_inter.h"
 
+
 /*****************************[ GLOBAL VARIABLES ]*****************************/
 static int                             ag_fb   = 0;       //-- FrameBuffer Handler
 static dword                           ag_fbsz = 0;
@@ -130,8 +131,9 @@ dword ag_calculatealpha16to32(color dcl,dword scl,byte l){
   byte b = (byte) (((((int) ag_b(dcl)) * ralpha) + (((int) ag_b32(scl)) * l)) >> 8);
   return ag_rgb32(r,g,b);
 }
-void ag_changecolorspace(int r, int g, int b, int a){
+static void ag_changecolorspace(int r, int g, int b, int a){
   if (ag_32){
+    miui_debug("%d, %d, %d, %d\n", r, g, b, a);
     ag_fbv.red.offset   = r;
     ag_fbv.green.offset = g;
     ag_fbv.blue.offset  = b;
@@ -155,6 +157,44 @@ void ag_changecolorspace(int r, int g, int b, int a){
     }
     
   }
+}
+
+int ag_changcolor(char ch1, char ch2, char ch3, char ch4)
+{
+    int i = 0;
+    int arg[4]={0,0,0,0};
+    char str[4]={ch1, ch2, ch3, ch4};
+    int sum = 0;
+    miui_debug("args:%c, %c, %c, %c\n", ch1, ch2, ch3, ch4);
+    for (i = 0; i < 4; i++)
+    {
+        switch(str[i])
+        {
+        case 'r':
+            arg[i] = 0;
+            sum += 0x1;
+            break;
+        case 'g':
+            sum += 0x2;
+            arg[i] = 8;
+            break;
+        case 'b':
+            sum += 0x4;
+            arg[i] = 16;
+            break;
+        case  'a':
+            sum += 0x8;
+            arg[i] = 24;
+            break;
+        default:
+            miui_printf("invalid args %c\n", str[i]);
+            sum = 0;
+            return -1;
+        }
+    }
+    return_val_if_fail(sum == 0xf, -1);
+    ag_changecolorspace(arg[0], arg[1], arg[2], arg[3]);
+    return 0;
 }
 
 /*********************************[ FUNCTIONS ]********************************/

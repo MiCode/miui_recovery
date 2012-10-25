@@ -169,6 +169,8 @@ STATUS miui_loadlang(char * name);
 //*
 char * miui_lang(char *name);
 STATUS miui_install(int echo);
+int miui_ui_init();
+int miui_ui_config(const char * file);
 STATUS miui_ui_start();
 STATUS miui_ui_end();
 

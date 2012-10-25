@@ -562,7 +562,7 @@ CANVAS *  agc();          // Get Main MIUI Graph Canvas
 byte      ag_init();      // Init MIUI Graph and Framebuffers
 void      ag_close_thread(); // Close Graph Thread
 void      ag_close();     // Close MIUI Graph and Framebuffers
-void      ag_changecolorspace(int r, int g, int b, int a); // Change Color Space
+void      ag_changecolor(char , char, char, char); // Change Color Space
 
 void      ag_sync();                        // Sync Main Canvas with Framebuffer
 int       agw();                            // Get Display X Resolution

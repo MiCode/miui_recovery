@@ -2051,18 +2051,7 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
     
   //-- Force Color Space  
   else if (strcmp(args[0],"force_colorspace") == 0){
-    if (strcasecmp(args[1],"rgba")==0){
-      ag_changecolorspace(0,8,16,24);
-    }
-    else if(strcasecmp(args[1],"abgr")==0){
-      ag_changecolorspace(24,16,8,0);
-    }
-    else if(strcasecmp(args[1],"argb")==0){
-      ag_changecolorspace(8,16,24,0);
-    }
-    else if(strcasecmp(args[1],"bgra")==0){
-      ag_changecolorspace(16,8,0,24);
-    }
+         ag_changcolor(args[1][0], args[1][1], args[1][2], args[1][3]);
   }
   else if (strcmp(args[0],"dp") == 0){
     set_agdp(valint);
@@ -2081,7 +2070,7 @@ Value* MIUI_CALIBRATE(const char* name, State* state, int argc, Expr* argv[]) {
   return StringValue(strdup(""));
 }
 
-void miui_ui_register()
+static void miui_ui_register()
 {
 //todo
     //--CONFIG FUNCTIONS
@@ -2090,23 +2079,28 @@ void miui_ui_register()
     RegisterFunction("calibrate", MIUI_CALIBRATE);
     //RegisterFunction("calibtool", MIUI_CALIB);
 }
-//read config file if exist and then execute it
-#define MIUI_DEVICE_FILE "/res/device.conf"
-int miui_ui_config()
+int miui_ui_init()
 {
-    //if file exist 
-    struct stat file_stat;
-    if (stat(MIUI_DEVICE_FILE, &file_stat) < 0)
-    {
-        miui_printf("stat file error, file is not exist");
-        return -1;
-    }
-    char *script_data = miui_readfromfs(MIUI_DEVICE_FILE);
-    return_val_if_fail(script_data != NULL, RET_FAIL);
+    acfg_init();
     //register function
     RegisterBuiltins();
     miui_ui_register();
     FinishRegistration();
+	return 0;
+}
+//read config file if exist and then execute it
+int miui_ui_config(const char *file)
+{
+    //if file exist 
+    return_val_if_fail(file != NULL, RET_FAIL);
+    struct stat file_stat;
+    if (stat(file, &file_stat) < 0)
+    {
+        miui_printf("stat file error, file is not exist");
+        return -1;
+    }
+    char *script_data = miui_readfromfs(file);
+    return_val_if_fail(script_data != NULL, RET_FAIL);
 
    //--PARSE CONFIG SCRIPT
    Expr* root;
@@ -2114,7 +2108,7 @@ int miui_ui_config()
    yy_scan_string(script_data); 
    int error = yyparse(&root, &error_count);
    if (error != 0 || error_count > 0) {
-       miui_printf("read file %s failed!\n", MIUI_DEVICE_FILE);
+       miui_printf("read file %s failed!\n", file);
        goto config_fail;
    }
    //--- EVALUATE CONFIG SCRIPT 
