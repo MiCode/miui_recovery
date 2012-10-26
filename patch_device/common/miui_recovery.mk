@@ -59,10 +59,20 @@ endif
 	$(MKBOOTFS) $(miui_recovery_root) | $(MINIGZIP) > $(miui_recovery_ramdisk)
 	$(MKBOOTIMG) $(miui_recoveryimage_args) --output $(miui_recovery_target)
 	$(hide) $(call assert-max-image-size, $(miui_recovery_target), $(BOARD_RECOVERYIMAGE_PARTITION_SIZE), raw)
+
+MIUI_PRODUCT_RELEASE := $(MIUI_PRODUCT)_release
+.PHONY:$(MIUI_PRODUCT_RELEASE)
+$(MIUI_PRODUCT_RELEASE): miui_recovery_target := $(miui_recovery_target)
+$(MIUI_PRODUCT_RELEASE): MIUI_PRODUCT := $(MIUI_PRODUCT)
+$(MIUI_PRODUCT_RELEASE):$(MIUI_PRODUCT)
+	mkdir -p out
+	mkdir -p out/release
+	cp $(miui_recovery_target) out/release/recovery_$(MIUI_PRODUCT)_2.0.img
 #else for MIUI_KERNEL is NULL
 else
 $(MIUI_PRODUCT):
 	@echo do nothing in make $(MIUI_PRODUCT),because no MIUI_KERNEL
 endif #end of MIUI_KERNEL judgement
 endif #end of MIUI_PRODUCT judgement
+
 

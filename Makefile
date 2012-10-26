@@ -34,3 +34,9 @@ usage:
 ##include main.mk ,load make system#######
 include build/core/main.mk
 ##########################################
+.PHONY:release
+release:
+	make clean;
+	make;
+	$(foreach product, $(MIUI_PRODUCTS),make $(product)_release;)
+
