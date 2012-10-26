@@ -2,7 +2,7 @@ on early-init
     start ueventd
 
 on init
-    export PATH /sbin
+    export PATH /sbin:/system/bin
     export ANDROID_ROOT /system
     export ANDROID_DATA /data
     export EXTERNAL_STORAGE /sdcard/external_sd
@@ -15,13 +15,6 @@ on init
     mkdir /data
     mkdir /cache
     mount /tmp /tmp tmpfs
-	
-	write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 22D9
-    write /sys/class/android_usb/android0/idProduct 2768
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state mass_storage
 
 on boot
 
@@ -44,7 +37,7 @@ on property:ro.debuggable=1
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 18D1
     write /sys/class/android_usb/android0/idProduct D001
-    write /sys/class/android_usb/android0/functions adb
+    write /sys/class/android_usb/android0/functions mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
     write /sys/class/android_usb/android0/iManufacturer $ro.product.manufacturer
     write /sys/class/android_usb/android0/iProduct $ro.product.model
