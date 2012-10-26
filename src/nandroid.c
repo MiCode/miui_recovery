@@ -190,7 +190,7 @@ static nandroid_backup_handler get_backup_handler(const char *backup_path) {
 }
 
 
-int nandroid_backup_partition_extended(const char* backup_path, const char* mount_point, int umount_when_finished) {
+static int nandroid_backup_partition_extended(const char* backup_path, const char* mount_point, int umount_when_finished) {
     int ret = 0;
     char* name = basename(mount_point);
 
@@ -229,7 +229,7 @@ int nandroid_backup_partition_extended(const char* backup_path, const char* moun
     return 0;
 }
 
-int nandroid_backup_partition(const char* backup_path, const char* root) {
+static int nandroid_backup_partition(const char* backup_path, const char* root) {
     Volume *vol = volume_for_path(root);
     // make sure the volume exists before attempting anything...
     if (vol == NULL || vol->fs_type == NULL)
@@ -254,6 +254,51 @@ int nandroid_backup_partition(const char* backup_path, const char* root) {
     }
 
     return nandroid_backup_partition_extended(backup_path, root, 1);
+}
+
+int nandroid_advanced_backup(const char* backup_path, const char *root)
+{
+    if (ensure_path_mounted(backup_path) != 0) {
+        return print_and_error("Can't mount backup path.\n");
+    }
+    
+    Volume* volume = volume_for_path(backup_path);
+    if (NULL == volume) {
+      if (strstr(backup_path, "/sdcard") == backup_path && is_data_media())
+          volume = volume_for_path("/data");
+      else
+          return print_and_error("Unable to find volume for backup path.\n");
+    }
+    int ret;
+    struct statfs s;
+    if (NULL != volume) {
+        if (0 != (ret = statfs(volume->mount_point, &s)))
+            return print_and_error("Unable to stat backup path.\n");
+        uint64_t bavail = s.f_bavail;
+        uint64_t bsize = s.f_bsize;
+        uint64_t sdcard_free = bavail * bsize;
+        uint64_t sdcard_free_mb = sdcard_free / (uint64_t)(1024 * 1024);
+        ui_print("SD Card space free: %lluMB\n", sdcard_free_mb);
+        if (sdcard_free_mb < 150)
+            ui_print("There may not be enough free space to complete backup... continuing...\n");
+    }
+    char tmp[PATH_MAX];
+    sprintf(tmp, "mkdir -p %s", backup_path);
+    __system(tmp);
+
+    if (0 != (ret = nandroid_backup_partition(backup_path, root)))
+        return ret;
+    ui_print("Generating md5 sum...\n");
+    sprintf(tmp, "nandroid-md5.sh %s", backup_path);
+    if (0 != (ret = __system(tmp))) {
+        ui_print("Error while generating md5 sum!\n");
+        return ret;
+    }
+
+    sync();
+    ui_print("\nBackup complete!\n");
+    return 0;
+
 }
 
 int nandroid_backup(const char* backup_path)
@@ -426,7 +471,7 @@ static nandroid_restore_handler get_restore_handler(const char *backup_path) {
     return tar_extract_wrapper;
 }
 
-int nandroid_restore_partition_extended(const char* backup_path, const char* mount_point, int umount_when_finished) {
+static int nandroid_restore_partition_extended(const char* backup_path, const char* mount_point, int umount_when_finished) {
     int ret = 0;
     char* name = basename(mount_point);
 
@@ -529,7 +574,7 @@ int nandroid_restore_partition_extended(const char* backup_path, const char* mou
     return 0;
 }
 
-int nandroid_restore_partition(const char* backup_path, const char* root) {
+static int nandroid_restore_partition(const char* backup_path, const char* root) {
     Volume *vol = volume_for_path(root);
     // make sure the volume exists...
     if (vol == NULL || vol->fs_type == NULL)

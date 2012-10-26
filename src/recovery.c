@@ -509,7 +509,7 @@ static intentResult* intent_advanced_backup(int argc, char* argv[])
 {
     return_intent_result_if_fail(argc == 2);
     return_intent_result_if_fail(argv != NULL);
-    int result = nandroid_backup_partition(argv[0], argv[1]);
+    int result = nandroid_advanced_backup(argv[0], argv[1]);
     assert_ui_if_fail(result == 0);
     return miuiIntent_result_set(result, NULL);
 }
