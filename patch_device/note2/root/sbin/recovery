@@ -1,0 +1,4 @@
+#!/sbin/busybox sh
+/sbin/busybox mount -t rootfs -o remount,rw rootfs
+/sbin/symlink
+/sbin/cfautoroot 

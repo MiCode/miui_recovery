@@ -1,0 +1,106 @@
+/dev/mali                 0666   system     system
+/dev/ump                  0666   system     graphics
+/dev/ion                  0666   system     system
+/dev/exynos-mem           0666   system     graphics
+
+/dev/media0               0660   system     system
+/dev/media1               0660   system     camera
+/dev/media2               0660   system     camera
+/dev/v4l-subdev0          0660   system     system
+/dev/v4l-subdev1          0660   system     system
+/dev/v4l-subdev3          0660   system     system
+/dev/v4l-subdev4          0660   system     system
+/dev/v4l-subdev5          0660   system     system
+/dev/v4l-subdev6          0660   system     system
+/dev/v4l-subdev7          0660   system     system
+/dev/v4l-subdev8          0660   system     system
+/dev/v4l-subdev9          0660   system     system
+/dev/v4l-subdev10         0660   system     system
+/dev/v4l-subdev11         0660   system     system
+/dev/v4l-subdev12         0660   system     system
+/dev/v4l-subdev13         0660   system     system
+/dev/v4l-subdev14         0660   system     system
+/dev/v4l-subdev15         0660   system     system
+/dev/v4l-subdev16         0660   system     system
+/dev/v4l-subdev17         0660   system     system
+
+/dev/video0               0666   system     m2m
+/dev/video1               0666   system     camera
+/dev/video2               0666   system     m2m
+/dev/video3               0666   system     m2m
+/dev/video4               0666   system     m2m
+/dev/video11              0666   system     system
+/dev/video12              0666   system     system
+/dev/video16              0666   system     system
+/dev/video20              0666   system     system
+/dev/video6               0660   media      graphics
+/dev/video7               0660   media      graphics
+
+/dev/video11              0666   system     graphics
+/dev/video12              0660   system     camera
+
+/dev/video16              0660   system     system
+/dev/video17              0660   system     system
+/dev/video18              0660   system     system
+/dev/video19              0660   system     system
+
+# Rotator
+/dev/video21              0660   system     system
+
+/dev/video23              0660   system     system
+/dev/video24              0660   system     system
+/dev/video25              0660   system     camera
+/dev/video26              0666   media      m2m
+/dev/video29              0666   media      m2m
+/dev/video32              0660   media      m2m
+
+/dev/video33              0660   system     system
+/dev/video34              0660   system     system
+
+/dev/video40              0660   system     camera
+/dev/video41              0660   system     camera
+/dev/video42              0660   system     camera
+/dev/video43              0660   system     camera
+
+/dev/i2c-2                0660   system     system
+/dev/i2c-5                0660   system     system
+/dev/i2c-6                0660   system     system
+/dev/CEC                  0660   system     system
+/dev/HPD                  0660   system     system
+/dev/fimg2d               0666   system     graphics
+/dev/fmradio              0660   system     audio
+
+#ALP Audio
+/dev/srp                  0660   system     audio
+
+/dev/s3c-mfc              0666   system     graphics
+/dev/s5p-mfc              0666   system     graphics
+
+/dev/block/mmcblk0p7      0660   system     root
+/dev/block/mmcblk0p10     0660   system     radio
+/dev/block/mmcblk0p4      0660   system     radio
+/dev/block/mmcblk0p5      0660   system     radio
+/dev/block/mmcblk0p6      0660   system     radio
+/dev/block/mmcblk0p11     0660   system     radio
+/dev/ttyUSB0              0666   system     system
+/dev/ttyUSB1              0666   system     system
+/dev/ttyUSB2              0666   system     system
+/dev/hsic*                0660   system     radio
+/dev/usb/lp*              0660   system     usb
+
+/dev/ttySAC*	          0660	 root	 system
+
+/dev/umts*                0660   system     radio
+/dev/lte*                 0660   system     radio 
+/dev/cdma*                0660   system     radio 
+/dev/link_pm              0660   system     radio
+
+# sensor sysfs properties
+/sys/devices/virtual/input/input*   acc_poll_delay  0660  system   radio
+/sys/devices/virtual/input/input*   gyro_poll_delay  0660  system   radio
+/sys/devices/virtual/input/input*   pressure_poll_delay  0660  system   radio
+/sys/devices/virtual/input/input*   light_poll_delay  0660  system   radio
+/sys/devices/virtual/input/input*   prox_poll_delay  0660  system   radio
+
+# sensorhub
+/dev/ssp_sensorhub        0660   system     input
