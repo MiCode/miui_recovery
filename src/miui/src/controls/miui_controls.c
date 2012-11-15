@@ -89,6 +89,7 @@ void acfg_init_ex(byte themeonly){
   memset(acfg_var.themename, 0x00, 64);
 
   acfg_var.input_filter = 0;
+  acfg_var.sd_ext = 0;
 
   acfg_reset_text();
 

@@ -7,10 +7,12 @@
 #define MOUNT_SYSTEM    3
 #define MOUNT_SDCARD    4
 #define MOUNT_TOGGLE    5
+#define MOUNT_SDEXT    6
 #define MOUNT_DESC_MOUNT       "1"
 #define MOUNT_DESC_UNMOUNT     "0"
 static struct _menuUnit *mount_node;
 static struct _menuUnit *mount_sd_node;
+static struct _menuUnit *mount_sd_ext_node = NULL;
 static struct _menuUnit *mount_cache_node = NULL;
 static struct _menuUnit *mount_data_node = NULL;
 static struct _menuUnit *mount_system_node = NULL;
@@ -65,6 +67,21 @@ static STATUS mount_menu_show(menuUnit *p)
         menuUnit_set_icon(mount_sd_node, ICON_DISABLE);
         menuUnit_set_desc(mount_sd_node, MOUNT_DESC_UNMOUNT);
     }
+    if (acfg()->sd_ext == 1)
+    {
+        //ensure sd-ext 
+        miuiIntent_send(INTENT_ISMOUNT, 1, "/sd-ext");
+        if (miuiIntent_result_get_int() == 1)
+        {
+            menuUnit_set_icon(mount_sd_ext_node, ICON_ENABLE);
+            menuUnit_set_desc(mount_sd_ext_node, MOUNT_DESC_MOUNT);
+        }
+        else
+        {
+            menuUnit_set_icon(mount_sd_ext_node, ICON_DISABLE);
+            menuUnit_set_desc(mount_sd_ext_node, MOUNT_DESC_UNMOUNT);
+        }
+    }
 
     //show menu
     return_val_if_fail(p != NULL, RET_FAIL);
@@ -113,6 +130,9 @@ static STATUS mount_child_show(menuUnit *p)
             break;
         case MOUNT_SDCARD:
             miuiIntent_send(intent_type, 1, "/sdcard");
+            break;
+        case MOUNT_SDEXT:
+            miuiIntent_send(intent_type, 1, "/sd-ext");
             break;
         case MOUNT_TOGGLE:
         {
@@ -190,6 +210,19 @@ struct _menuUnit *mount_ui_init()
     return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
     mount_sd_node = temp;
+
+    if (acfg()->sd_ext == 1)
+    {
+        //mount sd-ext
+        temp = common_ui_init();
+        assert_if_fail(menuNode_add(p, temp) == RET_OK);
+        return_null_if_fail(menuUnit_set_name(temp, "<~mount.sdext.name>") == RET_OK);
+        return_null_if_fail(menuUnit_set_result(temp, MOUNT_SDEXT) == RET_OK);
+        return_null_if_fail(menuUnit_set_icon(temp, ICON_DISABLE) == RET_OK);
+        return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
+        return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
+        mount_sd_ext_node = temp;
+    }
     //toggle usb stroage
 #if 0
     temp = common_ui_init();

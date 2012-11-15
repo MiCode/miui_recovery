@@ -2056,6 +2056,9 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
   else if (strcmp(args[0],"dp") == 0){
     set_agdp(valint);
   }
+  else if (strcmp(args[0], "sd_ext")== 0) {
+    acfg()->sd_ext=valint;
+  }
   
   miui_isbgredraw = 1;
   //-- Release Arguments

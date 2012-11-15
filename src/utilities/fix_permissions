@@ -1,4 +1,4 @@
-#! /system/bin/sh
+#! /sbin/sh
 #
 # Warning: if you want to run this script in cm-recovery change the above to #!/sbin/sh
 #

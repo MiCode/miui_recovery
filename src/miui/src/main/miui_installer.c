@@ -31,7 +31,8 @@
 static byte      ai_run              = 0;
 static int       ai_progani_pos      = 0;
 static float     ai_progress_pos     = 0;
-static float     ai_progress_fract   = 0; static int       ai_progress_fract_n = 0;
+static float     ai_progress_fract   = 0; 
+static int       ai_progress_fract_n = 0;
 static int       ai_progress_fract_c = 0;
 static long      ai_progress_fract_l = 0;
 static int       ai_progress_w     = 0;
@@ -167,10 +168,14 @@ static void *miui_install_package(void *cookie){
         {
             //sucecess installed
             aw_post(aw_msg(15, 0, 0, 0));
-            miui_error("install package failed\n");
+            miui_printf("install package sucess!\n");
         }
         //else installed failed
-        else aw_post(aw_msg(16, 0, 0, 0));
+        else 
+        {
+            aw_post(aw_msg(16, 0, 0, 0));
+            miui_error("install package failed!\n");
+        }
         return NULL;
     }
     miui_error("pmiui_install->pfun is NULL, force return");
@@ -322,10 +327,11 @@ static void *ac_progressthread(void *cookie){
       }
     }
     
-    ai_canvas_unlock();
     //ag_draw(NULL,ai_cv,0,0);
     //ag_sync();
+    
     aw_draw(ai_win);
+    ai_canvas_unlock();
     usleep(160);
   }
   return NULL;

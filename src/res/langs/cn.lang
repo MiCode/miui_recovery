@@ -42,6 +42,7 @@ batt.name=电池
 time.name=时间
 
 sd.install.name=从SD卡选择zip包安装
+sdext.install.name=从外置SD卡选择zip包安装
 sd.update.name=安装update.zip
 
 power.name=电源菜单
@@ -61,6 +62,7 @@ mount.cache.name=挂载cache分区
 mount.data.name=挂载data分区
 mount.system.name=挂载system分区
 mount.sdcard.name=挂载sdcard分区
+mount.sdext.name=挂载外置sdcard分区
 mount.toggle.name=USB 存储
 
 wipe.name=擦除和格式化分区

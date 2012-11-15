@@ -206,6 +206,8 @@ int is_data_media() {
         Volume* vol = device_volumes + i;
         if (strcmp(vol->fs_type, "datamedia") == 0)
             return 1;
+        if (strcmp(vol->fs_type, "datashare") == 0)
+            return 1;
     }
     return 0;
 }
@@ -220,12 +222,18 @@ void setup_data_media() {
             symlink("/data/media", vol->mount_point);
             return;
         }
+        if (strcmp(vol->fs_type, "datashare") == 0) {
+            rmdir(vol->mount_point);
+            mkdir("/data/share", 0755);
+            symlink("/data/share", vol->mount_point);
+            return;
+        }
     }
 }
 
 int is_data_media_volume_path(const char* path) {
     Volume* v = volume_for_path(path);
-    return strcmp(v->fs_type, "datamedia") == 0;
+    return strcmp(v->fs_type, "datamedia") == 0 || strcmp(v->fs_type, "datashare") == 0;
 }
 
 int ensure_path_mounted(const char* path) {
@@ -239,7 +247,7 @@ int ensure_path_mounted_at_mount_point(const char* path, const char* mount_point
         return -1;
     }
     if (is_data_media_volume_path(path)) {
-        LOGI("using /data/media for %s.\n", path);
+        LOGI("using /data/media or /data/share for %s.\n", path);
         int ret;
         if (0 != (ret = ensure_path_mounted("/data")))
             return ret;
@@ -584,7 +592,7 @@ int format_unknown_device(const char *device, const char* path, const char *fs_t
 
     static char tmp[PATH_MAX];
     if (strcmp(path, "/data") == 0) {
-        sprintf(tmp, "cd /data ; for f in $(ls -a | grep -v ^media$); do rm -rf $f; done");
+        sprintf(tmp, "cd /data ; for f in $(ls -a | grep -v ^[media|share]$); do rm -rf $f; done");
         __system(tmp);
     }
     else {

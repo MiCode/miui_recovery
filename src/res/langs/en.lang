@@ -39,6 +39,7 @@ batt.name=BATTARY
 time.name=TIME
 
 sd.install.name=choose zip from sd
+sdext.install.name=choose zip from external sd
 sd.update.name=apply /sdcard/update.zip
 sd.log.save=Save Logs
 
@@ -59,6 +60,7 @@ mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
 mount.sdcard.name=mount sdcard
+mount.sdcard.name=mount sd external
 mount.toggle.name=toggle usb storage
 
 wipe.name=wipe or format

@@ -389,6 +389,7 @@ typedef struct  {
   int ckey_back;
   int ckey_menu;
   u32 input_filter;
+  u32 sd_ext;
   
   // THEME
   PNGCANVASP theme[MIUI_THEME_CNT];
