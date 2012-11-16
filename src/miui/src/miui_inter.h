@@ -374,6 +374,7 @@ typedef struct  {
   char  text_calibrating[64]; // Calibration Tools
   char  text_quit[64];        // Quit
   char  text_quit_msg[128];   // Quit Message
+  char  brightness_path[PATH_MAX]; //brightness_path
   
   // ROM Text
   char rom_name[128];          // ROM Name

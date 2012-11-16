@@ -32,6 +32,8 @@
 
 //-- Input Device
 #include "input_device.c"
+//--screen black echo
+#include "miui_screen.c"
 
 //-- GLOBAL EVENT VARIABLE
 static  char      key_pressed[KEY_MAX + 1];
@@ -153,7 +155,18 @@ static void *ev_input_thread(void *cookie){
     struct input_event ev;
     byte res=aipGetInput(&ev, 0);
     if (res){
-      ev_input_callback(&ev);
+      if (screen_is_black())
+      {
+          if (ev.type == EV_KEY)
+          {
+              screen_set_time(time((time_t *)NULL));
+          }
+      }
+      else
+      {
+          screen_set_time(time((time_t *)NULL));
+          ev_input_callback(&ev);
+      }
     }
   }
   return NULL;
@@ -194,6 +207,7 @@ int ev_init(){
   
   //-- Create Watcher Thread
   evthread_active = 1;
+  screen_init();
   pthread_t input_thread_t;
   pthread_create(&input_thread_t, NULL, ev_input_thread, NULL);
   pthread_detach(input_thread_t);

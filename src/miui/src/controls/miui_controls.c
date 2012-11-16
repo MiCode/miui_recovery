@@ -98,6 +98,7 @@ void acfg_init_ex(byte themeonly){
   snprintf(acfg_var.rom_author,128,MIUI_BUILD_A);
   snprintf(acfg_var.rom_device,128,"Not Defined");
   snprintf(acfg_var.rom_date,128,MIUI_BUILD);
+  snprintf(acfg_var.brightness_path, PATH_MAX, "/sys/class/leds/lcd-backlight/brightness");
 
 
   acfg_var.ckey_up      = 0;
