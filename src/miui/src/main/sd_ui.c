@@ -54,11 +54,11 @@ static STATUS sd_menu_show(menuUnit *p)
 static STATUS sdext_menu_show(menuUnit *p)
 {
     //ensure_mounte sd path
-    struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/sd-ext");
+    struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/external_sd");
     //whatever wether sdd is mounted, scan sdcard and go on
     //assert_if_fail(miuiIntent_result_get_int() == 0);
     int ret ;
-    ret = file_scan("/sd-ext", sizeof("/sd-ext"), p->name, strlen(p->name), &file_install, (void *)p, &file_filter);
+    ret = file_scan("/external_sd", sizeof("/external_sd"), p->name, strlen(p->name), &file_install, (void *)p, &file_filter);
     if (ret == -1) return MENU_BACK;
     return ret;
 }
@@ -95,7 +95,7 @@ struct _menuUnit * sd_ui_init()
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     if (acfg()->sd_ext == 1)
     {
-        //install from sd-ext
+        //install from external_sd
         struct _menuUnit  *temp = common_ui_init();
         return_null_if_fail(temp != NULL);
         menuUnit_set_icon(temp, "@sd.choose");

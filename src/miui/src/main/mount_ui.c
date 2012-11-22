@@ -70,7 +70,7 @@ static STATUS mount_menu_show(menuUnit *p)
     if (acfg()->sd_ext == 1)
     {
         //ensure sd-ext 
-        miuiIntent_send(INTENT_ISMOUNT, 1, "/sd-ext");
+        miuiIntent_send(INTENT_ISMOUNT, 1, "/external_sd");
         if (miuiIntent_result_get_int() == 1)
         {
             menuUnit_set_icon(mount_sd_ext_node, ICON_ENABLE);
@@ -132,7 +132,7 @@ static STATUS mount_child_show(menuUnit *p)
             miuiIntent_send(intent_type, 1, "/sdcard");
             break;
         case MOUNT_SDEXT:
-            miuiIntent_send(intent_type, 1, "/sd-ext");
+            miuiIntent_send(intent_type, 1, "/external_sd");
             break;
         case MOUNT_TOGGLE:
         {
@@ -213,7 +213,7 @@ struct _menuUnit *mount_ui_init()
 
     if (acfg()->sd_ext == 1)
     {
-        //mount sd-ext
+        //mount external_sd
         temp = common_ui_init();
         assert_if_fail(menuNode_add(p, temp) == RET_OK);
         return_null_if_fail(menuUnit_set_name(temp, "<~mount.sdext.name>") == RET_OK);
