@@ -8,5 +8,5 @@ MIUI_KERNEL_PAGESIZE := 4096
 MIUI_KERNEL_CMDLINE := console=ttyDCC0 androidboot.hardware=huawei
 
 MIUI_PRODUCT_ROOT := $(LOCAL_PATH)/root
-MIUI_DEVICE_CONFIG := $(LOCAL_PATH)/device.conf
+MIUI_DEVICE_CONFIG := $(LOCAL_PATH)/*.conf
 include $(MIUI_RECOVERY)
