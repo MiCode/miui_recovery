@@ -68,6 +68,7 @@ mount.toggle.name=USB 存储
 wipe.name=擦除和格式化分区
 wipe.title=擦除数据操作和格式化分区操作
 wipe.cache.name=擦除cache
+wipe.dalvik-cache.name=擦除dalvik-cache
 wipe.factory.name=擦除cache/恢复出厂设置
 wipe.data.name=擦除data
 format.system.name=格式化system分区

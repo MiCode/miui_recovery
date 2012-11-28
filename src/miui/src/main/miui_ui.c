@@ -2037,6 +2037,7 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
   else if (strcmp(args[0],"rom_device") == 0)         snprintf(acfg()->rom_device,128,"%s", args[1]);
   else if (strcmp(args[0],"rom_date") == 0)           snprintf(acfg()->rom_date,128,"%s", args[1]);
   else if (strcmp(args[0],"brightness_path") == 0)     snprintf(acfg()->brightness_path, PATH_MAX, "%s", args[1]);
+  else if (strcmp(args[0],"lun_file") == 0)     snprintf(acfg()->lun_file, PATH_MAX, "%s", args[1]);
   
   
   else if (strcmp(args[0],"customkeycode_up")==0)     acfg()->ckey_up=valkey;

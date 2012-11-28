@@ -34,12 +34,6 @@
 #include "miui_intent.h"
 
 
-#ifndef MASS_STORAGE_FILE_PATH
-//#define MASS_STORAGE_FILE_PATH  "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
-//#define MASS_STORAGE_FILE_PATH "/sys/devices/platform/usb_mass_storage/lun0/file"
-#define MASS_STORAGE_FILE_PATH "/sys/devices/platform/s3c-usbgadget/gadget/lun0/file"
-#endif
-
 #ifndef BOARD_USB_CONFIG_FILE
 /*
  * Available state: DISCONNECTED, CONFIGURED, CONNECTED
@@ -82,7 +76,7 @@ static int mount_usb() {
     if (strncmp("mass_storage,adb", value, 16))
        property_set("sys.usb.config", "mass_storage,adb");
 
-    if ((fd = open(MASS_STORAGE_FILE_PATH, O_WRONLY)) < 0) {
+    if ((fd = open(acfg()->lun_file, O_WRONLY)) < 0) {
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         ret = -1;
         goto out;
@@ -104,7 +98,7 @@ static int umount_usb() {
     char ch = 0;
     char value[PROPERTY_VALUE_MAX];
 
-    if ((fd = open(MASS_STORAGE_FILE_PATH, O_WRONLY)) < 0) {
+    if ((fd = open(acfg()->lun_file, O_WRONLY)) < 0) {
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         ret = -1;
     goto out;

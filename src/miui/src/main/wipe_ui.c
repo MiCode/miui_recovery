@@ -5,12 +5,13 @@
 #define WIPE_FACTORY     1
 #define WIPE_DATA        2
 #define WIPE_CACHE       3
-#define FORMAT_SYSTEM    4
-#define FORMAT_DATA      5
-#define FORMAT_CACHE     6
-#define FORMAT_BOOT      7
-#define FORMAT_SDCARD    8
-#define FORMAT_ALL       9
+#define WIPE_DALVIK      4
+#define FORMAT_SYSTEM    11
+#define FORMAT_DATA      12
+#define FORMAT_CACHE     13
+#define FORMAT_BOOT      14
+#define FORMAT_SDCARD    15
+#define FORMAT_ALL       16
 
 STATUS wipe_item_show(menuUnit *p)
 {
@@ -26,6 +27,9 @@ STATUS wipe_item_show(menuUnit *p)
                 break;
             case WIPE_CACHE:
                 miuiIntent_send(INTENT_WIPE, 1, "/cache");
+                break;
+            case WIPE_DALVIK:
+                miuiIntent_send(INTENT_WIPE, 1, "dalvik-cache");
                 break;
             case FORMAT_SYSTEM:
                 miuiIntent_send(INTENT_FORMAT, 1, "/system");
@@ -104,6 +108,12 @@ struct _menuUnit* wipe_ui_init()
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     return_null_if_fail(menuUnit_set_name(temp, "<~wipe.cache.name>") == RET_OK);
     return_null_if_fail(menuUnit_set_result(temp, WIPE_CACHE) == RET_OK);
+    return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
+    //wipe dalvik-cache
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    return_null_if_fail(menuUnit_set_name(temp, "<~wipe.dalvik-cache.name>") == RET_OK);
+    return_null_if_fail(menuUnit_set_result(temp, WIPE_DALVIK) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
     //format system
     temp = common_ui_init();

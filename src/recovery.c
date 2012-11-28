@@ -435,12 +435,22 @@ static intentResult* intent_unmount(int argc, char* argv[])
         return miuiIntent_result_set(result, "ok");
     return miuiIntent_result_set(result, "fail");
 }
-//INTENT_WIPE ,wipe "/data" | "cache"
+//INTENT_WIPE ,wipe "/data" | "cache" "dalvik-cache"
 static intentResult* intent_wipe(int argc, char *argv[])
 {
     return_intent_result_if_fail(argc == 1);
     return_intent_result_if_fail(argv != NULL);
-    int result = erase_volume(argv[0]);
+    int result = 0;
+    if (!strcmp(argv[0], "dalvik-cache"))
+    {
+        ensure_path_mounted("/data");
+        ensure_path_mounted("/cache");
+        __system("rm -r /data/dalvik-cache");
+        __system("rm -r /cache/dalvik-cache");
+        result = 0;
+    }
+    else
+        result = erase_volume(argv[0]);
     assert_ui_if_fail(result == 0);
     return miuiIntent_result_set(result, "ok");
 }

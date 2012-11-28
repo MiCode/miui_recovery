@@ -66,6 +66,7 @@ mount.toggle.name=toggle usb storage
 wipe.name=wipe or format
 wipe.title=wipe data or format partation operation
 wipe.cache.name=wipe cache
+wipe.dalvik-cache.name=wipe dalvik-cache
 wipe.factory.name=wipe cache/factory reset
 wipe.data.name=wipe data
 format.system.name=format system

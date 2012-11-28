@@ -3,6 +3,7 @@
 //add in ui operation
 //
 //
+#include "utils.h"
 typedef int STATUS;
 #define RET_OK 0
 #define RET_FAIL -1
@@ -246,6 +247,5 @@ void miuiInstall_set_info(char *file_name);
 struct _menuUnit * menuNode_init(struct _menuUnit *node);
 STATUS menuNode_add(struct _menuUnit *parent, struct _menuUnit *child);
 STATUS menuNode_delete(struct _menuUnit *parent, struct _menuUnit *child);
-
 
 #endif // __MIUI_H__
