@@ -30,11 +30,11 @@ typedef int u32;
 //
 // MIUI Main Configurations
 //
-#define MIUI_NAME        "MIUI Recovery"
+#define MIUI_NAME        "MIUI Recovery by syhost"
 //rom_version
-#define MIUI_VERSION     "2.00"
+#define MIUI_VERSION     "2.03"
 //rom date
-#define MIUI_BUILD       "2012-10-26"
+#define MIUI_BUILD       "2012-12-01"
 #define MIUI_BUILD_CN    "Weekend"
 #define MIUI_BUILD_L     "Dennis"
 #define MIUI_BUILD_A     "<yanhao@xiaomi.com>"

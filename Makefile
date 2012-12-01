@@ -1,7 +1,7 @@
 ############same as android###############
 #make $(MIUI_PRODUCT) to buid device recovery.img, support as following;
 MIUI_PRODUCTS := crespo ville sensation vivo saga maguro honor shooteru \
-	lu6200  p1 d1 finder note2
+	lu6200 p1 d1 finder note2 ef65l ef40s ef39s
 #crespo: Samsung Nexus S
 #ville: HTC One S
 #sensation: HTC pyramid(G14)
@@ -15,11 +15,14 @@ MIUI_PRODUCTS := crespo ville sensation vivo saga maguro honor shooteru \
 #d1:HUAWEI U9500
 #finder: opper finder 4
 #note2: SAMSUNG Glaxy Note 2
+#ef65l: Pantech A820L
+#ef40s: Pantech A810S
+#ef39s: Pantech A800S
 MIUI_PRODUCTS := $(strip $(MIUI_PRODUCTS))
 
 .PHONY: default
 default: 
-	make recovery -B -j32
+	make recovery -B -j4
 	@echo make default
 
 .PHONY: usage
