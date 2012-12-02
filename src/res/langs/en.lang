@@ -97,9 +97,9 @@ tool.name=tool
 tool.title=advanced tools
 tool.key.name=key test
 tool.time.name=timer setting
-tool.battary.name=wip battary
-tool.log.name=cope log to sdcard
-tool.log.desc=are you sure cope log to 
+tool.battary.name=wipe battery stats
+tool.log.name=copy log to sdcard
+tool.log.desc=Confirm copying log file to 
 tool.permission.name=fix permission
 
 info.name=info
