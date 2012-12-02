@@ -189,9 +189,9 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
     int txtH = ag_fontheight(0);
     int txtW = ag_fontheight(0)*2;
     int battW = 12*agdp();
-    ag_rect(win, txtX - 2, y+1, battW, txtH-3, fg);
-    ag_rect(win, txtX - 1, y+2, battW - 2, txtH-5, bg);
-    txtX += agdp()-4;
+    ag_rect(win, txtX, y+1, battW, txtH-3, fg);
+    ag_rect(win, txtX+1, y+2, battW - 2, txtH-5, bg);
+    txtX += agdp();
     ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
     ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
     int rectH = agdp() * 3;
@@ -1373,8 +1373,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎使用A820L中文恢复系统 syhost制作 @anzhi.com", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery for A820L by syhost @anzhi.com", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 syhost制作 @anzhi.com", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by syhost @anzhi.com", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);

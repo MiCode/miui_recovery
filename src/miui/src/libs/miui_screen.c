@@ -95,9 +95,9 @@ static void *screen_black_thread(void *cookie)
 static pthread_t screen_thread_t;
 static int screen_init()
 {
-    //default interval 15 seconds
-    time_interval = 60;
-    screen_set_light(80);
+    //default interval 120 seconds
+    time_interval = 120;
+    screen_set_light(60);
     screen_set_time(time((time_t*)NULL));
     screen_set_black(0);
     
