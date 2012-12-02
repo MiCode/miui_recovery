@@ -60,7 +60,7 @@ mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
 mount.sdcard.name=mount sdcard
-mount.sdcard.name=mount sd external
+mount.sdext.name=mount sd external
 mount.toggle.name=toggle usb storage
 
 wipe.name=wipe or format
