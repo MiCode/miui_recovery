@@ -113,8 +113,8 @@ int miui_setbg(char * titlev){
   pthread_mutex_unlock(&title_mutex);
   return 2*elmP + ag_fontheight(1);
 }
-#define BATTERY_CAPACITY_PATH "/sys/class/power_supply/battery/capacity"
-#define BATTERY_CAPACITY_PATH_1 "/sys/class/power_supply/Battery/capacity"
+#define BATTERY_CAPACITY_PATH "/sys/class/power_supply/batterys/capacity"
+#define BATTERY_CAPACITY_PATH_1 "/sys/class/power_supply/battery/capacity"
 
 static int read_from_file(const char* path, char* buf, size_t size) {
     int fd = open(path, O_RDONLY, 0);
@@ -179,25 +179,25 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
     else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0)
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH_1));
-    else {
+    else{
         miui_error("BATTERY_CAPACITY_PATH error\n"); 
 		snprintf(batt_name, 8, "%2d", 0);
     }
 
-    int txtX = x + 4;
+    int txtX = x+4;
     int txtY = y;
     int txtH = ag_fontheight(0);
-    int txtW = ag_fontheight(0) * 2;
-    int battW = 10*agdp();
-    ag_rect(win, txtX - 2, y+1, battW, txtH-3, fg);
-    ag_rect(win, txtX - 1, y+2, battW - 2, txtH-5, bg);
+    int txtW = ag_fontheight(0)*2;
+    int battW = 12*agdp();
+    ag_rect(win, txtX, y+1, battW, txtH-3, fg);
+    ag_rect(win, txtX+1, y+2, battW - 2, txtH-5, bg);
     txtX += agdp();
     ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
     ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
     int rectH = agdp() * 3;
     int rectW = agdp();
     txtY += (txtH - rectH)/2;
-    ag_rect(win, txtX - 3* agdp(), txtY, rectW, rectH, fg);
+    ag_rect(win, txtX - 3* agdp()+5, txtY, rectW, rectH, fg);
     return txtH + 2*agdp();
 }
 
@@ -218,9 +218,9 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
   ag_textf(win,titW,elmP + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
   ag_text(win,titW,elmP,elmP,bg_title,acfg()->titlefg,0);
   //draw battery
-  _miui_draw_battery(win, agw()/2 + 12*elmP, elmP, acfg()->titlefg, acfg()->titlebg_g);
+  _miui_draw_battery(win, agw()/2 + 8*elmP, elmP, acfg()->titlefg, acfg()->titlebg_g);
   //draw time
-  snprintf(bg_title, 64, "%02d:%02d", (p->tm_hour + 8) % 24, p->tm_min);
+  snprintf(bg_title, 64, "%4d-%02d-%02d %02d:%02d", 1900+p->tm_year, p->tm_mon+1, p->tm_mday, (p->tm_hour + 8) % 24, p->tm_min);
   titW = ag_txtwidth(bg_title, 0);
   int timeX = agw() - titW - elmP;
   ag_textf(win,titW,timeX + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
@@ -1373,8 +1373,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎到MIUI Recovery", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 syhost制作 @anzhi.com", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by syhost @anzhi.com", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);

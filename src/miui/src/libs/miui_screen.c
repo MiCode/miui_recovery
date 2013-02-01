@@ -76,7 +76,8 @@ int screen_set_interval(int interval)
 }
 static void *screen_black_thread(void *cookie)
 {
-    while(1) {
+    while(1) 
+    {
         if (difftime(time((time_t *)NULL), time_orig) > time_interval)
         {
             if (0 == bool_black)
@@ -94,9 +95,9 @@ static void *screen_black_thread(void *cookie)
 static pthread_t screen_thread_t;
 static int screen_init()
 {
-    //default interval 15 seconds
-    time_interval = 15;
-    screen_set_light(255);
+    //default interval 120 seconds
+    time_interval = 120;
+    screen_set_light(60);
     screen_set_time(time((time_t*)NULL));
     screen_set_black(0);
     
