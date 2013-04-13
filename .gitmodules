@@ -4,4 +4,11 @@
 
 [submodule "external/busybox"]
 	path = external/busybox
-	url = git://github.com/CyanogenMod/android_external_busybox 
+	url = git://github.com/CyanogenMod/android_external_busybox
+[submodule "external/bash"]
+	path = external/bash
+	url = git://github.com/CyanogenMod/android_external_bash 
+[submodule "external/libncurses"]
+	path = external/libncurses 
+	url = git://github.com/CyanogenMod/android_external_libncurses
+
