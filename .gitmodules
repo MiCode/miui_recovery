@@ -4,4 +4,4 @@
 
 [submodule "external/busybox"]
 	path = external/busybox
-	url = git://github.com/CyanogenMod/android_external_busybox -b jellybean 
+	url = git://github.com/CyanogenMod/android_external_busybox 
