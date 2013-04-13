@@ -1,37 +1,30 @@
 1 the project is build android recovery only;
-
 2 before building, make sure copy project android_prebuilt, android_bionic and anroid_hardware to the directory ,which from ICS.
-
 3 Steps as following:
- <code>
     $. build/envsetup.sh
     $make crespo
-</code>
-  please see the out/patch_device/crespo/ , find recovery.img
- 
+  please see the out/patch_device/crespo/ , find recovery.img 
 4 please check Makefile to obtain the supported devices;
 
  
-<h1><ins>Modified by sndnvaps@gmail.com </ins></h1>
+<ins>Modified by sndnvaps@gmail.com @Gaojiquan.com[] 
+</ins>
 
 
 
-[http://www.gaojiquan.com](http://www.gaojiqu.com "Gaojiquan.com") 
 
-<h1>2013/4/12 </h1>
+[Gaojiquan](http://www.gaojiqu.com) 
 
-<h2> Changelog :</h2> 
-
-    <h2> support : ZTE n909 </h2>
-<p>     
+2013/4/12 :
+ Changelog :
+     support : ZTE n909 
+       
 Setps to build n909 :
-
-      <code>
+      ```bash 
           # build/envsetup.sh
-          # make n909 
-      </code>
-
+             # make n909 
+        ```
 You cand find recovery.img in folder out/patch_device/n909 
 
-</p>
+
 
