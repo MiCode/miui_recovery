@@ -1,0 +1,3 @@
+[submodule "bionic"]
+	path = bionic
+	url = git://github.com/CyanogenMod/android_bionic
