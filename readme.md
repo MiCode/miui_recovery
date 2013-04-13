@@ -1,6 +1,6 @@
 1 the project is build android recovery only;
 
-2 before building, make sure copy project android_prebuilt, android_bionic and anroid_hardware to the directory ,which from ICS.
+2 before building, make sure copy project <b>android_prebuilt</b>,<del> <b>android_bionic</b></del> and <b>anroid_hardware</b> to the directory ,which from ICS or higher 
 
 3 Steps as following:
  <code>
@@ -34,4 +34,12 @@ Setps to build n909 :
 You cand find recovery.img in folder out/patch_device/n909 
 
 </p>
+
+<h1> Get the android_bionic </h1>
+    <code>
+    $ cd MIUI_Recovery_N909 
+    $ git submodule init 
+    $ git submodule update 
+   </code>
+
 
