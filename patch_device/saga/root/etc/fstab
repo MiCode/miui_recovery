@@ -1,0 +1,4 @@
+/dev/block/mmcblk0p27 /cache auto rw
+/dev/block/mmcblk0p26 /data auto rw
+/dev/block/mmcblk0p25 /system auto rw
+/dev/block/mmcblk1p1 /sdcard vfat rw

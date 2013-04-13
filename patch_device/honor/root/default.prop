@@ -1,0 +1,14 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.secure=0
+ro.allow.mock.location=1
+ro.debuggable=1
+sys.usb.config=mass_storage,adb
+ro.product.model=u8860
+ro.product.brand=huawei
+ro.product.name=Geno_u8860
+ro.product.device=u8860
+ro.product.board=u8860
+ro.build.product=u8860
+ro.cwm.forbid_format=/boot,/cust

@@ -1,0 +1,49 @@
+
+
+on early-init
+    start ueventd
+
+on init
+    export PATH /sbin:/system/bin:/system/xbin:/system/sbin
+    export ANDROID_ROOT /system
+    export ANDROID_DATA /data
+    export EXTERNAL_STORAGE /sdcard
+    mkdir /system
+    mkdir /data
+    mkdir /cache
+    mkdir /cust
+    mount /tmp /tmp tmpfs
+
+    setprop ro.hwboottype boot_recovery
+
+on boot
+
+    ifup lo
+    hostname localhost
+    domainname localdomain
+
+    class_start default
+
+service ueventd /sbin/ueventd
+    critical
+
+service recovery /sbin/recovery
+
+service adbd /sbin/adbd recovery
+    disabled
+
+on property:ro.debuggable=1
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12D1
+    write /sys/class/android_usb/android0/idProduct 1037 
+    write /sys/class/android_usb/android0/iManufacturer huawei
+    write /sys/class/android_usb/android0/iProduct U9200
+    write /sys/class/android_usb/android0/iSerial cleanup 
+
+    write /sys/class/android_usb/android0/functions mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+
+on property:persist.service.adb.enable=0
+    stop adbd
+

@@ -1,0 +1,4 @@
+/dev/block/mmcblk0p34 /cache ext4 rw
+/dev/block/mmcblk0p35 /data ext4 rw
+/dev/block/mmcblk0p33 /system ext4 rw
+/dev/block/mmcblk0p36 /sdcard vfat rw

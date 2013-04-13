@@ -1,0 +1,7 @@
+#
+# system.prop for smdkc110
+#
+
+rild.libpath=/vendor/lib/libsec-ril.so
+rild.libargs=-d /dev/ttyS0
+ro.sf.lcd_density=240

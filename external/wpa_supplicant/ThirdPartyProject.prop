@@ -1,0 +1,10 @@
+# Copyright 2010 Google Inc. All Rights Reserved.
+#Fri Jul 16 10:03:09 PDT 2010
+currentVersion=0.6.10
+version=0.5.11
+isNative=true
+feedurl=http\://hostap.epitest.fi/gitweb/gitweb.cgi?p\=hostap-06.git;a\=blob_plain;f\=wpa_supplicant/ChangeLog
+name=wpa_supplicant
+keywords=wpa supplicant
+onDevice=true
+homepage=http\://hostap.epitest.fi/wpa_supplicant/

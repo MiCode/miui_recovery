@@ -1,0 +1,11 @@
+# mount point	fstype		device
+# DTS2012030702504   l00186011   2012/03/07  reserve the data of inner_sdcard when resetuser 
+
+/external_sd		vfat		/dev/block/mmcblk1p1
+/sdcard		datashare		/dev/null
+/system		ext4		/dev/block/platform/omap/omap_hsmmc.1/by-name/system
+/cache		ext4		/dev/block/platform/omap/omap_hsmmc.1/by-name/cache
+/data		ext4		/dev/block/platform/omap/omap_hsmmc.1/by-name/userdata
+/misc 		emmc 		/dev/block/platform/omap/omap_hsmmc.1/by-name/misc
+/boot		emmc		/dev/block/platform/omap/omap_hsmmc.1/by-name/boot
+/recovery	emmc		/dev/block/platform/omap/omap_hsmmc.1/by-name/recovery

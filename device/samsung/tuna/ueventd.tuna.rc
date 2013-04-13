@@ -1,0 +1,46 @@
+#for DSSCOMP
+/dev/dsscomp              0666   system     system
+/dev/tiler                0666   system     system
+
+#for SYSLINK
+/dev/rpmsg-omx0           0660   drmrpc    drmrpc
+/dev/rpmsg-omx1           0660   drmrpc    drmrpc
+/dev/rproc_user           0660   drmrpc    drmrpc
+/dev/tf_driver            0660   drmrpc    drmrpc
+/dev/tf_ctrl              0660   drmrpc    drmrpc
+
+#for Sensors
+/dev/mpu                  0660   system     system
+/dev/mpuirq               0660   system     system
+/dev/accelirq             0660   system     system
+/dev/compassirq           0660   system     system
+/dev/timerirq             0660   system     system
+
+#for HSPA RIL
+/dev/umts_boot0           0660   radio      radio
+/dev/umts_boot1           0660   radio      radio
+/dev/umts_ipc0            0660   radio      radio
+/dev/umts_rfs0            0660   radio      radio
+/dev/block/mmcblk0p9      0660   radio      radio
+/dev/umts_ramdump0        0660   radio      radio
+
+# used by RIL and GPS
+/dev/ttyO0                0660   system     radio
+
+#for LTE RIL
+/dev/cdma_boot0		    0660	radio	radio
+/dev/lte_boot0		    0660	radio	radio
+/dev/cdma_ipc0		    0660	radio	radio
+/dev/lte_ipc0		    0660	radio	radio
+/dev/cdma_rfs0		    0660	radio	radio
+/dev/lte_rfs0		    0660	radio	radio
+/dev/lte_spi		    0660	radio	radio
+/dev/cdma_rmnet5	    0660	radio	radio
+/dev/cdma_rmnet6	    0660	radio	radio
+/dev/lte_rmnet4		    0660	radio	radio
+/dev/ttyGS0		0660	radio	radio
+/dev/ttyGS1		0660	radio	radio
+/dev/block/mmcblk0p4	0660	radio	radio
+/dev/modem_br           0660    radio   radio
+/dev/cdma_ramdump0      0660    radio   radio
+/dev/lte_ramdump0       0660    radio   radio

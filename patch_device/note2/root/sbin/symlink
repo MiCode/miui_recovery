@@ -1,0 +1,18 @@
+#!/sbin/busybox sh
+/sbin/busybox ln -s /sbin/busybox /sbin/ash
+/sbin/busybox ln -s /sbin/busybox /sbin/cat
+/sbin/busybox ln -s /sbin/busybox /sbin/chmod
+/sbin/busybox ln -s /sbin/busybox /sbin/chown
+/sbin/busybox ln -s /sbin/busybox /sbin/dd
+/sbin/busybox ln -s /sbin/busybox /sbin/df
+/sbin/busybox ln -s /sbin/busybox /sbin/echo
+/sbin/busybox ln -s /sbin/busybox /sbin/ln
+/sbin/busybox ln -s /sbin/busybox /sbin/ls
+/sbin/busybox ln -s /sbin/busybox /sbin/mkdir
+/sbin/busybox ln -s /sbin/busybox /sbin/mount
+/sbin/busybox ln -s /sbin/busybox /sbin/mv
+/sbin/busybox ln -s /sbin/busybox /sbin/rm
+/sbin/busybox ln -s /sbin/busybox /sbin/rmdir
+/sbin/busybox ln -s /sbin/busybox /sbin/sleep
+/sbin/busybox ln -s /sbin/busybox /sbin/sync
+/sbin/busybox ln -s /sbin/busybox /sbin/umount

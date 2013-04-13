@@ -1,0 +1,9 @@
+#
+# system.prop for n880f 
+#
+
+rild.libpath=/system/lib/libril-qc-1.so
+rild.libargs=-d /dev/smd0
+ro.sf.lcd_density=240
+
+

@@ -1,0 +1,4 @@
+require board=tuna
+require version-bootloader=PRIMEKJ10|PRIMEKK15|PRIMEKL01|PRIMELA03
+require version-baseband=I9250XXKK6|I9250XXLA1|I9250XXLA2
+

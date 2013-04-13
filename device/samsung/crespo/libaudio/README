@@ -1,0 +1,7 @@
+The code in this library is implemented according to legacy audio HAL scheme:
+ - use of AudioHardwareInterface C++ interface.
+ - use of C++ classes in frameworks/base.
+
+It should not be used as an example for newer audio HALs implementations.
+
+

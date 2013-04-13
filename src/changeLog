@@ -1,0 +1,40 @@
+120702-2110:
+	1 the whole test ok;
+	2 make full fucntion;
+	3 touch event must be fixed;
+120625-2045:
+	1 add wipe_ui
+	2 add power_ui and mount_ui
+	3 add busybox 
+	4 compile ok, test ok;
+	5 add cm7 other file, but there are not added in makefile;
+120616-1440:
+    1 enter sd menu, 
+	2 when touch screen quickly , the segmentation fault as followings:
+	
+		Program received signal SIGSEGV, Segmentation fault.
+		[Switching to Thread 188]
+		__libc_android_abort () at bionic/libc/unistd/abort.c:82
+		82	    *((char*)0xdeadbaad) = 39;
+
+120615-1820:
+    1 compile ok for new framework, add menuNode operaton and miuiIntent
+	operation
+120607-1730:
+    1 echo lang menu ok;
+	2 echo main menu ok;
+120606-1600:
+	1 print lang menu but it has plenty bugs;
+120604-1800:
+	1 the whole compile ok;
+120604-1500:
+	1 compile libmiui ok;
+	2 the whole compile failed cause multiply defination;
+120522-1135:
+    1 the last recovery version for mx;
+120427-1750:
+    1 test updater.apk ok, achieve update on MIUI system;
+120426-0845:
+    1 test recovery ok ;
+    2 use cmd "wipe data" to clean cache and data ;
+    3 must wipe data before install new system;

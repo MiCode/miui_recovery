@@ -1,0 +1,9 @@
+# Copyright 2010 Google Inc. All Rights Reserved.
+#Fri Jul 16 10:03:09 PDT 2010
+currentVersion=0.3.1
+version=0.3
+isNative=true
+name=safe_iop
+keywords=safe iop
+onDevice=true
+homepage=http\://code.google.com/p/safe-iop/

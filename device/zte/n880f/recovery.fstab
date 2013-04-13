@@ -1,0 +1,27 @@
+#mount point         fstab             device
+
+/qcsblhd_cfgdata     emmc             /dev/block/mmcblk0p1 
+/qcsbl               emmc             /dev/block/mmcblk0p2
+/amss                emmc             /dev/block/mmcblk0p3
+/oemsbl              emmc             /dev/block/mmcblk0p5
+/emmcboot            emmc             /dev/block/mmcblk0p6
+/ssd                 emmc             /dev/block/mmcblk0p7
+/boot                emmc             /dev/block/mmcblk0p8
+/cefs1               emmc             /dev/block/mmcblk0p10
+/cefs2               emmc             /dev/block/mmcblk0p11
+/system              ext4             /dev/block/mmcblk0p12
+/data                ext4             /dev/block/mmcblk0p13
+/persist             ext4             /dev/block/mmcblk0p14
+/cache               ext4             /dev/block/mmcblk0p15 
+/recovery            emmc             /dev/block/mmcblk0p16
+/misc                emmc             /dev/block/mmcblk0p17
+/FOTA                emmc             /dev/block/mmcblk0p18
+/splash              emmc             /dev/block/mmcblk0p19
+/external_sd         vfat             /dev/block/mmcblk0p20
+/sdcard              vfat             /dev/block/mmcblk1p1
+
+#recovery.fstab create by sndnvaps<sndnvaps@gmail.com>
+
+
+
+

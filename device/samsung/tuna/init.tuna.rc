@@ -1,0 +1,225 @@
+import init.tuna.usb.rc
+
+on early-init
+	export EXTERNAL_STORAGE /mnt/sdcard
+	mkdir /mnt/sdcard 0000 system system
+	# for backwards compatibility
+	symlink /mnt/sdcard /sdcard
+
+on post-fs-data
+	# we will remap this as /mnt/sdcard with the sdcard fuse tool
+	mkdir /data/media 0775 media_rw media_rw
+	chown media_rw media_rw /data/media
+	mkdir /data/misc/wifi 0770 wifi wifi
+	mkdir /data/misc/wifi/sockets 0770 wifi wifi
+	mkdir /data/misc/dhcp 0770 dhcp dhcp
+	chown dhcp dhcp /data/misc/dhcp
+	mkdir /data/smc 0770 drmrpc drmrpc
+        chown drmrpc drmrpc /data/smc/counter.bin
+        chown drmrpc drmrpc /data/smc/storage.bin
+        chown drmrpc drmrpc /data/smc/system.bin
+
+	# camera calibration
+	mkdir /data/misc/camera 0770 media media
+	mkdir /data/misc/camera/R5_MVEN003_LD2_ND0_IR0_SH0_FL1_SVEN003_DCCID1044 0770 media media
+
+	setprop vold.post_fs_data_done 1
+
+# LTE
+    chown radio system /sys/devices/tuna_otg/usb_sel
+    chown radio system /sys/devices/tuna_otg/uart_sel
+    chown radio system /sys/bus/i2c/drivers/fsa9480/4-0025/switch
+    chmod 0660 /sys/bus/i2c/drivers/fsa9480/4-0025/switch
+    chmod 0660 /sys/devices/tuna_otg/uart_sel
+    chmod 0660 /sys/devices/tuna_otg/usb_sel
+
+on boot
+	mount debugfs /sys/kernel/debug /sys/kernel/debug
+	chmod 0666 /dev/pvrsrvkm
+	setprop ro.crypto.keyfile.userdata /dev/block/platform/omap/omap_hsmmc.0/by-name/metadata
+
+# Lower maximum frequency when screen is off
+	write /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq 700000
+
+# cpufreq interactive governor: timer 20ms, min sample 20ms, hispeed 700MHz
+	write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 20000
+	write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 20000
+	write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 700000
+
+# autosuspend root hubs immediatly after attached devices
+	write /sys/bus/usb/devices/usb1/power/autosuspend_delay_ms 0
+	write /sys/bus/usb/devices/usb2/power/autosuspend_delay_ms 0
+
+on fs
+	mkdir /factory 0775 radio radio
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/system /system wait ro
+	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/userdata /data wait noatime nosuid nodev nomblk_io_submit,errors=panic
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/cache /cache wait noatime nosuid nodev nomblk_io_submit,errors=panic
+	mount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/efs /factory wait ro
+	setprop ro.crypto.fuse_sdcard true
+
+# change permissions for mtd device
+	chmod 0660 /dev/mtd/mtd0
+	chown media media /dev/mtd/mtd0
+
+# change permissions for i2c-2 device
+	chmod 0660 /dev/i2c-2
+	chown media media /dev/i2c-2
+
+# change permissions for Tiler driver
+    chmod 0777 /dev/tiler
+    chmod 0777 /dev/dmm
+
+# change permissions for ION driver
+    chmod 0777 /dev/ion
+
+# We chown/chmod /factory because mount is run as root + defaults
+	chown radio radio /factory
+	chmod 0775 /factory
+	mkdir /data/radio 0775 radio radio
+	mkdir /data/radio/log 0775 radio radio
+
+# add symlink for HDCP key
+        symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
+
+# nfc
+    setprop ro.nfc.port "COM4"
+    chmod 0600 /dev/ttyO3
+    chown nfc nfc /dev/ttyO3
+    chmod 0600 /sys/devices/platform/nfc-power/nfc_power
+    chown nfc nfc /sys/devices/platform/nfc-power/nfc_power
+
+# permissions for bluetooth.
+	setprop ro.bt.bdaddr_path "/factory/bluetooth/bt_addr"
+	chown bluetooth bluetooth ro.bt.bdaddr_path
+	chown bluetooth bluetooth /dev/ttyO1
+	chmod 0600 /dev/ttyO1
+	chmod 0660 /sys/class/rfkill/rfkill0/state
+	chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+	chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+
+# backlight
+	chown system system /sys/class/backlight/s6e8aa0/brightness
+
+# leds
+	chown system system /dev/an30259a_leds
+
+# for GPS
+    chown root system /sys/class/sec/gps/GPS_PWR_EN/value
+    chmod 0660 /sys/class/sec/gps/GPS_PWR_EN/value
+    chown root system /sys/class/sec/gps/GPS_nRST/value
+    chmod 0660 /sys/class/sec/gps/GPS_nRST/value
+
+# ril control auto-suspend
+	chmod 0660 /sys/bus/usb/devices/usb1/power/control
+	chown radio radio /sys/bus/usb/devices/usb1/power/control
+
+on property:persist.sys.tuna.off_mode=*
+	write /d/pm_debug/enable_off_mode $persist.sys.tuna.off_mode
+
+on property:ril.modem.lte.powercontrol=*
+	write /sys/bus/usb/devices/1-1/power/control $ril.modem.lte.powercontrol
+
+service fRom /system/bin/fRom \
+	-x /data/misc/camera/R5_MVEN003_LD2_ND0_IR0_SH0_FL1_SVEN003_DCCID1044 \
+	-d /dev/mtd/mtd0
+	user media
+	group media
+	class late_start
+	oneshot
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --no2bytes --enable_lpm \
+	--tosleep 50000 --baudrate 3000000 --use_baudrate_for_download --i2s=1,1,0,1 \
+	--patchram /vendor/firmware/bcm4330.hcd /dev/ttyO1
+	class main
+	user bluetooth
+	group bluetooth net_bt_admin
+	disabled
+	oneshot
+
+service pvrsrvinit /vendor/bin/pvrsrvinit
+	class core
+	user root
+	group root
+	oneshot
+
+# create filesystems if necessary
+service setup_fs /system/bin/setup_fs \
+		/dev/block/platform/omap/omap_hsmmc.0/by-name/cache \
+		/dev/block/platform/omap/omap_hsmmc.0/by-name/userdata
+        class core
+        user root
+        group root
+        oneshot
+
+service tf_daemon /system/bin/tf_daemon \
+        -d -c /vendor/etc/smc_normal_world_android_cfg.ini
+        class main
+        user drmrpc
+        group drmrpc
+
+service smc_pa_wvdrm /system/bin/smc_pa_ctrl \
+        -c /vendor/etc/smc_normal_world_android_cfg.ini \
+        start /vendor/firmware/smc_pa_wvdrm.ift
+        class core
+        user drmrpc
+        group drmrpc
+        oneshot
+
+# create virtual SD card at /mnt/sdcard, based on the /data/media directory
+# daemon will drop to user/group system/media_rw after initializing
+# underlying files in /data/media will be created with user and group media_rw (1023)
+service sdcard /system/bin/sdcard /data/media 1023 1023
+	class late_start
+
+service wpa_supplicant /system/bin/wpa_supplicant \
+	-Dnl80211 -iwlan0 -puse_p2p_group_interface=1 -e/data/misc/wifi/entropy.bin
+	#   we will start as root and wpa_supplicant will switch to user wifi
+	#   after setting up the capabilities required for WEXT
+	#   user wifi
+	#   group wifi inet keystore
+	class main
+	socket wpa_wlan0 dgram 660 wifi wifi
+	disabled
+	oneshot
+
+service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
+	class main
+	disabled
+	oneshot
+
+service dhcpcd_p2p /system/bin/dhcpcd -aABKL
+	class main
+	disabled
+	oneshot
+
+service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
+	class main
+	disabled
+	oneshot
+
+service iprenew_wlan0 /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+
+service iprenew_p2p /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+
+service iprenew_bnep0 /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/bugmailer.sh -v
+	class main
+	disabled
+	oneshot
+	keycodes 114 115 116
+
+service battery_charger /charger
+	class charger

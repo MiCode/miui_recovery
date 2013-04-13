@@ -1,0 +1,3 @@
+/dev/block/platform/s3c-sdhci.0/by-name/media /sdcard vfat rw
+/dev/block/platform/s3c-sdhci.0/by-name/system /system ext4 rw
+/dev/block/platform/s3c-sdhci.0/by-name/userdata /data ext4 rw

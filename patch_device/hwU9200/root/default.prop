@@ -1,0 +1,9 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.secure=0
+ro.allow.mock.location=1
+ro.debuggable=1
+persist.sys.usb.config=mass_storage,adb,diag
+ro.product.device=hwu9200
+ro.build.product=hwu9200

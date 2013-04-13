@@ -1,0 +1,114 @@
+﻿### LICENSE:
+#--- COMMON SYSTEM STRING RESOURCE
+#
+text_ok=OK
+text_next=Next >
+text_back=< Back
+text_yes=Yes
+text_no=No
+text_about=About
+text_calibrating=Calibrating Tools
+text_quit=Quit
+text_quit_msg=Are you sure to quit?
+text_done=done
+global_done=done
+
+
+lang.name=选择语言/Select Language
+lang.title_name=请选择语言/Select Language
+lang.desc=lang selected
+default_name=default_name
+default_title=default_title
+default_desc=Are you sure do it?
+
+mainmenu.name=MAIN MENU
+mainmenu.title_name=MAIN MENU
+mainmenu.install.name=install from SD
+mainmenu.tools.name=tools
+
+back.name=Back
+back.title_name=Back to parent menu
+
+sd.back.name=Back
+sd.back.desc=back to upper
+
+sd.name=install from sd
+sd.title_name=install from sd
+sd.desc=install from sd
+batt.name=BATTARY
+time.name=TIME
+
+sd.install.name=choose zip from sd
+sdext.install.name=choose zip from external sd
+sd.update.name=apply /sdcard/update.zip
+sd.log.save=Save Logs
+
+power.name=power
+power.title=power operation
+reboot.null= reboot
+reboot.null.title= reboot now
+reboot.recovery= reboot to recovery
+reboot.bootloader= reboot to bootloader
+reboot.poweroff= poweroff
+
+alert.result=FAIL!
+alert.desc=operation failed
+
+mount.name=mount
+mount.title=mount and toogle usb storage
+mount.cache.name=mount cache
+mount.data.name=mount data
+mount.system.name=mount system
+mount.sdcard.name=mount sdcard
+mount.sdcard.name=mount sd external
+mount.toggle.name=toggle usb storage
+
+wipe.name=wipe or format
+wipe.title=wipe data or format partation operation
+wipe.cache.name=wipe cache
+wipe.dalvik-cache.name=wipe dalvik-cache
+wipe.factory.name=wipe cache/factory reset
+wipe.data.name=wipe data
+format.system.name=format system
+format.data.name=format data
+format.cache.name=format cache
+format.boot.name=format boot
+format.sdcard.name=format sdcard
+format.all.name=format all(except sdcard and boot)
+
+backup.name=backup and restore
+backup.title=backup to sdcard and restore from sdcard
+backup.backup.name=backup
+backup.restore.name=restore
+advanced_backup.name=advanced backup
+advanced_backup.cache.name=backup cache
+advanced_backup.data.name=backup data
+advanced_backup.system.name=backup system
+advanced_backup.boot.name=backup boot
+advanced_backup.recovery.name=backup recovery
+advanced_restore.name=advanced restore
+advanced_restore.cache.name=restore cache
+advanced_restore.data.name=restore data
+advanced_restore.system.name=restore system
+advanced_restore.boot.name=restore boot
+advanced_restore.recovery.name=restore recovery
+
+tool.name=tool
+tool.title=advanced tools
+tool.key.name=key test
+tool.time.name=timer setting
+tool.battary.name=wip battary
+tool.log.name=cope log to sdcard
+tool.log.desc=are you sure cope log to 
+tool.permission.name=fix permission
+
+info.name=info
+info.title=information of miui recovery
+info.mount.name=storage info
+info.log.name=log
+info.about.name=about miui recovery
+
+about.device=Device:
+about.name=Name:
+about.version=Version:
+about.date=Date:
