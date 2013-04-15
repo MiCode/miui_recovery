@@ -30,19 +30,16 @@ typedef int u32;
 //
 // MIUI Main Configurations
 //
-#define MIUI_NAME        "MIUI Rec by sndnvaps" //modified by sndnvaps@gmail.com
+#define MIUI_NAME        "MIUI Rec by @Gaojiquan LaoYang"
 //rom_version
 #define MIUI_VERSION     "2.04"
 //rom date
-#define MIUI_BUILD       "2013-04-11"
-#define MIUI_BUILD_CN    "Thusday"
-#define MIUI_BUILD_L     "Dennis"
-#define MIUI_BUILD_A     "sndnvaps@gmail.com" //modified by sndnvaps@gmail.com
+#define MIUI_BUILD       "2013-04-13"
+#define MIUI_BUILD_CN    "Weekend"
+#define MIUI_BUILD_L     "sndnvaps"
+#define MIUI_BUILD_A     "<yanhao@xiaomi.com>"
 #define MIUI_BUILD_URL   "http://www.micode.net/"
 #define MIUI_COPY        "(c) 2012 by xiaomi MIUI developers"
-
-//rom_devices create by sndnvaps@gmail.com 2013/4/10 21:40:48 
-#define MIUI_BUILD_DEVICE_N909  "1"
 
 //-- Temporary Dir - Move from /tmp/miui-data to /tmp/miui symlink to /tmp/miui-data for backward compatibility
 #define MIUI_SYSTMP      "/tmp"
@@ -212,7 +209,6 @@ typedef struct  {
   int ckey_menu;
   u32 input_filter;
   u32 sd_ext;
-  u32 sd_internal; 
   
   // THEME
   PNGCANVASP theme[MIUI_THEME_CNT];

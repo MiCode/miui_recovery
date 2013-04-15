@@ -19,6 +19,18 @@ static STATUS battary_menu_show(struct _menuUnit* p)
     }
     return MENU_BACK;
 }
+
+
+static STATUS root_menu_show(struct _menuUnit* p)
+{          
+        if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+       miuiIntent_send(INTENT_MOUNT, 1, "/system");
+       miuiIntent_send(INTENT_SYSTEM, 1, "root_device");
+       //miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
+        }
+       return MENU_BACK;
+}
+
 static STATUS permission_menu_show(struct _menuUnit* p)
 {
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
@@ -83,5 +95,12 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    ///root device
+    temp = common_ui_init();
+    menuUnit_set_name(temp, "<~tool.root.name>");
+    menuUnit_set_icon(temp, "@tool.root");
+    menuUnit_set_show(temp,&root_menu_show);
+    assert_if_fail(menuNode_add(p,temp) == RET_OK);
+
     return p;
 }

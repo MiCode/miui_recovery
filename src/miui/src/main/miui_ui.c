@@ -1373,8 +1373,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 laser杨万荣编译 @gaojiquan.com", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by sndnvaps @gaojiquan", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 搞机圈－老杨制作 @Gaojiquan", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by Gaojiquan LaoYang @Gaojiquan", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);

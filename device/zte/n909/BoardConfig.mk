@@ -21,10 +21,10 @@ ARCH_ARM_HAVE_VFP := true
 TARGET_CPU_SMP := true
 
 
-TARGET_GLOBAL_CFLAGS += -mfpu=cortex-a5 -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mfpu=cortex-a5 -mfloat-abi=softfp
+TARGET_GLOBAL_CFLAGS +=  -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
-BOARD_USES_ADRENO_203 := true
+#BOARD_USES_ADRENO_203 := true
 
 TARGET_NO_BOOTLOADER := true
 TARGET_BOOTLOADER_BOARD_NAME := MSM8625QSKU
@@ -49,7 +49,7 @@ BOARD_FLASH_BLOCK_SIZE := 262144
 
 TARGET_PREBUILT_KERNEL := device/zte/n909/kernel
 
-//BOARD_TOUCH_RECOVERY := true
+# BOARD_TOUCH_RECOVERY := true
 
 #recovery
 #BOARD_HAS_NO_SELECT_BUTTON := true
