@@ -73,7 +73,7 @@ int root_device() {
            apply_rm_binary("busybox");
             }
 
-     __system("cp /sbin/busybox /system/xbin/busybox");
+     __system("/sbin/busybox install -m 0755  /sbin/busybox /system/xbin/");
      __system("chown 0.0 /system/xbin/busybox");
 
            miui_printf("Install su binary ...\n");
@@ -82,8 +82,9 @@ int root_device() {
             apply_rm_binary("su");
              }
      //copy su binary to /sytem/xbin/su
-     __system("cp /sbin/su /system/xbin/su");
+     __system("/sbin/busybox install -m 06755 /sbin/su /system/xbin/");
      __system("chown 0.0 /system/xbin/su");
+     __system("chmod 06755 /system/xbin/su");
              if (access("/system/app/Superuser.apk", F_OK) != 0 || access("/system/app/superuser.apk", F_OK) != 0 ) {
                     is_state_superuser = 1;
                   
@@ -93,9 +94,10 @@ int root_device() {
                 __system("rm /system/app/Superuser.apk");
                      __system("rm /system/app/superuser.apk");
                     }
-                miui_printf("Install Superuser.apk....\n");
+
+          miui_printf("Install Superuser.apk....\n");
      //copy Superuser.apk to /system/app/Superuser.apk 
-      __system("cat  /sbin/Superuser.apk >> /system/app/Superuser.apk");
+      __system("/sbin/busybox install -m 0755 /sbin/Superuser.apk /system/app/");
       __system("chown 0.0 /system/app/Superuser.apk");
          //unmount /system
          //miuiIntent_send(INTENT_UNMOUNT, 1, "/system");
