@@ -60,7 +60,7 @@ mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
 mount.sdcard.name=mount sdcard
-mount.sdext.name=mount internal sdcard 
+mount.sdext.name= mount internal sd
 mount.toggle.name=toggle usb storage
 
 wipe.name=wipe or format
@@ -101,6 +101,8 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
+tool.root.name= root your device 
+tool.recovery.name=disable restore rec from boot.p 
 
 info.name=info
 info.title=information of miui recovery
@@ -112,4 +114,3 @@ about.device=Device:
 about.name=Name:
 about.version=Version:
 about.date=Date:
-about.author=Author:

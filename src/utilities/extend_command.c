@@ -24,6 +24,9 @@ extern char **environ;
 #define miui_printf printf
 #endif 
 
+#define restore_recovery "/system/etc/install-recovery.sh"
+#define restore_rec_from_boot "/system/recovery-from-boot.p"
+
 
 void apply_rm_binary(char* name) { //删除 /system/bin/name /system/xbin/name /system/sbin/name 
 	char tmp[128], tmp_a[128], tmp_b[128];
@@ -54,6 +57,30 @@ int check_file_state(char *filename) { //返回1，表示存在，返回0，表�
 }
 
 
+int remove_permission_x(char *filepath) {
+      char tmp[128];
+      sprintf(tmp, "chmod -x %s",filepath);
+      __system(tmp);
+      return 0;
+}
+
+int restore_recovery_from_boot() { //禁止恢复官方的recovery 
+           if (access(restore_recovery,F_OK) == 0) {
+                           miui_printf("chmod -x %s\n",restore_recovery);
+                           remove_permission_x(restore_recovery);
+                  }
+           if (access(restore_rec_from_boot, F_OK) == 0) {
+                            miui_printf("chmod -x %s\n",restore_rec_from_boot);
+                            remove_permission_x(restore_rec_from_boot);
+                   }
+         return 0;
+}
+
+
+
+                         
+
+                                 
 int root_device() {
     
      miui_printf("\nInstall busybox....\n");
@@ -109,7 +136,19 @@ int root_device() {
 
 
 int main(int argc, char** args) {
+        if (argc < 2) {
+           miui_printf("you didn't input a handler to %s",args[0]);
+                 }
+              else {
+       if (strcmp(args[1],"disable_recovery") == 0) {
+
+      restore_recovery_from_boot();
+                    }
+       if (strcmp(args[1],"root") == 0) {
+
       root_device();
+                  }
+}
          return 0;
 }
 
