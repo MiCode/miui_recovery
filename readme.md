@@ -36,7 +36,7 @@ You cand find recovery.img in folder out/patch_device/n909
 *Notification*
    ZTE N909 support dynamic linker binary 
    so I build the busybox and bash as dymamic 
-
+   support usb-toggle for internal sdcard && sdcard 
 
 <h1> Get the android_bionic && external/busybox && external/bash  submodule </h1>
     <code>
