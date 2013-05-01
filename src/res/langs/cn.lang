@@ -63,7 +63,8 @@ mount.data.name=挂载data分区
 mount.system.name=挂载system分区
 mount.sdcard.name=挂载sdcard分区
 mount.sdext.name=挂载内置sdcard分区
-mount.toggle.name=USB 存储
+mount.toggle.name=USB存储sdcard
+mount.toggle_int.name=USB存储内置卡
 
 wipe.name=擦除和格式化分区
 wipe.title=擦除数据操作和格式化分区操作

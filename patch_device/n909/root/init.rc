@@ -27,6 +27,7 @@ on init
 
     chown root shell /tmp
     chmod 0775 /tmp
+   # chmod 0755 /rmt_storage_recovery 
 
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 19d2
@@ -54,7 +55,9 @@ service console /sbin/sh
 	user shell
 	group log
 
-service rmt_storage /rmt_storage_recovery
+#service rmt_storage /rmt_storage_recovery
+  #       user root
+   #      group root 
 
 service recovery /sbin/recovery
 

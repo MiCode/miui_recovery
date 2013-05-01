@@ -62,6 +62,7 @@ mount.system.name=mount system
 mount.sdcard.name=mount sdcard
 mount.sdext.name= mount internal sd
 mount.toggle.name=toggle usb storage
+mount.toggle_int.name=toggle usb storage internal
 
 wipe.name=wipe or format
 wipe.title=wipe data or format partation operation

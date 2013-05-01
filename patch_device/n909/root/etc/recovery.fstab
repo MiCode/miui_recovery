@@ -24,3 +24,10 @@
 /external_sd      vfat          /dev/block/platform/msm_sdcc.3/by-num/p20
 /sdcard		 vfat		/dev/block/mmcblk1p1	/dev/block/mmcblk1
 #/internal_sd     vfat             /dev/block/mmcblk1p1	/dev/block/mmcblk1
+
+#modify by sndnvaps@gmail.com 
+#http://www.gaojiquan.com
+#2013/4/13 13:48:50 
+
+
+
