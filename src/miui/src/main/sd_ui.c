@@ -118,16 +118,5 @@ struct _menuUnit * sd_ui_init()
         assert_if_fail(menuNode_add(p, temp) == RET_OK);
     }
 
-      if (acfg()->sd_internal == 1)
-         {
-        //install from internal_sd 
-        struct _menuUnit *temp = common_ui_init();
-       return_null_if_fail(temp != NULL);
-       menuUnit_set_icon(temp, "@sd.choose");
-        strncpy(temp->name, "<~sdinternal.install.name", MENU_LEN);
-        temp->show = &sdinternal_menu_show;
-        assert_if_fail(menuNode_add(p,temp) == RET_OK);
-        }
-
     return p;
 }
