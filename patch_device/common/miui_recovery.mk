@@ -49,7 +49,7 @@ $(MIUI_PRODUCT): $(MKBOOTFS) $(MINIGZIP) \
 	mkdir -p $(miui_recovery_root)
 	cp -rf $(MIUI_PRODUCT_ROOT) $(miui_recovery_product)/
 	cp -rf $(MIUI_KERNEL) $(miui_recovery_product)/
-	cp -rf $(miui_recovery_sbin) $(miui_recovery_root)/
+	#cp -rf $(miui_recovery_sbin) $(miui_recovery_root)/
 	cp -f $(miui_recovery_binary) $(miui_recovery_root)/sbin/
 	cp -rf $(miui_recovery_resource) $(miui_recovery_root)/
 ifneq ($(MIUI_DEVICE_CONFIG),)
