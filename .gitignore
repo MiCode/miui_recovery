@@ -3,6 +3,7 @@
 *.a
 *.so
 *.swp 
+out/
 prebuilt/
 hardware/
 system/
