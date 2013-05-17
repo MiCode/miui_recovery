@@ -2,11 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-<<<<<<< HEAD
-=======
-#TARGET_DEVICE := n909 
 
->>>>>>> dev
 libmiui_common_includes = $(LOCAL_PATH)/include $(LOCAL_PATH)/src
 libmiui_common_src_files :=libs/png/png.c \
     libs/png/pngerror.c \
@@ -82,6 +78,10 @@ LOCAL_SRC_FILES := \
     $(libmiui_common_src_files)
 LOCAL_C_INCLUDES += $(libmiui_common_includes)
 LOCAL_CFLAGS := $(MYDEFINE_CFLAGS)
+ifeq ($(TARGET_MIUI_RECOVERY_N909),true) 
+	LOCAL_CFLAGS += -DMIUI_BUILD_DEVICE_N909
+endif
+
 
 LOCAL_STATIC_LIBRARIES += libc libm
 LOCAL_MODULE := libmiui

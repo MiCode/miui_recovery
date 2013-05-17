@@ -8,20 +8,18 @@
 #define MOUNT_SDCARD    4
 #define MOUNT_TOGGLE    5
 #define MOUNT_SDEXT    6
-<<<<<<< HEAD
-=======
+=
 //Add mount_sdinternal  7 -> by sndnvaps@gmail.com 
 #define MOUNT_SDINTERNAL 7 
->>>>>>> dev
+v
 #define MOUNT_DESC_MOUNT       "1"
 #define MOUNT_DESC_UNMOUNT     "0"
 static struct _menuUnit *mount_node;
 static struct _menuUnit *mount_sd_node;
 static struct _menuUnit *mount_sd_ext_node = NULL;
-<<<<<<< HEAD
-=======
+
 static struct _menuUnit *mount_sd_internal_node = NULL; //add by sndnvaps@gmail.com 
->>>>>>> dev
+
 static struct _menuUnit *mount_cache_node = NULL;
 static struct _menuUnit *mount_data_node = NULL;
 static struct _menuUnit *mount_system_node = NULL;
@@ -90,8 +88,7 @@ static STATUS mount_menu_show(menuUnit *p)
             menuUnit_set_icon(mount_sd_ext_node, ICON_DISABLE);
             menuUnit_set_desc(mount_sd_ext_node, MOUNT_DESC_UNMOUNT);
         }
-<<<<<<< HEAD
-=======
+
 
 
       if (acfg()->sd_internal == 1) //add by sndnvaps@gmail.com 
@@ -107,7 +104,7 @@ static STATUS mount_menu_show(menuUnit *p)
                       menuUnit_set_icon(mount_sd_internal_node, ICON_DISABLE);
                       menuUnit_set_icon(mount_sd_internal_node, MOUNT_DESC_UNMOUNT);
                     }
->>>>>>> dev
+
     }
 
     //show menu
@@ -161,11 +158,10 @@ static STATUS mount_child_show(menuUnit *p)
         case MOUNT_SDEXT:
             miuiIntent_send(intent_type, 1, "/external_sd");
             break;
-<<<<<<< HEAD
-=======
+
         case MOUNT_SDINTERNAL: 
             miuiIntent_send(intent_type, 1, "/internal_sd"); 
->>>>>>> dev
+
         case MOUNT_TOGGLE:
         {
             if (intent_type == INTENT_MOUNT)
@@ -255,8 +251,7 @@ struct _menuUnit *mount_ui_init()
         return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
         mount_sd_ext_node = temp;
     }
-<<<<<<< HEAD
-=======
+
    
      //add by sndnvaps@gmail.com 2013/4/11 10:25:26 
        if (acfg()->sd_internal == 1)
@@ -272,8 +267,7 @@ struct _menuUnit *mount_ui_init()
        mount_sd_internal_node = temp;
     }
 
-                     
->>>>>>> dev
+
     //toggle usb stroage
     if (acfg()->lun_file[0] != 0)
     {

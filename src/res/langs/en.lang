@@ -39,11 +39,7 @@ batt.name=BATTARY
 time.name=TIME
 
 sd.install.name=choose zip from sd
-<<<<<<< HEAD
-sdext.install.name=choose zip from external sd
-=======
 sdext.install.name=choose zip from internal sd
->>>>>>> dev
 sd.update.name=apply /sdcard/update.zip
 sd.log.save=Save Logs
 
@@ -64,14 +60,8 @@ mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
 mount.sdcard.name=mount sdcard
-<<<<<<< HEAD
-mount.sdcard.name=mount sd external
 mount.toggle.name=toggle usb storage
-=======
 mount.sdext.name= mount internal sd
-mount.toggle.name=toggle usb storage
-mount.toggle_int.name=toggle usb storage internal
->>>>>>> dev
 
 wipe.name=wipe or format
 wipe.title=wipe data or format partation operation
@@ -111,11 +101,8 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
-<<<<<<< HEAD
-=======
 tool.root.name= root your device 
 tool.recovery.name=disable restore rec from boot.p 
->>>>>>> dev
 
 info.name=info
 info.title=information of miui recovery

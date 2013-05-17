@@ -1083,9 +1083,6 @@ done
 unset f
 
 addcompletions
-<<<<<<< HEAD
-lunch 4
-=======
 #lunch 4
 lunch full_n880f-userdebug
->>>>>>> dev
+

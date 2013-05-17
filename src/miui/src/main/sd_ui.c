@@ -62,8 +62,7 @@ static STATUS sdext_menu_show(menuUnit *p)
     if (ret == -1) return MENU_BACK;
     return ret;
 }
-<<<<<<< HEAD
-=======
+
 //add by sndnvaps@gmail.com 2013/4/11 11:29:35 
 static STATUS sdinternal_menu_show(menuUnit *p) 
 {
@@ -76,7 +75,7 @@ static STATUS sdinternal_menu_show(menuUnit *p)
         if (ret == -1) return MENU_BACK;
         return ret;
 }
->>>>>>> dev
+
 static STATUS sd_update_show(menuUnit *p)
 {
     char new_path[SD_MAX_PATH] = "/sdcard/update.zip";
@@ -118,8 +117,7 @@ struct _menuUnit * sd_ui_init()
         temp->show = &sdext_menu_show;
         assert_if_fail(menuNode_add(p, temp) == RET_OK);
     }
-<<<<<<< HEAD
-=======
+
       if (acfg()->sd_internal == 1)
          {
         //install from internal_sd 
@@ -130,6 +128,6 @@ struct _menuUnit * sd_ui_init()
         temp->show = &sdinternal_menu_show;
         assert_if_fail(menuNode_add(p,temp) == RET_OK);
         }
->>>>>>> dev
+
     return p;
 }

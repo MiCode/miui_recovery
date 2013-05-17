@@ -42,11 +42,7 @@ batt.name=电池
 time.name=时间
 
 sd.install.name=从SD卡选择zip包安装
-<<<<<<< HEAD
-sdext.install.name=从外置SD卡选择zip包安装
-=======
 sdext.install.name=从内置SD卡选择zip包安装
->>>>>>> dev
 sd.update.name=安装update.zip
 
 power.name=电源菜单
@@ -66,14 +62,9 @@ mount.cache.name=挂载cache分区
 mount.data.name=挂载data分区
 mount.system.name=挂载system分区
 mount.sdcard.name=挂载sdcard分区
-<<<<<<< HEAD
-mount.sdext.name=挂载外置sdcard分区
 mount.toggle.name=USB 存储
-=======
 mount.sdext.name=挂载内置sdcard分区
-mount.toggle.name=USB存储sdcard
-mount.toggle_int.name=USB存储内置卡
->>>>>>> dev
+
 
 wipe.name=擦除和格式化分区
 wipe.title=擦除数据操作和格式化分区操作
@@ -113,11 +104,8 @@ tool.battary.name=电池信息初始化
 tool.log.name=拷贝LOG到SD卡
 tool.log.desc=是否将日志拷贝到
 tool.permission.name=修复权限
-<<<<<<< HEAD
-=======
 tool.root.name=破解权限
 tool.recovery.name=禁止恢复官方recovery 
->>>>>>> dev
 
 info.name=信息
 info.title=关于MIUI RECOVERY的信息

@@ -19,8 +19,7 @@ static STATUS battary_menu_show(struct _menuUnit* p)
     }
     return MENU_BACK;
 }
-<<<<<<< HEAD
-=======
+
 
 
 static STATUS root_menu_show(struct _menuUnit* p) //破解设置的权限
@@ -48,7 +47,6 @@ static STATUS disable_official_recovery_menu_show(struct _menuUnit *p) //禁止�
 }
 
 
->>>>>>> dev
 static STATUS permission_menu_show(struct _menuUnit* p)
 {
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
@@ -113,8 +111,7 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
-<<<<<<< HEAD
-=======
+
     ///root device
     temp = common_ui_init();
     menuUnit_set_name(temp, "<~tool.root.name>");
@@ -129,7 +126,5 @@ struct _menuUnit* tool_ui_init()
        menuUnit_set_show(temp, &disable_official_recovery_menu_show);
        assert_if_fail(menuNode_add(p,temp) == RET_OK);
 
-
->>>>>>> dev
     return p;
 }

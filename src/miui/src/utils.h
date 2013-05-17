@@ -29,16 +29,7 @@ typedef int u32;
 
 //
 // MIUI Main Configurations
-//
-<<<<<<< HEAD
-#define MIUI_NAME        "MIUI Recovery by syhost"
-//rom_version
-#define MIUI_VERSION     "2.04"
-//rom date
-#define MIUI_BUILD       "2012-12-02"
-#define MIUI_BUILD_CN    "Weekend"
-#define MIUI_BUILD_L     "Dennis"
-=======
+
 #define MIUI_NAME        "MIUI Rec by @Gaojiquan LaoYang"
 //rom_version
 #define MIUI_VERSION     "2.04"
@@ -46,7 +37,6 @@ typedef int u32;
 #define MIUI_BUILD       "2013-04-13"
 #define MIUI_BUILD_CN    "Weekend"
 #define MIUI_BUILD_L     "sndnvaps"
->>>>>>> dev
 #define MIUI_BUILD_A     "<yanhao@xiaomi.com>"
 #define MIUI_BUILD_URL   "http://www.micode.net/"
 #define MIUI_COPY        "(c) 2012 by xiaomi MIUI developers"

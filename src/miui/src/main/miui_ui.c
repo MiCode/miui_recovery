@@ -184,12 +184,9 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 		snprintf(batt_name, 8, "%2d", 0);
     }
 
-<<<<<<< HEAD
-    int txtX = x+4;
-=======
    // int txtX = x+4; 
     int txtX = x - 60; //add by gaojiquan.com @laoyang //modify by gaojiquan.com @hey 
->>>>>>> dev
+
     int txtY = y;
     int txtH = ag_fontheight(0);
     int txtW = ag_fontheight(0)*2;

@@ -6,10 +6,7 @@ LOCAL_RECOVERY_EXECTABLES += parted
 LOCAL_RECOVERY_EXECTABLES += sdparted
 LOCAL_RECOVERY_EXECTABLES += nandroid-md5.sh
 LOCAL_RECOVERY_EXECTABLES += killrecovery.sh
-<<<<<<< HEAD
-=======
 LOCAL_RECOVERY_EXECTABLES += root_device 
->>>>>>> dev
 RECOVERY_EXECTABLES := $(addprefix $(TARGET_ROOT_OUT)/sbin/, $(LOCAL_RECOVERY_EXECTABLES))
 $(RECOVERY_EXECTABLES): $(LOCAL_INSTALLED_MODULE)
 	@echo "copy $@ "
@@ -18,10 +15,6 @@ $(RECOVERY_EXECTABLES): $(LOCAL_INSTALLED_MODULE)
 	@cp -rf src/utilities/$(notdir $@) $(dir $@)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_EXECTABLES)
-
-<<<<<<< HEAD
-=======
-
 
 
 #Add by 搞机圈－老杨 root_device
@@ -34,8 +27,6 @@ LOCAL_SRC_FILES := extend_command.c
 LOCAL_STATIC_LIBRARIES := libc libcrecovery  
 include $(BUILD_EXECUTABLE)
 
-
->>>>>>> dev
 #
 #include $(CLEAR_VARS)
 #LOCAL_MODULE := fix_permissions
