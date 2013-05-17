@@ -45,7 +45,7 @@ STATUS info_about_show(struct _menuUnit* p)
     acfg()->rom_name,
     acfg()->rom_version,
     acfg()->rom_device,
-    acfg()->rom_date,
+    acfg()->rom_date
     );
 
     miui_aboutmenu(
