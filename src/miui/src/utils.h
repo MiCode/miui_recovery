@@ -30,7 +30,7 @@ typedef int u32;
 //
 // MIUI Main Configurations
 
-#define MIUI_NAME        "MIUI Rec by @Gaojiquan LaoYang"
+#define MIUI_NAME        "MIUI Rec by  LaoYang"
 //rom_version
 #define MIUI_VERSION     "2.04"
 //rom date
