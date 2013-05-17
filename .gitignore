@@ -1,4 +1,11 @@
 *~
 *.o
+*.a
+*.so
 *.swp 
+prebuilt/
+hardware/
+system/
+
+
 
