@@ -1,0 +1,1 @@
+console=ttyHSL0,115200,n8 androidboot.hardware=qcom vmalloc=200M

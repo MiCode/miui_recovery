@@ -2,6 +2,11 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+<<<<<<< HEAD
+=======
+#TARGET_DEVICE := n909 
+
+>>>>>>> dev
 libmiui_common_includes = $(LOCAL_PATH)/include $(LOCAL_PATH)/src
 libmiui_common_src_files :=libs/png/png.c \
     libs/png/pngerror.c \

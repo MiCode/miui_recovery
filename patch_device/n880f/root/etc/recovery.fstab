@@ -1,0 +1,52 @@
+# Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of Code Aurora Forum, Inc. nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#[ECID:000000] ZTEBSP wangjianping, 20120705 added for update, start
+#[ECID:000000] ZTEBSP wangjianping, 20120514 add use one partition as inner sdcard, start
+# mount point	fstype		device			[device2]
+/qcsblhd_cfgdata	emmc		/dev/block/mmcblk0p1
+/qcsbl   	emmc		/dev/block/mmcblk0p2
+/amss   	emmc		/dev/block/mmcblk0p3
+/oemsbl   	emmc		/dev/block/mmcblk0p5
+/emmcboot   emmc		/dev/block/mmcblk0p6
+/ssd        emmc		/dev/block/mmcblk0p7
+/boot		emmc		/dev/block/mmcblk0p8
+/cefs1      emmc		/dev/block/mmcblk0p10
+/cefs2		emmc		/dev/block/mmcblk0p11
+/system		ext4		/dev/block/mmcblk0p12
+/data		ext4		/dev/block/mmcblk0p13
+/persist	ext4		/dev/block/mmcblk0p14
+/cache		ext4		/dev/block/mmcblk0p15
+/recovery   emmc        /dev/block/mmcblk0p16
+/misc		emmc		/dev/block/mmcblk0p17
+/FOTA		emmc		/dev/block/mmcblk0p18
+/splash 	emmc		/dev/block/mmcblk0p19
+/external_sd	vfat		/dev/block/mmcblk0p20
+/sdcard		vfat		/dev/block/mmcblk1p1	/dev/block/mmcblk1
+
+#[ECID:000000] ZTEBSP wangjianping, 20120514 add use one partition as inner sdcard, end
+#[ECID:000000] ZTEBSP wangjianping, 20120705 added for update, end 

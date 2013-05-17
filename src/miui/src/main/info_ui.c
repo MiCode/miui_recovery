@@ -16,6 +16,10 @@ STATUS info_mount_show(struct _menuUnit* p)
     miuiIntent_send(INTENT_MOUNT, 1, "/cache");
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
     miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
+<<<<<<< HEAD
+=======
+     miuiIntent_send(INTENT_MOUNT, 1, "/external_sd"); //Add by sndnvaps @Gaojiquan 2013/4/11 20:57:19 
+>>>>>>> dev
     char command[256];
     snprintf(command, 256, "df -hP > %s", MOUNT_LOG);
     miuiIntent_send(INTENT_SYSTEM, 1, command);
@@ -40,11 +44,20 @@ STATUS info_about_show(struct _menuUnit* p)
     "<~about.version>\n  <b><#selectbg_g>%s</#></b>\n"
     "<~about.device>\n  <b><#selectbg_g>%s</#></b>\n"
     "<~about.date>\n  <b><#selectbg_g>%s</#></b>\n"
+<<<<<<< HEAD
+=======
+    "<~about.author\n  <b><#selectbg_g>%s</#></b>\n" // Add by sndnvaps@Gaojiquan 2013/4/11 20:54:48 
+>>>>>>> dev
     ,
     acfg()->rom_name,
     acfg()->rom_version,
     acfg()->rom_device,
+<<<<<<< HEAD
     acfg()->rom_date
+=======
+    acfg()->rom_date,
+    acfg()->rom_author     //Add by sndnvaps @Gaojiquan 2013/4/11 20:54:48 
+>>>>>>> dev
     );
 
     miui_aboutmenu(

@@ -27,7 +27,11 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -O3 -DUSE_MMAP
 LOCAL_SRC_FILES := $(zlib_files)
 ifneq ($(TARGET_ARCH),x86)
+<<<<<<< HEAD
   LOCAL_NDK_VERSION := 5
+=======
+  LOCAL_NDK_VERSION := 7
+>>>>>>> dev
   LOCAL_SDK_VERSION := 9
 endif
 include $(BUILD_SHARED_LIBRARY)
@@ -40,7 +44,11 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -O3 -DUSE_MMAP
 LOCAL_SRC_FILES := $(zlib_files)
 ifneq ($(TARGET_ARCH),x86)
+<<<<<<< HEAD
   LOCAL_NDK_VERSION := 5
+=======
+  LOCAL_NDK_VERSION := 7
+>>>>>>> dev
   LOCAL_SDK_VERSION := 9
 endif
 include $(BUILD_STATIC_LIBRARY)
@@ -75,7 +83,11 @@ LOCAL_SRC_FILES := $(unzip_files)
 LOCAL_MODULE:= libunz
 LOCAL_ARM_MODE := arm
 ifneq ($(TARGET_ARCH),x86)
+<<<<<<< HEAD
   LOCAL_NDK_VERSION := 5
+=======
+  LOCAL_NDK_VERSION := 7
+>>>>>>> dev
   LOCAL_SDK_VERSION := 9
 endif
 include $(BUILD_STATIC_LIBRARY)
