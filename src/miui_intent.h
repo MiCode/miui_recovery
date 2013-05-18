@@ -33,7 +33,7 @@ typedef enum _intentType{
     INTENT_ROOT
 }intentType;
 
-#define INTENT_RESULT_LEN 16
+#define INTENT_RESULT_LEN 17
 typedef struct _intentResult{
     int ret;
     char result[INTENT_RESULT_LEN];

@@ -45,7 +45,7 @@ static STATUS root_device_item_show(menuUnit *p) {
 		switch(p->result) {
 			case ROOT_DEVICE:
 				miuiIntent_send(INTENT_MOUNT, 1 , "/system");
-				miuiIntent_send(INTENT_ROOT, 1, "root");
+				miuiIntent_send(INTENT_ROOT, 1, "root_device");
 				miuiIntent_send(INTENT_UNMOUNT, 1 , "/system");
 				break;
 			case DISABLE_OFFICAL_REC:
@@ -74,7 +74,7 @@ struct _menuUnit * root_ui_init() {
 	struct _menuUnit *tmp = common_ui_init();
 	return_null_if_fail(tmp != NULL);
 	strncpy(tmp->name, "<~root.device>", MENU_LEN);
-	menuUnit_set_icon(tmp, "@root");
+	menuUnit_set_icon(tmp, "@root.device");
 	tmp->result = ROOT_DEVICE;
 	tmp->show = &root_device_item_show;
 	assert_if_fail(menuNode_add(p,tmp) == RET_OK);

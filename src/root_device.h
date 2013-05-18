@@ -11,6 +11,9 @@ int intsall_supersu();
 //disable restore recovery from stock ROM
 int un_of_recovery();
 
+//remove supersu functions 
+int remove_supersu();
+
 //main func of root_device()
 int root_device_main(char *cmd);
 

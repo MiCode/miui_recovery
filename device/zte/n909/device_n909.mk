@@ -18,5 +18,5 @@ endif
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
 PRODUCT_COPY_FILES += \
-	$(LOCAL_KERNEL):kernel \
-	device/zte/n909/initlogo.rle:root/initlogo.rle 
+	$(LOCAL_KERNEL):kernel 
+ 

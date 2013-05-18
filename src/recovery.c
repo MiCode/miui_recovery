@@ -547,7 +547,8 @@ static intentResult* intent_copy(int argc, char* argv[])
 static intentResult* intent_root(int argc, char *argv[]) {
 	return_intent_result_if_fail(argc == 1);
 	finish_recovery(NULL);
-	if(strstr(argv[0], "root_device") != NULL) {
+//	if(strstr(argv[0], "root_device") != NULL) {
+         if(strcmp(argv[0], "root_device") == 0) {
 		root_device_main(argv[0]);
 	} else {
 		root_device_main(argv[0]);

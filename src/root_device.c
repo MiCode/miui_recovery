@@ -18,58 +18,91 @@
  *
  *
  */
+#define DEBUG_ROOT
 
 
  const char* supersu_list[] = {
-	"Superuser.apk",
-	"Superuser.odex",
-	"SuperUser.apk",
-	"SuperUser.odex",
-	"superuser.apk",
-	"superuser.odex",
-	"Supersu.apk",
-	"Supersu.odex",
-	"SuperSU.apk",
-	"SuperSU.odex",
-	"supersu.apk",
-	"supersu.odex
-};
+	"/system/app/Superuser.apk",
+	"/system/app/Superuser.odex",
+	"/system/app/SuperUser.apk",
+	"/system/app/SuperUser.odex",
+	"/system/app/superuser.apk",
+	"/system/app/superuser.odex",
+	"/system/app/Supersu.apk",
+	"/system/app/Supersu.odex",
+	"/system/app/SuperSU.apk",
+	"/system/app/SuperSU.odex",
+	"/system/app/supersu.apk",
+	"/system/app/supersu.odex",
+        "/system/app/LBESEC_MIUI.apk"	
+ };
+
 
  const char* su_dir_list[] = {
 	"/system/xbin/su",
 	"/system/bin/su",
 	"/system/bin/.ext/.su",
-	"/system/app/Superuser.apk
+	"/system/app/Superuser.apk"
 };
 
 const char* super_su_list[] = {
-	"/supersu/Superuser.apk",
-	"/supersu/su",
-	"/supersu/.su"
+	"/supersu/Superuser.apk", //0
+	"/supersu/su",             //1 
+	"/supersu/su.ext" // su.ext -> .su //2 
 };
 
 
 int remove_supersu() {
 	struct stat st;
 	int i = 0;
-	char file[256];
-	char cmd[1024];
-	strncat(cmd,1023,"rm ");
+	char cmd[256];
+
+#ifdef DEBUG_ROOT 
+	int ret = 0;
+#endif
 	//remove supersu.apk from the system 
-	for (i = 0 ; i < 12 ; i++ ) {
-		snprintf(file, 255, "/system/app/%s",supersu_list[i]);
-		if(stat(file,&st) == 0) {
-			printf("remove file -> %s\n",file);
-			snprintf(cmd, 1023,"%s",file);
+	for (i = 0 ; i < 13 ; i++ ) {
+		if(stat(supersu_list[i],&st) == 0) {
+			printf("remove file -> %s\n",supersu_list[i]);
+			snprintf(cmd, 255,"rm %s",supersu_list[i]);
+#ifdef DEBUG_ROOT
+			ret = __system(cmd);
+			if (ret != -1 ) {
+				printf("success run command: %s\n",cmd);
+			} else {
+				printf("Failed to run command: %s\n", cmd);
+				return -1;
+			}
+#else 
 			__system(cmd);
+#endif
+
+
+#ifdef DEBUG_ROOT
+		} else {
+			printf("Can't stat '%s' ..\n", supersu_list[i]);
 		}
+#else
+
+		}
+#endif 
 	}
         //remove su binary from the system 
 	for (i = 0; i < 3; i++) {
 		if(stat(su_dir_list[i],&st) == 0) {
 			printf("remove file -> %s\n",su_dir_list[i]);
-			snprintf(cmd, 1023, "%s", su_dir_list[i]);
+			snprintf(cmd, 255, "rm %s", su_dir_list[i]);
+#ifdef DEBUG_ROOT 
+			ret = __system(cmd);
+			if (ret != -1) {
+				printf("success run command: %s\n",cmd);
+			} else {
+				printf("Failed to run command: %s\n",cmd);
+				return -1;
+			}
+#else 
 			__system(cmd);
+#endif
 		}
 	}
 	return 0;
@@ -80,12 +113,22 @@ int install_supersu() {
 
 	struct stat st;
 	char cmd[256];
-	if(ensure_path_mounted("/system") != 0) {
-		printf("/system didn't mount...\n");
-		return 1;
-	} else {
+
           //remove supersu from system
+#ifdef DEBUG_ROOT 
+	int ret = 0;
+#endif
+
+#ifdef DEBUG_ROOT 
+	ret = remove_supersu();
+	if(ret == 0) {
+		printf("success run function remove_supersu()..\n");
+	} else {
+		printf("Failed run function remove_supersu()...\n");
+	}
+#else 
             remove_supersu();
+#endif
 
            //check /system/bin/.ext dir and install .su file 
 	   if(stat("/system/bin/.ext",&st) == 0) {
@@ -97,22 +140,40 @@ int install_supersu() {
 		   mkdir("system/bin/.ext",0777);
 		   snprintf(cmd, 255, "busybox install %s -m 06755 %s",super_su_list[2],su_dir_list[2]);
 		   __system(cmd);
+		   printf("copy %s -> %s \n",super_su_list[2], su_dir_list[2]);
 	   }
 
 	   printf("install su & Superuser.apk..\n");
 	   //su binary
 	   snprintf(cmd, 255, "busybox install %s -m 06755 %s", super_su_list[1], su_dir_list[0]);
 	   printf("copy %s -> %s \n",super_su_list[1], su_dir_list[0]);
+#ifdef DEBUG_ROOT 
+	   ret = __system(cmd);
+	   if (ret != -1) {
+		   printf("success run command: %s..\n",cmd);
+	   } else {
+		   printf("Failed to run command: %s...\n",cmd);
+		   return -1;
+	   }
+#else 
 	   __system(cmd);
+#endif
 
 	   //Superuser.apk 
 	   snprintf(cmd, 255, "busybox install %s -m 0644 %s", super_su_list[0], su_dir_list[3]);
 	   printf("copy %s -> %s \n", super_su_list[0], su_dir_list[3]);
+#ifdef DEBUG_ROOT
+	   ret = __system(cmd);
+	   if (ret != -1) {
+		   printf("success run command: %s..\n",cmd);
+	   } else {
+		   printf("Failed to run command: %s...\n",cmd);
+		   return -1;
+	   }
+#else 
 	   __system(cmd);
-	}
-          
-    }
-	return 0;
+#endif
+          	return 0;
 }
 
 int un_of_recovery() {
@@ -146,13 +207,20 @@ int un_of_recovery() {
 }
 
 
-
 int root_device_main(char *cmd) {
 	int ret = 0;
 	if(cmd != NULL) {
-	if(strcmp(cmd,"root_device") == 0) {
+	if(0 == strcmp(cmd,"root_device")) {
 	    	ret = install_supersu();
+#ifdef DEBUG_ROOT 
+		if (ret == -1) {
+			printf("Failed to install supersu to system..\n");
+		} else {
+			printf("success to install supersu to system..\n");
+		}
+#else
 			return ret;
+#endif
 	}
 	if(0 == strcmp(cmd,"un_of_rec")) {
 		ret = un_of_recovery();
@@ -161,5 +229,6 @@ int root_device_main(char *cmd) {
     }
 	return 0;
 }
+
 
 

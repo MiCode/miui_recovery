@@ -1084,5 +1084,5 @@ unset f
 
 addcompletions
 #lunch 4
-lunch full_n880f-userdebug
+lunch full_n909-eng
 
