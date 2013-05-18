@@ -49,6 +49,8 @@ BOARD_FLASH_BLOCK_SIZE := 262144
 
 TARGET_PREBUILT_KERNEL := device/zte/n909/kernel
 
+USE_EXECLUDE_SUPERSU := true 
+
 # BOARD_TOUCH_RECOVERY := true
 
 #recovery

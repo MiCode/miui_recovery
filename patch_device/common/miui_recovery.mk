@@ -47,12 +47,16 @@ $(MIUI_PRODUCT): $(MKBOOTFS) $(MINIGZIP) \
 	mkdir -p $(miui_recovery_out)
 	mkdir -p $(miui_recovery_product)
 	mkdir -p $(miui_recovery_root)
-	cp -rf src/supersu $(miui_recovery_root)/
+#	cp -rf src/supersu $(miui_recovery_root)/
 	cp -rf $(MIUI_PRODUCT_ROOT) $(miui_recovery_product)/
 	cp -rf $(MIUI_KERNEL) $(miui_recovery_product)/
 	cp -rf $(miui_recovery_sbin) $(miui_recovery_root)/
 	cp -f $(miui_recovery_binary) $(miui_recovery_root)/sbin/
 	cp -rf $(miui_recovery_resource) $(miui_recovery_root)/
+ifneq ($(TARGET_BOOTLOADER_BOARD_NAME),u5)
+	cp -rf src/supersu $(miui_recovery_root)/
+endif
+
 ifneq ($(MIUI_DEVICE_CONFIG),)
 	-cp -f $(MIUI_DEVICE_CONFIG) $(miui_recovery_root)/res/
 endif

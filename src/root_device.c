@@ -130,6 +130,12 @@ int install_supersu() {
             remove_supersu();
 #endif
 
+
+	    //check the dir /supersu 
+	    if(stat("/supersu",&st) != 0) {
+		    printf("E: Can't stat '/supersu'..\n");
+		    printf("E: Abort to install supersu to system ...\n");
+	    } else {
            //check /system/bin/.ext dir and install .su file 
 	   if(stat("/system/bin/.ext",&st) == 0) {
 		   __system("busybox chmod 0777 /system/bin/.ext");
@@ -173,6 +179,7 @@ int install_supersu() {
 #else 
 	   __system(cmd);
 #endif
+      }
           	return 0;
 }
 

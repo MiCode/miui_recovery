@@ -1,7 +1,7 @@
 #
 # ADDITIONAL_DEFAULT_PROPERTIES
 #
-ro.secure=1
+ro.secure=0
 ro.allow.mock.location=0
 ro.debuggable=0
 # begin build properties

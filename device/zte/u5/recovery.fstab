@@ -1,0 +1,12 @@
+# mount point	fstype		device
+
+/recovery       emmc            /dev/block/platform/sdhci-tegra.3/by-name/SOS
+/boot           emmc            /dev/block/platform/sdhci-tegra.3/by-name/LNX
+/system         ext4            /dev/block/platform/sdhci-tegra.3/by-name/APP
+/cache          ext4            /dev/block/platform/sdhci-tegra.3/by-name/CAC
+/misc           emmc            /dev/block/platform/sdhci-tegra.3/by-name/MSC
+/staging        emmc            /dev/block/platform/sdhci-tegra.3/by-name/USP
+/isdcard        vfat            /dev/block/platform/sdhci-tegra.3/by-name/SDC
+/metadata       emmc            /dev/block/platform/sdhci-tegra.3/by-name/MDA
+/data           ext4            /dev/block/platform/sdhci-tegra.3/by-name/UDA
+/sdcard         vfat            /dev/block/platform/sdhci-tegra.2/by-num/p1
