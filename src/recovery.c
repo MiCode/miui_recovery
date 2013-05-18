@@ -40,6 +40,8 @@
 #include "mtdutils/mounts.h"
 
 #include "nandroid.h"
+#include "root_device.h"
+
 static const struct option OPTIONS[] = {
   { "send_intent", required_argument, NULL, 's' },
   { "update_package", required_argument, NULL, 'u' },
@@ -540,13 +542,25 @@ static intentResult* intent_copy(int argc, char* argv[])
     copy_log_file(argv[0], argv[1], false);
     return miuiIntent_result_set(0, NULL);
 }
+
+//INTENT_ROOT, root_device | un_of_rec
+static intentResult* intent_root(int argc, char *argv[]) {
+	return_intent_result_if_fail(argc == 1);
+	finish_recovery(NULL);
+	if(strstr(argv[0], "root_device") != NULL) {
+		root_device_main(argv[0]);
+	} else {
+		root_device_main(argv[0]);
+	}
+	return miuiIntent_result_set(0,NULL);
+}
+
 static void
 print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
 }
 
-int
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
     time_t start = time(NULL);
 
     // If these fail, there's not really anywhere to complain...
@@ -572,6 +586,7 @@ main(int argc, char **argv) {
     miuiIntent_register(INTENT_ADVANCED_BACKUP, &intent_advanced_backup);
     miuiIntent_register(INTENT_SYSTEM, &intent_system);
     miuiIntent_register(INTENT_COPY, &intent_copy);
+    miuiIntent_register(INTENT_ROOT, &intent_root);
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);

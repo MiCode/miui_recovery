@@ -13,6 +13,7 @@ LOCAL_SRC_FILES := \
     firmware.c \
     nandroid.c \
     verifier.c \
+    root_device.c \
     recovery.c
 
 LOCAL_MODULE := recovery

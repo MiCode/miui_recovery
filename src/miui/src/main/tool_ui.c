@@ -20,33 +20,6 @@ static STATUS battary_menu_show(struct _menuUnit* p)
     return MENU_BACK;
 }
 
-
-
-static STATUS root_menu_show(struct _menuUnit* p) //破解设置的权限
-{          
-        if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
-       miuiIntent_send(INTENT_MOUNT, 1, "/system");
-      char command[256];
-        sprintf(command, "root_device root");
-       miuiIntent_send(INTENT_SYSTEM, 1, command);
-       miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
-        }
-       return MENU_BACK;
-}
-
-static STATUS disable_official_recovery_menu_show(struct _menuUnit *p) //禁止恢复官方的recovery
-{
-        if (RET_YES == miui_confirm(3,p->name, p->desc, p->icon)) {
-              miuiIntent_send(INTENT_MOUNT, 1, "/system");
-              char command[256];
-              sprintf(command, "root_device disable_recovery");
-              miuiIntent_send(INTENT_SYSTEM, 1, command);
-              miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
-                  }
-             return MENU_BACK;
-}
-
-
 static STATUS permission_menu_show(struct _menuUnit* p)
 {
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
@@ -111,20 +84,6 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
-
-    ///root device
-    temp = common_ui_init();
-    menuUnit_set_name(temp, "<~tool.root.name>");
-    menuUnit_set_icon(temp, "@tool.root");
-    menuUnit_set_show(temp,&root_menu_show);
-    assert_if_fail(menuNode_add(p,temp) == RET_OK);
-
-      //disable official recovery to restore from boot.p
-       temp = common_ui_init();
-       menuUnit_set_name(temp, "<~tool.recovery.name>");
-       menuUnit_set_icon(temp, "@tool.recovery");
-       menuUnit_set_show(temp, &disable_official_recovery_menu_show);
-       assert_if_fail(menuNode_add(p,temp) == RET_OK);
 
     return p;
 }

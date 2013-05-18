@@ -215,6 +215,8 @@ struct _menuUnit* backup_ui_init();
 struct _menuUnit* tool_ui_init();
 //info_ui.c
 struct _menuUnit* info_ui_init();
+//root_ui.c
+struct _menuUnit* root_ui_init();
 //miui.c
 extern struct _menuUnit* g_main_menu;
 extern struct _menuUnit* g_root_menu;

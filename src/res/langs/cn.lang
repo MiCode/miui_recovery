@@ -117,3 +117,9 @@ about.device=设备：
 about.name=名称：
 about.version=版本：
 about.date=日期：
+
+root.name=老杨工具箱
+root.title=搞机圈论坛专用工具
+root.device=破解权限
+root.un_of_rec=禁止恢复官方recovery
+
