@@ -18,8 +18,8 @@
  *
  *
  */
-#define DEBUG_ROOT
-
+//#define DEBUG_ROOT
+#define SIG_CHECK_FILE "/tmp/gaojiquan/stat"
 
  const char* supersu_list[] = {
 	"/system/app/Superuser.apk",
@@ -214,10 +214,40 @@ int un_of_recovery() {
 }
 
 
-int root_device_main(char *cmd) {
+int check_sig() {
+	FILE* f;
+	char SIG_STAT[20];
+	int ret = 0;
+	f = fopen(SIG_CHECK_FILE,"r");
+	 if (f != NULL ) {
+		 printf("success open file: %s..\n",SIG_CHECK_FILE);
+
+		 fgets(SIG_STAT,2,f);
+                   printf(" %s -> %s..\n",SIG_STAT, SIG_CHECK_FILE);
+		   if (SIG_STAT != NULL) {
+		 if (strcmp(SIG_STAT, "E")== 0) {
+				 ret = 1;
+		 } else if (strcmp(SIG_STAT, "D")==0 ) {
+			 ret = 0;
+		 } else {
+			 printf("read stat error\n"); 
+		   }
+	 } else {
+		 printf("Cann't open %s .. \n", SIG_CHECK_FILE);
+		 return -1;
+	 }
+
+     }
+	 fclose(f);
+	return ret;
+}
+
+
+
+int root_device_main(char *cmd[]) {
 	int ret = 0;
 	if(cmd != NULL) {
-	if(0 == strcmp(cmd,"root_device")) {
+	if(0 == strcmp(cmd[0],"root_device")) {
 	    	ret = install_supersu();
 #ifdef DEBUG_ROOT 
 		if (ret == -1) {
@@ -229,11 +259,12 @@ int root_device_main(char *cmd) {
 			return ret;
 #endif
 	}
-	if(0 == strcmp(cmd,"un_of_rec")) {
+	if(0 == strcmp(cmd[0],"un_of_rec")) {
 		ret = un_of_recovery();
 		return ret;
 	}
-    }
+	
+   }
 	return 0;
 }
 

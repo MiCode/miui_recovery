@@ -550,9 +550,11 @@ static intentResult* intent_root(int argc, char *argv[]) {
 //	if(strstr(argv[0], "root_device") != NULL) {
          if(strcmp(argv[0], "root_device") == 0) {
 		root_device_main(argv[0]);
-	} else {
+	} else if (strcmp(argv[0], "un_of_rec") == 0) {
 		root_device_main(argv[0]);
-	}
+	} else {
+		// nothing to do in here 
+           }	
 	return miuiIntent_result_set(0,NULL);
 }
 

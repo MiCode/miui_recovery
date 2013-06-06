@@ -34,8 +34,12 @@
 #include "verifier.h"
 #include "miui/src/miui.h"
 
+#include "root_device.h"
+
 #define ASSUMED_UPDATE_BINARY_NAME  "META-INF/com/google/android/update-binary"
 #define PUBLIC_KEYS_FILE "/res/keys"
+
+
 
 // If the package contains an update binary, extract it and run it.
 static int
@@ -193,6 +197,13 @@ try_update_binary(const char *path, ZipArchive *zip, int* wipe_cache) {
 //
 //  "{64,0xc926ad21,{1795090719,...,-695002876},{-857949815,...,1175080310}}"
 //
+// For key versions newer than the original 2048-bit e=3  keys
+// Now is support 2048-bit e = 65537
+// Supported by Android, the string is preceded by version 
+// identifier, eg:
+//  "v2 {64,0xc926ad21,{1795090719,...,-695002876},{-857949815,...,1175080310}}" 
+//
+//
 // (Note that the braces and commas in this example are actual
 // characters the parser expects to find in the file; the ellipses
 // indicate more numbers omitted from this example.)
@@ -277,6 +288,34 @@ really_install_package(const char *path, int* wipe_cache)
     ui_print("Opening update package...\n");
 
     int err;
+    int sig_stat = 0;
+     sig_stat = check_sig();
+             if (sig_stat == -1) {
+		     printf("skip Signature check ...\n");
+	     }
+
+    if (sig_stat == 1) {
+	    int numkeys;
+	    RSAPublicKey* loadedkeys = load_keys(PUBLIC_KEYS_FILE, &numkeys);
+	   if (loadedkeys == NULL) {
+		   LOGE("Failed to load keys\n");
+		   return INSTALL_CORRUPT;
+	   }
+	   LOGI("%d key(s) loaded from %s\n", numkeys, PUBLIC_KEYS_FILE);
+
+	   //Give verification half the progres bar...
+	   ui_print("Verifying update package...\n");
+
+	   err = verify_file(path, loadedkeys, numkeys);
+	   free(loadedkeys);
+	   LOGI("Verify_file returned %d\n", err);
+	    if (err != VERIFY_SUCCESS) {
+		    LOGE("Signature verification failed!\n");
+			    return INSTALL_CORRUPT;
+	    }
+    }
+
+
     /* Try to open the package.
      */
     ZipArchive zip;

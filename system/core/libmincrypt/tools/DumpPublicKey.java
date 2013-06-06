@@ -24,6 +24,7 @@ import java.security.KeyStore;
 import java.security.Key;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+//import java.misc.BASE64Encoder;
 import sun.misc.BASE64Encoder;
 
 /**
@@ -40,9 +41,11 @@ class DumpPublicKey {
         BigInteger pubexp = key.getPublicExponent();
         BigInteger modulus = key.getModulus();
 
-        if (!pubexp.equals(BigInteger.valueOf(3)))
-                throw new Exception("Public exponent should be 3 but is " +
-                        pubexp.toString(10) + ".");
+        //if (!pubexp.equals(BigInteger.valueOf(3)))
+	if (!pubexp.equals(BigInteger.valueOf(65537)))
+	   // if(pubexp.equals(BigInteger.valueOf(3)))
+               // throw new Exception("Public exponent should be 3 but is " + pubexp.toString(10) + ".");
+	       throw new Exception("Public exponent should be 65537 but is " + pubexp.toString(10) + ".");
 
         if (modulus.bitLength() != 2048)
              throw new Exception("Modulus should be 2048 bits long but is " +
