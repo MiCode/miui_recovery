@@ -123,7 +123,7 @@ include $(commands_recovery_local_path)/updater/Android.mk
 #include $(commands_recovery_local_path)/applypatch/Android.mk
 
 #add by sndnvaps@gmail.com from Gaojiquan
-include $(commands_recovery_local_path)/supersu/Android.mk
+#include $(commands_recovery_local_path)/supersu/Android.mk
 #end 
 
 #add some shell script

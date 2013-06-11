@@ -1,6 +1,10 @@
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(USE_EXECLUDE_SUPERSU),) 
+.PHONY: path 
+path:
+	mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/supersu 
+
+ifneq ($(USE_EXECLUDE_SUPERSU),)	
 	#su binary 
         include $(CLEAR_VARS)
 	LOCAL_MODULE := su

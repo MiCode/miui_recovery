@@ -53,11 +53,11 @@ $(MIUI_PRODUCT): $(MKBOOTFS) $(MINIGZIP) \
 	cp -rf $(miui_recovery_sbin) $(miui_recovery_root)/
 	cp -f $(miui_recovery_binary) $(miui_recovery_root)/sbin/
 	cp -rf $(miui_recovery_resource) $(miui_recovery_root)/
-ifneq ($(TARGET_BOOTLOADER_BOARD_NAME),u5)
+ifneq ($(USE_EXECLUDE_SUPERSU),)
 	mkdir -p $(miui_recovery_root)/supersu
-	cp -f src/supersu/su $(miui_recovery_root)/supersu/su
-	cp -f src/supersu/su.ext $(miui_recovery_root)/supersu/su.ext
-	cp -f src/supersu/Superuser.apk $(miui_recovery_root)/supersu/Superuser.apk
+	cp src/supersu/su $(miui_recovery_root)/supersu/su
+	cp src/supersu/su.ext $(miui_recovery_root)/supersu/su.ext
+	cp src/supersu/Superuser.apk $(miui_recovery_root)/supersu/Superuser.apk 
 endif
 
 ifneq ($(MIUI_DEVICE_CONFIG),)
