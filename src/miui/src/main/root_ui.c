@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 #include "../miui_inter.h"
 #include "../miui.h"
@@ -43,7 +44,8 @@
 #define E_SIG 0x89
 #define D_SIG 0X90
 #define CURRENT_SIGN_STAT_PATH "/tmp/gaojiquan"
-
+//INTENT_RUN_ORS ,1, filename
+//
 static STATUS root_device_item_show(menuUnit *p) {
 	if(RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
 		miui_busy_process();
@@ -87,7 +89,8 @@ static STATUS brightness_menu_show(struct _menuUnit* p) {
 	}
 	return MENU_BACK;
 }
-
+/* Remove it to support ors */
+/*
 static STATUS signature_set_menu_show(struct _menuUnit* p) {
 	struct stat st;
 	char cmd[1024];
@@ -112,6 +115,84 @@ static STATUS signature_set_menu_show(struct _menuUnit* p) {
 				break;
 	}
 	return MENU_BACK;
+}
+*/
+
+
+/* 
+ *  _sd_show_dir show file system on screen 
+ *  return MENU_BACK when press backmenu
+ */
+
+#define _SD_MAX_PATH 256
+//callback function, success return 0, non-zero fail
+ int ors_file_run(char *file_name, int file_len, void* data) {
+	 return_val_if_fail(file_name != NULL, RET_FAIL);
+	 return_val_if_fail(strlen(file_name) <= file_len, RET_INVALID_ARG);
+	 return_val_if_fail(data != NULL, RET_FAIL);
+	 struct _menuUnit* p = (pmenuUnit)data;
+	  if(RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+		  miuiIntent_send(INTENT_RUN_ORS, 1, file_name);
+		  return 0;
+
+	  }else return -1;
+
+	  return 0;
+ }
+
+//callback function file filter, if access, return 0, other return -1
+int ors_file_filter(char* file, int file_len) {
+	return_val_if_fail(file != NULL, RET_FAIL);
+	int len = strlen(file);
+	return_val_if_fail(len <= file_len, RET_INVALID_ARG);
+	if (len >= 4 && strncasecmp(file + len -4, ".ors", 4) == 0)
+		return 0;
+	return -1;
+}
+
+static STATUS ors_sd_menu_show(menuUnit *p) {
+	//ensure mounte sd path 
+	struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
+	//whatever wether sd is mount, scan sdcard and go on 
+	int ret;
+	ret = file_scan("/sdcard",sizeof("/sdcard"), p->name, strlen(p->name), &ors_file_run, (void*)p, &ors_file_filter);
+	if (ret == -1) return MENU_BACK;
+	return ret;
+}
+
+static STATUS ors_sdext_menu_show(menuUnit* p) {
+	//ensure_mounte sdext path
+	struct _intentResult* result = miuiIntent_send(INTENT_MOUNT, 1, "/external_sd");
+	//whatever wether sd-ext is mounted ,scan sd-ext and go on
+	int ret;
+	ret = file_scan("/external_sd", sizeof("/external_sd"), p->name, strlen(p->name), &ors_file_run, (void*)p, &ors_file_filter);
+	if (ret == -1) return MENU_BACK;
+	return ret;
+}
+
+struct _menuUnit* ors_ui_init() {
+	struct _menuUnit* p = common_ui_init();
+	return_null_if_fail(p != NULL);
+	menuUnit_set_name(p, "运行ORS脚本");
+	menuUnit_set_title(p, "运行ORS脚本");
+	menuUnit_set_icon(p, "@root");
+	assert_if_fail(menuNode_init(p) != NULL);
+	//select ORS from sd card 
+	struct _menuUnit* temp = common_ui_init();
+	menuUnit_set_name(temp, "从SD卡选择ORS脚本");
+	menuUnit_set_show(temp, &ors_sd_menu_show);
+	assert_if_fail(menuNode_add(p, temp) == RET_OK);
+	
+	//select ORS from external_sd
+	if (acfg()->sd_ext == 1) {
+	temp = common_ui_init();
+	menuUnit_set_name(temp, "从内置卡选择ORS脚本");
+	menuUnit_set_show(temp, &ors_sdext_menu_show);
+	assert_if_fail(menuNode_add(p, temp) == RET_OK);
+	}
+	
+
+	return p;
 }
 
 
@@ -151,7 +232,8 @@ struct _menuUnit* brightness_ui_init() {
 	return p;
 }
 
-
+/* remove it to support ors */
+/*
 struct _menuUnit* SIG_SET_ui_init() {
          struct _menuUnit* p = common_ui_init();
          return_null_if_fail(p != NULL);
@@ -178,7 +260,7 @@ struct _menuUnit* SIG_SET_ui_init() {
 	 return p;
 }
 
-
+*/
 
 struct _menuUnit* root_ui_init() {
 
@@ -210,9 +292,15 @@ struct _menuUnit* root_ui_init() {
 	//set Brightness
 	tmp = brightness_ui_init();
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
-
+           
 	//signature set menu 
+	// remove it to support ors 
+	/*
 	tmp = SIG_SET_ui_init();
+	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
+         */
+	//ORS function 
+	tmp = ors_ui_init();
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
 
 	return p;

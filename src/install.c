@@ -288,6 +288,8 @@ really_install_package(const char *path, int* wipe_cache)
     ui_print("Opening update package...\n");
 
     int err;
+  /* Remove signature check to support ors */
+    /*
     int sig_stat = 0;
      sig_stat = check_sig();
              if (sig_stat == -1) {
@@ -314,7 +316,7 @@ really_install_package(const char *path, int* wipe_cache)
 			    return INSTALL_CORRUPT;
 	    }
     }
-
+*/
 
     /* Try to open the package.
      */

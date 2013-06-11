@@ -124,6 +124,50 @@ static const char *SIDELOAD_TEMP_DIR = "/tmp/sideload";
 static const int MAX_ARG_LENGTH = 4096;
 static const int MAX_ARGS = 100;
 
+void write_fstab_root(char *path, FILE *file)
+{
+    Volume *vol = volume_for_path(path);
+    if (vol == NULL) {
+        LOGW("Unable to get recovery.fstab info for %s during fstab generation!\n", path);
+        return;
+    }
+    char device[200];
+    if (vol->device[0] != '/')
+        get_partition_device(vol->device, device);
+    else
+        strcpy(device, vol->device);
+
+    fprintf(file, "%s ", device);
+    fprintf(file, "%s ", path);
+    // special case rfs cause auto will mount it as vfat on samsung.
+    fprintf(file, "%s rw\n", vol->fs_type2 != NULL && strcmp(vol->fs_type, "rfs") != 0 ? "auto" : vol->fs_type);
+}
+
+void create_fstab()
+{
+    struct stat info;
+    __system("touch /etc/mtab");
+    FILE *file = fopen("/etc/fstab", "w");
+    if (file == NULL) {
+        LOGW("Unable to create /etc/fstab!\n");
+        return;
+    }
+    Volume *vol = volume_for_path("/boot");
+    if (NULL != vol && strcmp(vol->fs_type, "mtd") != 0 && strcmp(vol->fs_type, "emmc") != 0 && strcmp(vol->fs_type, "bml") != 0)
+    write_fstab_root("/boot", file);
+    write_fstab_root("/cache", file);
+    write_fstab_root("/data", file);
+    write_fstab_root("/datadata", file);
+    write_fstab_root("/emmc", file);
+    write_fstab_root("/system", file);
+    write_fstab_root("/sdcard", file);
+    write_fstab_root("/sd-ext", file);
+    write_fstab_root("/external_sd", file);
+    fclose(file);
+    LOGI("Completed outputting fstab.\n");
+}
+
+
 // open a given path, mounting partitions as necessary
 FILE*
 fopen_path(const char *path, const char *mode) {
@@ -558,10 +602,32 @@ static intentResult* intent_root(int argc, char *argv[]) {
 	return miuiIntent_result_set(0,NULL);
 }
 
+
+// INTENT_RUN_ORS scripts.ors | *.ors 
+static intentResult* intent_run_ors(int argc, char *argv[]) {
+	return_intent_result_if_fail(argc == 1);
+	finish_recovery(NULL);
+	if(strstr(argv[0], ".ors") != NULL) {
+	 	if (0 == (check_for_script_file(argv[0]))) {
+			if ( 0 == run_ors_script("/tmp/openrecoveryscript")) {      
+				printf("success run openrecoveryscript....\n");
+			} else {
+				LOGE("cannot run openrecoveryscript...\n");
+			}
+		} else {
+			LOGE("cannot found OpenRecoveryScript in '%s'",argv[0]);
+		}
+	}
+	
+		return miuiIntent_result_set(0, NULL);
+}
+
+
 static void
 print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
 }
+
 
 int main(int argc, char **argv) {
     time_t start = time(NULL);
@@ -590,6 +656,7 @@ int main(int argc, char **argv) {
     miuiIntent_register(INTENT_SYSTEM, &intent_system);
     miuiIntent_register(INTENT_COPY, &intent_copy);
     miuiIntent_register(INTENT_ROOT, &intent_root);
+    miuiIntent_register(INTENT_RUN_ORS, &intent_run_ors);
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);
@@ -662,7 +729,25 @@ int main(int argc, char **argv) {
         if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
         if (status != INSTALL_SUCCESS) ui_print("Cache wipe failed.\n");
     } else {
+	    LOGI("Checking for OpenRecoveryScript...\n");
         status = INSTALL_ERROR;  // No command specified
+	//we are starting up in user initiated recovery here
+	//let's set up some defaut options;
+	ui_set_background(BACKGROUND_ICON_INSTALLING);
+	if( 0 == check_for_script_file("/cache/recovery/openrecoveryscript")) {
+		LOGI("Runing openrecoveryscript...\n");
+		int ret;
+		if (0 == (ret = run_ors_script("/tmp/openrecoveryscript"))) {
+			status = INSTALL_SUCCESS;
+			//ui_set_show_text(0);
+		} else {
+			LOGE("Running openrecoveryscript Fail\n");
+		}
+	}
+
+
+
+
     }
     if (status != INSTALL_SUCCESS) device_main_ui_show();//show menu
     device_main_ui_release();

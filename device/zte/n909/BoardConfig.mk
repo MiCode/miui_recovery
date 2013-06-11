@@ -39,6 +39,8 @@ TARGET_MIUI_RECOVERY_N909 := true
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_USES_MMCUTILS := true
 BOARD_HAS_LARGE_FILESYSTEM := true 
+#for ors 
+BOARD_HAS_REMOVABLE_STORAGE := true
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 13901824

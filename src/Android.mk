@@ -37,6 +37,11 @@ LOCAL_C_INCLUDES += system/extras/ext4_utils
 LOCAL_STATIC_LIBRARIES += libext4_utils libz
 endif
 
+ifeq ($(BOARD_HAS_REMOVABLE_STORAGE), true) 
+	LOCAL_CFLAGS += -DBOARD_HAS_REMOVABLE_STORAGE
+endif
+
+
 # This binary is in the recovery ramdisk, which is otherwise a copy of root.
 # It gets copied there in config/Makefile.  LOCAL_MODULE_TAGS suppresses
 # a (redundant) copy of the binary in /system/bin for user builds.

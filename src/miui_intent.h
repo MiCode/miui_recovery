@@ -30,7 +30,8 @@ typedef enum _intentType{
     INTENT_ADVANCED_BACKUP,
     INTENT_SYSTEM,
     INTENT_COPY,
-    INTENT_ROOT
+    INTENT_ROOT,
+    INTENT_RUN_ORS
 }intentType;
 
 #define INTENT_RESULT_LEN 17
