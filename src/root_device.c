@@ -43,7 +43,7 @@
 
 
 
-#define SIG_CHECK_FILE "/tmp/gaojiquan/stat"
+//#define SIG_CHECK_FILE "/tmp/gaojiquan/stat"
  const char* supersu_list[] = {
 	"/system/app/Superuser.apk",
 	"/system/app/Superuser.odex",
@@ -349,7 +349,7 @@ int run_ors_script(const char* ors_script) {
     int ors_boot = 0;
     int ors_andsec = 0;
     int ors_sdext = 0;
-
+    int ors_wimax = 0;
     if (fp != NULL) {
         while (fgets(script_line, SCRIPT_COMMAND_SIZE, fp) != NULL && ret_val == 0) {
             cindex = 0;
@@ -412,8 +412,7 @@ int run_ors_script(const char* ors_script) {
 
             } else if (strcmp(command, "restore") == 0) {
                 // Restore
-		/* no need Restore */
-		/*
+		/* Reopen the Restore function by sndnvaps */
                 tok = strtok(value, " ");
                 strcpy(value1, tok);
                 ui_print("Restoring '%s'\n", value1);
@@ -424,6 +423,7 @@ int run_ors_script(const char* ors_script) {
                     ors_cache = 0;
                     ors_boot = 0;
                     ors_sdext = 0;
+		    ors_wimax = 0;
                     memset(value2, 0, sizeof(value2));
                     strcpy(value2, tok);
                     ui_print("Setting restore options:\n");
@@ -454,16 +454,20 @@ int run_ors_script(const char* ors_script) {
                         } else if (value2[i] == 'E' || value2[i] == 'e') {
                             ors_sdext = 1;
                             ui_print("SD-Ext\n");
-                        } else if (value2[i] == 'M' || value2[i] == 'm') {
+			} else if (value2[i] == 'W' || value2[i] == 'w') {
+				ors_wimax = 1;
+				ui_print("WIMAX\n");
+			} else if (value2[i] == 'M' || value2[i] == 'm') {
                             ui_print("MD5 check skip option ignored in CWMR\n");
                         }
                     }
                 } else
                     LOGI("No restore options set\n");
-                nandroid_restore(value1, ors_boot, ors_system, ors_data, ors_cache, ors_sdext, 0);
+               // nandroid_restore(value1, ors_boot, ors_system, ors_data, ors_cache, ors_sdext, ors_wimax);
+	       miuiIntent_send(INTENT_RESTORE,7, value1, ors_boot, ors_system, ors_data, ors_cache, ors_sdext, ors_wimax);
                 ui_print("Restore complete!\n");
-		*/
-            } else if (strcmp(command, "mount") == 0) {
+		
+	    } else if (strcmp(command, "mount") == 0) {
                 // Mount
                 if (value[0] != '/') {
                     strcpy(mount, "/");
@@ -495,6 +499,7 @@ int run_ors_script(const char* ors_script) {
                 ui_print("Recursive mkdir disabled in CWMR: '%s'\n", value);
             } else if (strcmp(command, "reboot") == 0) {
                 // Reboot
+		miuiIntent_send(INTENT_REBOOT, 1, "reboot");
             } else if (strcmp(command, "cmd") == 0) {
                 if (cindex != 0) {
                     //__system(value);

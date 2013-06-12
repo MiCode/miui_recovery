@@ -18,3 +18,6 @@ extendedcommands.c
 最后有定义：
 __system("chmod -x /system/etc/install-recovery.sh");
 
+
+switch to dedque 
+https://github.com/CyanogenMod/android_bootable_recovery/commit/3918fedd5eb2d0d17d2cee5bfc491c6273c28a4c
