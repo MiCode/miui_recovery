@@ -19,6 +19,7 @@ MIUI_PRODUCTS := crespo ville sensation vivo saga maguro honor shooteru \
 #ef40s: Pantech A810S
 #ef39s: Pantech A800S
 #n909: ZTE N909 
+#n880f: ZTE N880F
 MIUI_PRODUCTS := $(strip $(MIUI_PRODUCTS))
 
 .PHONY: default
