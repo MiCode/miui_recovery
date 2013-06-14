@@ -2,8 +2,8 @@
 # ADDITIONAL_DEFAULT_PROPERTIES
 #
 
-ro.secure=1
-ro.allow.mock.location=0
+ro.secure=0
+ro.allow.mock.location=1
 ro.debuggable=1
 persist.sys.usb.config=adb
 # begin build properties
@@ -17,8 +17,8 @@ ro.build.version.release=4.2.2
 ro.build.date=Thu Mar 14 22:16:54 PDT 2013
 ro.build.date.utc=0
 ro.build.type=userdebug
-ro.build.user=hudson
-ro.build.host=koushik-lion
+ro.build.user=sndnvaps
+ro.build.host=sn-ThinkCentre
 ro.build.tags=test-keys
 ro.product.model=n880f
 ro.product.brand=ZTE N880F 

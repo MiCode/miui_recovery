@@ -1,5 +1,6 @@
-# ! /sbin/sh
-# Warning: if you want to run this script in cm-recovery change the above to 
+#! /sbin/sh
+#
+# Warning: if you want to run this script in cm-recovery change the above to #!/sbin/sh
 #
 # fix_permissions - fixes permissions on Android data directories after upgrade
 # shade@chemlab.org
@@ -266,9 +267,9 @@ fp_chmod()
 
 fp_all()
 {
-   FP_NUMS=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk |  $WC -l )
+   FP_NUMS=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk | $GREP -v com.htc.resources.apk | $WC -l )
    I=0
-   $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk | while read all_line; do
+   $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk | $GREP -v com.htc.resources.apk | while read all_line; do
       I=$( $EXPR $I + 1 )
       fp_package "$all_line" $I $FP_NUMS
    done
@@ -276,13 +277,13 @@ fp_all()
 
 fp_single()
 {
-   FP_SFOUND=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk |$GREP -i $ONLY_ONE | wc -l )
+   FP_SFOUND=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk | $GREP -v com.htc.resources.apk | $GREP -i $ONLY_ONE | wc -l )
    if $TEST $FP_SFOUND -gt 1; then
       fp_print "Cannot perform single operation on $FP_SFOUND matched package(s)."
       elif $TEST $FP_SFOUND = "" -o $FP_SFOUND -eq 0; then
       fp_print "Could not find the package you specified in the packages.xml file."
    else
-      FP_SPKG=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk |  $GREP -i $ONLY_ONE )
+      FP_SPKG=$( $CAT /data/system/packages.xml | $EGREP "^<package.*serId" | $GREP -v framework-res.apk | $GREP -v com.htc.resources.apk | $GREP -i $ONLY_ONE )
       fp_package "${FP_SPKG}" 1 1
    fi
 }
