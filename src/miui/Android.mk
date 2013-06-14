@@ -79,10 +79,6 @@ LOCAL_SRC_FILES := \
     $(libmiui_common_src_files)
 LOCAL_C_INCLUDES += $(libmiui_common_includes)
 LOCAL_CFLAGS := $(MYDEFINE_CFLAGS)
-ifeq ($(TARGET_MIUI_RECOVERY_N909),true) 
-	LOCAL_CFLAGS += -DMIUI_BUILD_DEVICE_N909
-endif
-
 
 LOCAL_STATIC_LIBRARIES += libc libm
 LOCAL_MODULE := libmiui

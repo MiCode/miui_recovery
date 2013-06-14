@@ -142,14 +142,7 @@ static char * aipStrTokR(char *str, const char *delim, char **save_str){
 static byte aipInitEventDev(AIP_EVP e){
   /* Variables */
 
-  char    vk_path[PATH_MAX];
-
-#ifdef MIUI_BUILD_DEVICE_N909
-  //Add by sndnvaps@gamil.com 2013/4/11 21:50:48 
-    vk_path[PATH_MAX] = "/sys/board_properties.";
-#else 
-     vk_path[PATH_MAX] = "/sys/board_properties/virtualkeys.";
-#endif 
+  char    vk_path[PATH_MAX] = "/sys/board_properties/virtualkeys.";
 
   char    vks[2048], *ts    = NULL;
   ssize_t len;

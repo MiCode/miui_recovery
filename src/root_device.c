@@ -342,6 +342,7 @@ int run_ors_script(const char* ors_script) {
          value[SCRIPT_COMMAND_SIZE], mount[SCRIPT_COMMAND_SIZE],
          value1[SCRIPT_COMMAND_SIZE], value2[SCRIPT_COMMAND_SIZE];
     char *val_start, *tok;
+   /*
     int ors_system = 0;
     int ors_data = 0;
     int ors_cache = 0;
@@ -350,6 +351,16 @@ int run_ors_script(const char* ors_script) {
     int ors_andsec = 0;
     int ors_sdext = 0;
     int ors_wimax = 0;
+    */
+    char *ors_system = "0";
+    char *ors_data = "0";
+    char *ors_cache = "0";
+    char *ors_recovery = "0";
+    char *ors_boot = "0";
+    char *ors_andsec = "0";
+    char *ors_sdext = "0";
+    char *ors_wimax = "0";
+
     if (fp != NULL) {
         while (fgets(script_line, SCRIPT_COMMAND_SIZE, fp) != NULL && ret_val == 0) {
             cindex = 0;
@@ -418,25 +429,25 @@ int run_ors_script(const char* ors_script) {
                 ui_print("Restoring '%s'\n", value1);
                 tok = strtok(NULL, " ");
                 if (tok != NULL) {
-                    ors_system = 0;
-                    ors_data = 0;
-                    ors_cache = 0;
-                    ors_boot = 0;
-                    ors_sdext = 0;
-		    ors_wimax = 0;
+                    ors_system = "0";
+                    ors_data = "0";
+                    ors_cache = "0";
+                    ors_boot = "0";
+		    ors_sdext = "0";
+		    ors_wimax = "0";
                     memset(value2, 0, sizeof(value2));
                     strcpy(value2, tok);
                     ui_print("Setting restore options:\n");
                     line_len = strlen(value2);
                     for (i=0; i<line_len; i++) {
                         if (value2[i] == 'S' || value2[i] == 's') {
-                            ors_system = 1;
+                            ors_system = "1";
                             ui_print("System\n");
                         } else if (value2[i] == 'D' || value2[i] == 'd') {
-                            ors_data = 1;
+                            ors_data = "1";
                             ui_print("Data\n");
                         } else if (value2[i] == 'C' || value2[i] == 'c') {
-                            ors_cache = 1;
+                            ors_cache = "1";
                             ui_print("Cache\n");
                         } else if (value2[i] == 'R' || value2[i] == 'r') {
                             ui_print("Option for recovery ignored in CWMR\n");
@@ -447,15 +458,15 @@ int run_ors_script(const char* ors_script) {
                         } else if (value2[i] == '3') {
                             ui_print("%s\n", "Option for special1 ignored in CWMR");
                         } else if (value2[i] == 'B' || value2[i] == 'b') {
-                            ors_boot = 1;
+                            ors_boot = "1";
                             ui_print("Boot\n");
                         } else if (value2[i] == 'A' || value2[i] == 'a') {
                             ui_print("Option for android secure ignored in CWMR\n");
                         } else if (value2[i] == 'E' || value2[i] == 'e') {
-                            ors_sdext = 1;
+                            ors_sdext = "1";
                             ui_print("SD-Ext\n");
 			} else if (value2[i] == 'W' || value2[i] == 'w') {
-				ors_wimax = 1;
+				ors_wimax = "1";
 				ui_print("WIMAX\n");
 			} else if (value2[i] == 'M' || value2[i] == 'm') {
                             ui_print("MD5 check skip option ignored in CWMR\n");
