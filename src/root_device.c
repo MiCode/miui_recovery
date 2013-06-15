@@ -303,7 +303,8 @@ int check_for_script_file(const char* ors_boot_script)
 {
     //ensure_path_mounted("/sdcard");
     miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
-   
+    
+   //if acfg()->sdcard == 1, means ,has internal storage  
    if (acfg()->sd_ext == 1) {
 	   miuiIntent_send(INTENT_MOUNT, 1, "/external_sd");
    } 
@@ -393,8 +394,11 @@ int run_ors_script(const char* ors_script) {
             }
             if (strcmp(command, "install") == 0) {
                 // Install zip
-
+                if (cindex != 0) {
                 miuiIntent_send(INTENT_INSTALL, 3, value, "0", "1");
+		} else {
+			//not input zip file
+		} 
 
             } else if (strcmp(command, "wipe") == 0) {
                 // Wipe
@@ -510,7 +514,19 @@ int run_ors_script(const char* ors_script) {
                 ui_print("Recursive mkdir disabled in CWMR: '%s'\n", value);
             } else if (strcmp(command, "reboot") == 0) {
                 // Reboot
-		miuiIntent_send(INTENT_REBOOT, 1, "reboot");
+		if (cindex != 0) {
+			if (!strcmp("now", value)) {
+	miuiIntent_send(INTENT_REBOOT, 1, "reboot");
+	                } else if (!(strcmp(value,"bootloader")) || !(strcmp(value, "B")) || !(strcmp(value, "b"))) {
+				miuiIntent_send(INTENT_REBOOT, 1, "bootloader");
+			} else if (!(strcmp(value, "recovery")) || !(strcmp(value, "R")) || !(strcmp(value, "r"))) {
+				miuiIntent_send(INTENT_REBOOT, 1, "recovery");
+			} else if (!(strcmp(value, "poweroff")) || !(strcmp(value, "P")) || !(strcmp(value, "p"))) {
+				miuiIntent_send(INTENT_REBOOT, 1, "poweroff");
+			} else {
+				// there is not argrment 
+			}
+		 }
             } else if (strcmp(command, "cmd") == 0) {
                 if (cindex != 0) {
                     //__system(value);

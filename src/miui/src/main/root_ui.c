@@ -35,6 +35,7 @@
 
 #include "../miui_inter.h"
 #include "../miui.h"
+#include "../utils.h"
 #include "../../../miui_intent.h"
 #include "../libs/miui_screen.h"
 #include "../libs/miui_libs.h"
@@ -43,9 +44,11 @@
 #define DISABLE_OFFICAL_REC 2
 #define E_SIG 0x89
 #define D_SIG 0X90
-#define CURRENT_SIGN_STAT_PATH "/tmp/gaojiquan"
+//#define CURRENT_SIGN_STAT_PATH "/tmp/gaojiquan"
 //INTENT_RUN_ORS ,1, filename
 //
+#define AUTHOR_INFO "/tmp/author_info.log"
+
 static STATUS root_device_item_show(menuUnit *p) {
 	if(RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
 		miui_busy_process();
@@ -170,6 +173,28 @@ static STATUS ors_sdext_menu_show(menuUnit* p) {
 	return ret;
 }
 
+static STATUS about_author_menu_show(menuUnit* p) {
+	 FILE* fp;
+         char author_info[4084];
+	 char file_name[PATH_MAX];
+	 snprintf(author_info, 4084, "\n由搞机圈老杨制作\n编译日期: %s\n微博名称: laser杨万荣\n微博地址:http://weibo.com/210124187\n",acfg()->rom_date);
+	 fp = fopen(AUTHOR_INFO, "w+");
+	 if (fp != NULL) {
+		 fputs(author_info, fp);
+		 fclose(fp);
+	 } else {
+		 LOGE("can not open %s!",AUTHOR_INFO);
+		 fclose(fp);
+	 } 
+	 snprintf(file_name, PATH_MAX, "%s", AUTHOR_INFO);
+	 miui_textbox(p->name, p->title_name, p->icon, miui_readfromfs(file_name));
+	 return MENU_BACK;
+}
+
+
+
+
+
 struct _menuUnit* ors_ui_init() {
 	struct _menuUnit* p = common_ui_init();
 	return_null_if_fail(p != NULL);
@@ -271,8 +296,16 @@ struct _menuUnit* root_ui_init() {
 	menuUnit_set_icon(p, "@root");
 	assert_if_fail(menuNode_init(p) != NULL);
 
-	//root root_device 
+	//show info of the author 
 	struct _menuUnit *tmp = common_ui_init();
+	return_null_if_fail(tmp != NULL);
+	strncpy(tmp->name, "关于作者",MENU_LEN);
+	menuUnit_set_icon(tmp, "@info");
+        menuUnit_set_show(tmp, &about_author_menu_show);
+	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
+
+        //root device 
+	tmp = common_ui_init();
 	return_null_if_fail(tmp != NULL);
 	strncpy(tmp->name, "<~root.device>", MENU_LEN);
 	menuUnit_set_icon(tmp, "@root.device");
