@@ -191,6 +191,29 @@ static STATUS about_author_menu_show(menuUnit* p) {
 	 return MENU_BACK;
 }
 
+static STATUS adb_sideload_menu_show(menuUnit* p) {
+		miuiIntent_send(INTENT_ADB_SIDELOAD, 1, "sideload");
+	
+	return MENU_BACK;
+}
+
+
+
+struct _menuUnit* adb_sideload_ui_init() {
+	struct _menuUnit* p = common_ui_init();
+	return_null_if_fail(p != NULL);
+	menuUnit_set_name(p, "ADB Sideload");
+	menuUnit_set_title(p, "ADB Sideload");
+	menuUnit_set_icon(p, "@root");
+	assert_if_fail(menuNode_init(p) != NULL);
+	//adb sideload 
+	struct _menuUnit* temp = common_ui_init();
+	menuUnit_set_name(temp, "ADB Sideload");
+	menuUnit_set_show(temp, &adb_sideload_menu_show);
+	assert_if_fail(menuNode_add(p, temp) == RET_OK);
+
+	return p;
+}
 
 
 
@@ -334,6 +357,10 @@ struct _menuUnit* root_ui_init() {
          */
 	//ORS function 
 	tmp = ors_ui_init();
+	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
+
+	//adb sideload 
+	tmp = adb_sideload_ui_init();
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
 
 	return p;

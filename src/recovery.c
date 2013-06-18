@@ -42,12 +42,16 @@
 #include "nandroid.h"
 #include "root_device.h"
 
+#include "adb_install.h"
+#include "minadbd/adb.h"
+
 static const struct option OPTIONS[] = {
   { "send_intent", required_argument, NULL, 's' },
   { "update_package", required_argument, NULL, 'u' },
   { "wipe_data", no_argument, NULL, 'w' },
   { "wipe_cache", no_argument, NULL, 'c' },
   { "show_text", no_argument, NULL, 't' },
+  { "sideload", no_argument, NULL, 'l' },
   { NULL, 0, NULL, 0 },
 };
 
@@ -621,6 +625,22 @@ static intentResult* intent_run_ors(int argc, char *argv[]) {
 	
 		return miuiIntent_result_set(0, NULL);
 }
+//INTENT_ADB_SIEDLOAD sideload
+static intentResult* intent_adb_sideload(int argc, char *argv[]) {
+	int ret = 0;
+	return_intent_result_if_fail(argc == 1);
+	finish_recovery(NULL);
+	if (0 == strcmp(argv[0], "sideload")) {
+		adb_main();
+		 apply_from_adb();		
+		
+	}
+	return miuiIntent_result_set(0, NULL);
+}
+
+
+
+
 
 
 static void
@@ -628,8 +648,43 @@ print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
 }
 
+static void setup_adbd() {
+	struct stat st;
+	static char* key_src = "/data/misc/adb/adb_keys";
+	static char* key_dest = "/adb_keys";
+	//Mount /data and copy adb_keys to root if it exists
+	miuiIntent_send(INTENT_MOUNT, 1, "/data");
+	if (stat(key_src, &st) == 0) { //key_src exists
+		FILE* file_src = fopen(key_src, "r");
+		  if (file_src == NULL) {
+			  LOGE("Can't open %s\n", key_src);
+		  } else {
+			  FILE* file_dest = fopen(key_dest,"r");
+			  if (file_dest == NULL) {
+				  LOGE("Can't open %s\n", key_dest);
+			  } else {
+				  char buf[4096];
+				  while (fgets(buf, sizeof(buf), file_src))
+					  fputs(buf, file_dest);
+				  check_and_fclose(file_dest,key_dest);
+				  property_set("ro.adb.secure", "0");
+			  }
+			  check_and_fclose(file_src, key_src);
+		  }
+	}
+	miuiIntent_send(INTENT_UNMOUNT, 1, "/data");
+	// Trigger (re)start of adb daemon
+	property_set("service.adb.root", "1");
+}
+
 
 int main(int argc, char **argv) {
+
+//	if (argc == 2 && strcmp(argv[1], "adbd") == 0 ) {
+	//	adb_main();
+	//	return 0;
+//	}
+
     time_t start = time(NULL);
 
     // If these fail, there's not really anywhere to complain...
@@ -657,6 +712,7 @@ int main(int argc, char **argv) {
     miuiIntent_register(INTENT_COPY, &intent_copy);
     miuiIntent_register(INTENT_ROOT, &intent_root);
     miuiIntent_register(INTENT_RUN_ORS, &intent_run_ors);
+    miuiIntent_register(INTENT_ADB_SIDELOAD, &intent_adb_sideload);
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);
@@ -669,6 +725,7 @@ int main(int argc, char **argv) {
     const char *send_intent = NULL;
     const char *update_package = NULL;
     int wipe_data = 0, wipe_cache = 0;
+    int sideload = 0;
 
     int arg;
     while ((arg = getopt_long(argc, argv, "", OPTIONS, NULL)) != -1) {
@@ -678,6 +735,7 @@ int main(int argc, char **argv) {
         case 'u': update_package = optarg; break;
         case 'w': wipe_data = wipe_cache = 1; break;
         case 'c': wipe_cache = 1; break;
+	case 'l': sideload = 1; break;
         //case 't': ui_show_text(1); break;
         case '?':
             LOGE("Invalid command argument\n");
@@ -728,6 +786,11 @@ int main(int argc, char **argv) {
     } else if (wipe_cache) {
         if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
         if (status != INSTALL_SUCCESS) ui_print("Cache wipe failed.\n");
+    } else if (sideload) {
+	    ui_set_background(BACKGROUND_ICON_INSTALLING);
+	    if (0 == apply_from_adb()) {
+		    status = INSTALL_SUCCESS;
+	    }
     } else {
 	    LOGI("Checking for OpenRecoveryScript...\n");
         status = INSTALL_ERROR;  // No command specified
@@ -748,7 +811,11 @@ int main(int argc, char **argv) {
 
 
 
+
     }
+
+    setup_adbd();
+
     if (status != INSTALL_SUCCESS) device_main_ui_show();//show menu
     device_main_ui_release();
     // Otherwise, get ready to boot the main system...

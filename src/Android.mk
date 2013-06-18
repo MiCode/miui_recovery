@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := \
     nandroid.c \
     verifier.c \
     root_device.c \
+    adb_install.c \
     recovery.c
 
 LOCAL_MODULE := recovery
@@ -58,7 +59,7 @@ LOCAL_STATIC_LIBRARIES += libminzip libunz libmtdutils libmincrypt
 LOCAL_STATIC_LIBRARIES += libedify libcrecovery libflashutils libmmcutils libbmlutils
 LOCAL_STATIC_LIBRARIES += libmkyaffs2image libunyaffs liberase_image libdump_image libflash_image
 LOCAL_STATIC_LIBRARIES += libmiui libcutils
-LOCAL_STATIC_LIBRARIES += libstdc++ libc libm
+LOCAL_STATIC_LIBRARIES += libstdc++ libc libm libminadbd
 
 
 LOCAL_C_INCLUDES += system/extras/ext4_utils
@@ -133,6 +134,9 @@ include $(commands_recovery_local_path)/libcrecovery/Android.mk
 #end
 include $(commands_recovery_local_path)/miui/Android.mk
 include $(commands_recovery_local_path)/minelf/Android.mk
+#add minadbd 
+include $(commands_recovery_local_path)/minadbd/Android.mk
+#end
 include $(commands_recovery_local_path)/minzip/Android.mk
 include $(commands_recovery_local_path)/mtdutils/Android.mk
 #add from cm7

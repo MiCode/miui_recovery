@@ -31,7 +31,8 @@ typedef enum _intentType{
     INTENT_SYSTEM,
     INTENT_COPY,
     INTENT_ROOT,
-    INTENT_RUN_ORS
+    INTENT_RUN_ORS,
+    INTENT_ADB_SIDELOAD
 }intentType;
 
 #define INTENT_RESULT_LEN 17

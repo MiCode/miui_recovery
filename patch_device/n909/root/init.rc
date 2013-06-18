@@ -27,16 +27,17 @@ on init
     mount /tmp /tmp tmpfs
 
     chown root shell /tmp
-    chmod 0777 /tmp
-   # chmod 0755 /rmt_storage_recovery 
+    chmod 0777 /tmp 
+    
+    setprop sys.usb.config diag,adb
 
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 19d2
-    write /sys/class/android_usb/android0/idProduct 1361
-    write /sys/class/android_usb/android0/functions mass_storage,adb
-    write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
-    write /sys/class/android_usb/android0/iProduct ${ro.product.model}
-    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+    #write /sys/class/android_usb/android0/enable 0
+  #  write /sys/class/android_usb/android0/idVendor 19d2
+  #  write /sys/class/android_usb/android0/idProduct 1361
+   # write /sys/class/android_usb/android0/functions mass_storage,adb
+  #  write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
+  #  write /sys/class/android_usb/android0/iProduct ${ro.product.model}
+  #  write /sys/class/android_usb/android0/iSerial ${ro.serialno}
 
 
 on boot
@@ -77,3 +78,23 @@ on property:service.adb.root=1
     write /sys/class/android_usb/android0/enable 0
     restart adbd
     write /sys/class/android_usb/android0/enable 1
+
+#USB compositions 
+on property:sys.usb.config=diag,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 19d2
+    write /sys/class/android_usb/android0/idProduct 1361 
+    write /sys/class/android_usb/android0/f_diag/clients diag
+    write /sys/class/android_usb/android0/functions diag,adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
+
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 19d2
+    write /sys/class/android_usb/android0/idProduct 1361
+    write /sys/class/android_usb/android0/functions adb,mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
