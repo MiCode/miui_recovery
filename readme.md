@@ -58,4 +58,8 @@ You cand find recovery.img in folder out/patch_device/device_name
     $ git submodule update 
    </code>
 
+<h1> What i will do </h1>
 
+    1. make it support adb sideload function 
+    2. port new function from TWRP or CWM 
+    
