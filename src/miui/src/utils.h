@@ -32,9 +32,9 @@ typedef int u32;
 
 #define MIUI_NAME        "MIUI Rec by  LaoYang"
 //rom_version
-#define MIUI_VERSION     "2.1.0"
+#define MIUI_VERSION     "3.0.0"
 //rom date
-#define MIUI_BUILD       "2013-06-11"
+#define MIUI_BUILD       "2013-07-04"
 #define MIUI_BUILD_CN    "Thusday"
 #define MIUI_BUILD_L     "sndnvaps"
 #define MIUI_BUILD_A     "<sndnvaps@gmail.com>"
@@ -214,9 +214,13 @@ typedef struct  {
   PNGCANVASP theme[MIUI_THEME_CNT];
   byte       theme_9p[MIUI_THEME_CNT];
   char themename[64];
+
+  //force colorspace
+  char force_colorspace[4];
 } AC_CONFIG;
 
 AC_CONFIG * acfg();           // Get Config Structure
 void        acfg_init();      // Set Default Config
 void acfg_init_ex(byte themeonly);
+
 #endif

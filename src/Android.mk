@@ -14,7 +14,6 @@ LOCAL_SRC_FILES := \
     nandroid.c \
     verifier.c \
     root_device.c \
-    adb_install.c \
     recovery.c
 
 LOCAL_MODULE := recovery
@@ -59,7 +58,7 @@ LOCAL_STATIC_LIBRARIES += libminzip libunz libmtdutils libmincrypt
 LOCAL_STATIC_LIBRARIES += libedify libcrecovery libflashutils libmmcutils libbmlutils
 LOCAL_STATIC_LIBRARIES += libmkyaffs2image libunyaffs liberase_image libdump_image libflash_image
 LOCAL_STATIC_LIBRARIES += libmiui libcutils
-LOCAL_STATIC_LIBRARIES += libstdc++ libc libm libminadbd
+LOCAL_STATIC_LIBRARIES += libstdc++ libc libm libdedupe libcrypto_static 
 
 
 LOCAL_C_INCLUDES += system/extras/ext4_utils
@@ -67,12 +66,12 @@ LOCAL_C_INCLUDES += system/extras/ext4_utils
 
 include $(BUILD_EXECUTABLE)
 
-
+ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_SYMLINKS)
 LOCAL_PREBUILT_PATH := $(LOCAL_PATH)/prebuilt_lib
 BUSYBOX_PATH := $(LOCAL_PREBUILT_PATH)/busybox
 # Now let's do recovery symlinks
 BUSYBOX_LINKS := $(shell cat $(BUSYBOX_PATH)/busybox-minimal.links)
-exclude := tune2fs mke2fs
+exclude := tune2fs mke2fs  
 RECOVERY_BUSYBOX_SYMLINKS := $(addprefix $(TARGET_ROOT_OUT)/sbin/,$(filter-out $(exclude),$(notdir $(BUSYBOX_LINKS))))
 $(RECOVERY_BUSYBOX_SYMLINKS): BUSYBOX_BINARY := busybox
 $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
@@ -87,6 +86,7 @@ LOCAL_PREBUILT_EXEC := $(TARGET_ROOT_OUT)/bin
 $(LOCAL_PREBUILT_EXEC):
 	cp $(BUSYBOX_PATH)/busybox $(TARGET_ROOT_OUT)/sbin/ -f
 	cp $(LOCAL_PREBUILT_PATH)/adbd $(TARGET_ROOT_OUT)/sbin/ -f
+	cp $(LOCAL_PREBUILT_PATH)/dedupe $(TARGET_ROOT_OUT)/sbin/ -f 
 
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_PREBUILT_EXEC)
 
@@ -134,8 +134,6 @@ include $(commands_recovery_local_path)/libcrecovery/Android.mk
 #end
 include $(commands_recovery_local_path)/miui/Android.mk
 include $(commands_recovery_local_path)/minelf/Android.mk
-#add minadbd 
-include $(commands_recovery_local_path)/minadbd/Android.mk
 #end
 include $(commands_recovery_local_path)/minzip/Android.mk
 include $(commands_recovery_local_path)/mtdutils/Android.mk
@@ -151,6 +149,8 @@ include $(commands_recovery_local_path)/updater/Android.mk
 #include $(commands_recovery_local_path)/supersu/Android.mk
 #end 
 
+#add dedupe to replace the tar backup method
+include $(commands_recovery_local_path)/dedupe/Android.mk
 #add some shell script
 include $(commands_recovery_local_path)/utilities/Android.mk
 #add su binary 

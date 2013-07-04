@@ -22,7 +22,7 @@
  */
 #include "../miui_inter.h"
 #include "../miui.h"
-
+//#include <linux/fb.h> //get the resolution of the framebuffer
 
 struct _menuUnit *g_main_menu;//main menu
 struct _menuUnit *g_root_menu;//language ui

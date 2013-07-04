@@ -42,13 +42,9 @@
 
 #define ROOT_DEVICE 1
 #define DISABLE_OFFICAL_REC 2
-#define E_SIG 0x89
-#define D_SIG 0X90
-//#define CURRENT_SIGN_STAT_PATH "/tmp/gaojiquan"
 //INTENT_RUN_ORS ,1, filename
 //
 #define AUTHOR_INFO "/tmp/author_info.log"
-
 static STATUS root_device_item_show(menuUnit *p) {
 	if(RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
 		miui_busy_process();
@@ -92,36 +88,6 @@ static STATUS brightness_menu_show(struct _menuUnit* p) {
 	}
 	return MENU_BACK;
 }
-/* Remove it to support ors */
-/*
-static STATUS signature_set_menu_show(struct _menuUnit* p) {
-	struct stat st;
-	char cmd[1024];
-	if (stat(CURRENT_SIGN_STAT_PATH, &st) != 0) {
-		mkdir(CURRENT_SIGN_STAT_PATH, 0777); 
-	}
-	if (stat("/tmp/gaojiquan/stat", &st) != 0) {
-	snprintf(cmd, 1023, "busybox touch %s/stat", CURRENT_SIGN_STAT_PATH);
-	miuiIntent_send(INTENT_SYSTEM, 1, cmd);
-	}
-
-
-	switch(p->result) {
-		       case E_SIG:
-				signature_set("Enable");
-				break;
-			case D_SIG:
-			        signature_set("Disable");
-				break;
-			default:
-				//we should never get here
-				break;
-	}
-	return MENU_BACK;
-}
-*/
-
-
 /* 
  *  _sd_show_dir show file system on screen 
  *  return MENU_BACK when press backmenu
@@ -191,33 +157,6 @@ static STATUS about_author_menu_show(menuUnit* p) {
 	 return MENU_BACK;
 }
 
-static STATUS adb_sideload_menu_show(menuUnit* p) {
-		miuiIntent_send(INTENT_ADB_SIDELOAD, 1, "sideload");
-	
-	return MENU_BACK;
-}
-
-
-
-struct _menuUnit* adb_sideload_ui_init() {
-	struct _menuUnit* p = common_ui_init();
-	return_null_if_fail(p != NULL);
-	menuUnit_set_name(p, "ADB Sideload");
-	menuUnit_set_title(p, "ADB Sideload");
-	menuUnit_set_icon(p, "@root");
-	assert_if_fail(menuNode_init(p) != NULL);
-	//adb sideload 
-	struct _menuUnit* temp = common_ui_init();
-	menuUnit_set_name(temp, "ADB Sideload");
-	menuUnit_set_show(temp, &adb_sideload_menu_show);
-	assert_if_fail(menuNode_add(p, temp) == RET_OK);
-
-	return p;
-}
-
-
-
-
 struct _menuUnit* ors_ui_init() {
 	struct _menuUnit* p = common_ui_init();
 	return_null_if_fail(p != NULL);
@@ -280,36 +219,6 @@ struct _menuUnit* brightness_ui_init() {
 	return p;
 }
 
-/* remove it to support ors */
-/*
-struct _menuUnit* SIG_SET_ui_init() {
-         struct _menuUnit* p = common_ui_init();
-         return_null_if_fail(p != NULL);
-         menuUnit_set_name(p, "开启/关闭签名认证");
-	 menuUnit_set_title(p, "开启/关闭签名认证");
-	 menuUnit_set_icon(p, "@root");
-	 assert_if_fail(menuNode_init(p) != NULL);
-
-	 //Enable signature check
-	 struct _menuUnit* temp = common_ui_init();
-	 return_null_if_fail(temp != NULL);
-	 menuUnit_set_name(temp,"开启签名认证");
-	 menuUnit_set_show(temp, &signature_set_menu_show);
-	 temp->result = E_SIG;
-	 assert_if_fail(menuNode_add(p, temp) == RET_OK);
-
-	 //Disable signature check
-	 temp = common_ui_init();
-	 return_null_if_fail(temp != NULL);
-	 menuUnit_set_name(temp, "关闭签名认证");
-	 menuUnit_set_show(temp, &signature_set_menu_show);
-         temp->result = D_SIG;
-	 assert_if_fail(menuNode_add(p, temp) == RET_OK);
-	 return p;
-}
-
-*/
-
 struct _menuUnit* root_ui_init() {
 
 	struct _menuUnit *p = common_ui_init();
@@ -349,18 +258,8 @@ struct _menuUnit* root_ui_init() {
 	tmp = brightness_ui_init();
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
            
-	//signature set menu 
-	// remove it to support ors 
-	/*
-	tmp = SIG_SET_ui_init();
-	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
-         */
 	//ORS function 
 	tmp = ors_ui_init();
-	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
-
-	//adb sideload 
-	tmp = adb_sideload_ui_init();
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
 
 	return p;

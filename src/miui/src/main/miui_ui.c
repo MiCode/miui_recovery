@@ -2055,6 +2055,7 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
     
   //-- Force Color Space  
   else if (strcmp(args[0],"force_colorspace") == 0){
+	  snprintf(acfg()->force_colorspace, 4, "%s", args[1]);
          ag_changcolor(args[1][0], args[1][1], args[1][2], args[1][3]);
   }
   else if (strcmp(args[0],"dp") == 0){
@@ -2063,6 +2064,15 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
   else if (strcmp(args[0], "sd_ext")== 0) {
     acfg()->sd_ext=valint;
   }
+ /*
+  else if (acfg()->force_colorspace == NULL) {
+	  ag_changecolor('r','g','b','a');
+	  miui_debug("use color mode RGBA \n");
+  }
+
+  */
+
+
   
   miui_isbgredraw = 1;
   //-- Release Arguments

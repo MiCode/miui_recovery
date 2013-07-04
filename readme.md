@@ -41,6 +41,11 @@
     # lunch full_n880f-eng
     # make && make n880f
   </code>
+
+<h3>2013/07/04 </h3>
+  remove adb sideload func
+  replace tar backup && restore method with dedupe
+  
 You cand find recovery.img in folder out/patch_device/device_name
  
 *Notification*
