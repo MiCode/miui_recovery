@@ -546,7 +546,7 @@ static int nandroid_restore_partition_extended(const char* backup_path, const ch
                 restore_handler = unyaffs_wrapper;
                 break;
             }
-            sprintf(tmp, "%s/%s.%s.tar", backup_path, name, filesystem);
+            sprintf(tmp, "%s/%s.%s.dup", backup_path, name, filesystem);
             if (0 == (ret = statfs(tmp, &file_info))) {
                 backup_filesystem = filesystem;
                 restore_handler = dedupe_extract_wrapper;
