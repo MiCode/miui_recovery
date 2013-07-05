@@ -40,8 +40,9 @@
 #include "../libs/miui_screen.h"
 #include "../libs/miui_libs.h"
 
-#define ROOT_DEVICE 1
-#define DISABLE_OFFICAL_REC 2
+#define ROOT_DEVICE 0x8
+#define DISABLE_OFFICAL_REC 0x9
+#define FREE_SDCARD_SPACE 0xA
 //INTENT_RUN_ORS ,1, filename
 //
 #define AUTHOR_INFO "/tmp/author_info.log"
@@ -59,7 +60,10 @@ static STATUS root_device_item_show(menuUnit *p) {
 				miuiIntent_send(INTENT_ROOT, 1, "un_of_rec");
 				miuiIntent_send(INTENT_UNMOUNT, 1, "/system");
 				break;
-
+			case FREE_SDCARD_SPACE:
+				miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
+				miuiIntent_send(INTENT_ROOT, 1, "dedupe_gc");
+				break;
 			 default:
 				assert_if_fail(0);
 				break;
@@ -70,6 +74,12 @@ static STATUS root_device_item_show(menuUnit *p) {
 
 static STATUS brightness_menu_show(struct _menuUnit* p) {
 	switch (p->result) {
+		case  0:
+			screen_set_brightness("0");
+			break;
+		case 15:
+			screen_set_brightness("15");
+			break;
 		case 25:
 			screen_set_brightness("25");
 			break;
@@ -192,8 +202,20 @@ struct _menuUnit* brightness_ui_init() {
 	menuUnit_set_title(p, "调节亮度");
 	menuUnit_set_icon(p, "@root");
 	assert_if_fail(menuNode_init(p) != NULL);
-	//25% brightness
+	//0% brightness
 	struct _menuUnit* temp = common_ui_init();
+	menuUnit_set_name(temp, "0% Brightness");
+	menuUnit_set_show(temp, &brightness_menu_show);
+	temp->show = 10;
+	assert_if_fail(menuNode_add(p, temp) == RET_OK);
+	//15% brightness 
+	temp = common_ui_init();
+	menuUnit_set_name(temp, "15% Brightness");
+	menuUnit_set_show(temp, &brightness_menu_show);
+	temp->result = 15;
+	assert_if_fail(menuNode_add(p, temp) == RET_OK);
+	//25% brightness
+	temp = common_ui_init();
 	menuUnit_set_name(temp, "25% Brightness");
 	menuUnit_set_show(temp, &brightness_menu_show);
 	temp->result = 25;
@@ -251,6 +273,15 @@ struct _menuUnit* root_ui_init() {
 	strncpy(tmp->name, "<~root.un_of_rec>", MENU_LEN);
 	menuUnit_set_icon(tmp, "@root.un_of_rec");
 	tmp->result = DISABLE_OFFICAL_REC;
+	tmp->show = &root_device_item_show;
+	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
+           
+	//Free the sdcard space 
+	tmp = common_ui_init();
+	return_null_if_fail(tmp != NULL);
+	strncpy(tmp->name, "Free sd space for backup", MENU_LEN);
+	menuUnit_set_icon(tmp,"@root");
+	tmp->result = FREE_SDCARD_SPACE;
 	tmp->show = &root_device_item_show;
 	assert_if_fail(menuNode_add(p, tmp) == RET_OK);
 

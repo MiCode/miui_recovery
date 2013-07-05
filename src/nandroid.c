@@ -147,7 +147,8 @@ void nandroid_dedupe_gc(const char* blob_dir) {
     strcpy(backup_dir, blob_dir);
     char *d = dirname(backup_dir);
     strcpy(backup_dir, d);
-    strcat(backup_dir, "/backup");
+    //remove this line ,because the backup path is "/sdcard/miui_recovery/backup"
+   // strcat(backup_dir, "/backup"); 
     ui_print("Freeing space...\n");
     char tmp[PATH_MAX];
     sprintf(tmp, "dedupe gc %s $(find %s -name '*.dup')", blob_dir, backup_dir);

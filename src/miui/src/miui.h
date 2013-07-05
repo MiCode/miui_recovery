@@ -15,7 +15,7 @@ typedef int STATUS;
 #define ICON_ENABLE   "@enable"
 #define ICON_DISABLE  "@disable"
 //MAX_MENU_
-#define ITEM_COUNT 128
+#define ITEM_COUNT 256
 #define MENU_BACK ITEM_COUNT 
 #define MENU_QUIT ITEM_COUNT + 1
 

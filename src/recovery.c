@@ -498,14 +498,17 @@ static intentResult* intent_copy(int argc, char* argv[])
 }
 
 //INTENT_ROOT, root_device | un_of_rec
+//INTENT_ROOT, dedupe_gc -> free the space of the sdcard 
 static intentResult* intent_root(int argc, char *argv[]) {
 	return_intent_result_if_fail(argc == 1);
 	finish_recovery(NULL);
-//	if(strstr(argv[0], "root_device") != NULL) {
+
          if(strcmp(argv[0], "root_device") == 0) {
 		root_device_main(argv[0]);
 	} else if (strcmp(argv[0], "un_of_rec") == 0) {
 		root_device_main(argv[0]);
+	} else if (strcmp(argv[0], "dedupe_gc") == 0) {
+		nandroid_dedupe_gc("/sdcard/miui_recovery/backup/blobs");
 	} else {
 		// nothing to do in here 
            }	
@@ -531,24 +534,6 @@ static intentResult* intent_run_ors(int argc, char *argv[]) {
 	
 		return miuiIntent_result_set(0, NULL);
 }
-
-static int count_restart = 0;
-
-void remove_device_conf() {
-	char filename[256] = "/res/device.conf";
-	struct stat st;
-	char cmd[1024];
-	if (stat(filename, &st) == 0) {
-		snprintf(cmd, 1024, "rm %s", filename);
-		__system(cmd);
-		if (count_restart == 0) {
-		__system("postrecoveryboot.sh");
-	         } 
-		count_restart += 1;
-	}
-}
-
-		
 
 static void
 print_property(const char *key, const char *name, void *cookie) {
