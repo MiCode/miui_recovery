@@ -39,7 +39,10 @@
 #include "miui_intent.h"
 #include "mtdutils/mounts.h"
 
+#include "dedupe/dedupe.h"
+
 #include "nandroid.h"
+#include "root_device.h"
 static const struct option OPTIONS[] = {
   { "send_intent", required_argument, NULL, 's' },
   { "update_package", required_argument, NULL, 'u' },
@@ -58,7 +61,6 @@ static const char *CACHE_ROOT = "/cache";
 static const char *SDCARD_ROOT = "/sdcard";
 static const char *TEMPORARY_LOG_FILE = "/tmp/miui_recovery.log";
 static const char *TEMPORARY_INSTALL_FILE = "/tmp/last_install";
-static const char *SIDELOAD_TEMP_DIR = "/tmp/sideload";
 
 
 /*
@@ -118,9 +120,52 @@ static const char *SIDELOAD_TEMP_DIR = "/tmp/sideload";
  *        -- after this, rebooting will (try to) restart the main system --
  * 9. main() calls reboot() to boot main system
  */
-
 static const int MAX_ARG_LENGTH = 4096;
 static const int MAX_ARGS = 100;
+
+void write_fstab_root(char *path, FILE *file)
+{
+    Volume *vol = volume_for_path(path);
+    if (vol == NULL) {
+        LOGW("Unable to get recovery.fstab info for %s during fstab generation!\n", path);
+        return;
+    }
+    char device[200];
+    if (vol->device[0] != '/')
+        get_partition_device(vol->device, device);
+    else
+        strcpy(device, vol->device);
+
+    fprintf(file, "%s ", device);
+    fprintf(file, "%s ", path);
+    // special case rfs cause auto will mount it as vfat on samsung.
+    fprintf(file, "%s rw\n", vol->fs_type2 != NULL && strcmp(vol->fs_type, "rfs") != 0 ? "auto" : vol->fs_type);
+}
+
+void create_fstab()
+{
+    struct stat info;
+    __system("touch /etc/mtab");
+    FILE *file = fopen("/etc/fstab", "w");
+    if (file == NULL) {
+        LOGW("Unable to create /etc/fstab!\n");
+        return;
+    }
+    Volume *vol = volume_for_path("/boot");
+    if (NULL != vol && strcmp(vol->fs_type, "mtd") != 0 && strcmp(vol->fs_type, "emmc") != 0 && strcmp(vol->fs_type, "bml") != 0)
+    write_fstab_root("/boot", file);
+    write_fstab_root("/cache", file);
+    write_fstab_root("/data", file);
+    write_fstab_root("/datadata", file);
+    write_fstab_root("/emmc", file);
+    write_fstab_root("/system", file);
+    write_fstab_root("/sdcard", file);
+    write_fstab_root("/sd-ext", file);
+    write_fstab_root("/external_sd", file);
+    fclose(file);
+    LOGI("Completed outputting fstab.\n");
+}
+
 
 // open a given path, mounting partitions as necessary
 FILE*
@@ -306,95 +351,6 @@ erase_volume(const char *volume) {
     return format_volume(volume);
 }
 
-static char*
-copy_sideloaded_package(const char* original_path) {
-  if (ensure_path_mounted(original_path) != 0) {
-    LOGE("Can't mount %s\n", original_path);
-    return NULL;
-  }
-
-  if (ensure_path_mounted(SIDELOAD_TEMP_DIR) != 0) {
-    LOGE("Can't mount %s\n", SIDELOAD_TEMP_DIR);
-    return NULL;
-  }
-
-  if (mkdir(SIDELOAD_TEMP_DIR, 0700) != 0) {
-    if (errno != EEXIST) {
-      LOGE("Can't mkdir %s (%s)\n", SIDELOAD_TEMP_DIR, strerror(errno));
-      return NULL;
-    }
-  }
-
-  // verify that SIDELOAD_TEMP_DIR is exactly what we expect: a
-  // directory, owned by root, readable and writable only by root.
-  struct stat st;
-  if (stat(SIDELOAD_TEMP_DIR, &st) != 0) {
-    LOGE("failed to stat %s (%s)\n", SIDELOAD_TEMP_DIR, strerror(errno));
-    return NULL;
-  }
-  if (!S_ISDIR(st.st_mode)) {
-    LOGE("%s isn't a directory\n", SIDELOAD_TEMP_DIR);
-    return NULL;
-  }
-  if ((st.st_mode & 0777) != 0700) {
-    LOGE("%s has perms %o\n", SIDELOAD_TEMP_DIR, st.st_mode);
-    return NULL;
-  }
-  if (st.st_uid != 0) {
-    LOGE("%s owned by %lu; not root\n", SIDELOAD_TEMP_DIR, st.st_uid);
-    return NULL;
-  }
-
-  char copy_path[PATH_MAX];
-  strcpy(copy_path, SIDELOAD_TEMP_DIR);
-  strcat(copy_path, "/package.zip");
-
-  char* buffer = malloc(BUFSIZ);
-  if (buffer == NULL) {
-    LOGE("Failed to allocate buffer\n");
-    return NULL;
-  }
-
-  size_t read;
-  FILE* fin = fopen(original_path, "rb");
-  if (fin == NULL) {
-    LOGE("Failed to open %s (%s)\n", original_path, strerror(errno));
-    return NULL;
-  }
-  FILE* fout = fopen(copy_path, "wb");
-  if (fout == NULL) {
-    LOGE("Failed to open %s (%s)\n", copy_path, strerror(errno));
-    return NULL;
-  }
-
-  while ((read = fread(buffer, 1, BUFSIZ, fin)) > 0) {
-    if (fwrite(buffer, 1, read, fout) != read) {
-      LOGE("Short write of %s (%s)\n", copy_path, strerror(errno));
-      return NULL;
-    }
-  }
-
-  free(buffer);
-
-  if (fclose(fout) != 0) {
-    LOGE("Failed to close %s (%s)\n", copy_path, strerror(errno));
-    return NULL;
-  }
-
-  if (fclose(fin) != 0) {
-    LOGE("Failed to close %s (%s)\n", original_path, strerror(errno));
-    return NULL;
-  }
-
-  // "adb push" is happy to overwrite read-only files when it's
-  // running as root, but we'll try anyway.
-  if (chmod(copy_path, 0400) != 0) {
-    LOGE("Failed to chmod %s (%s)\n", copy_path, strerror(errno));
-    return NULL;
-  }
-
-  return strdup(copy_path);
-}
 /*
  * for register intent for ui send intent to some operation
  */
@@ -540,13 +496,90 @@ static intentResult* intent_copy(int argc, char* argv[])
     copy_log_file(argv[0], argv[1], false);
     return miuiIntent_result_set(0, NULL);
 }
+
+//INTENT_ROOT, root_device | un_of_rec
+//INTENT_ROOT, dedupe_gc -> free the space of the sdcard 
+static intentResult* intent_root(int argc, char *argv[]) {
+	return_intent_result_if_fail(argc == 1);
+	finish_recovery(NULL);
+
+         if(strcmp(argv[0], "root_device") == 0) {
+		root_device_main(argv[0]);
+	} else if (strcmp(argv[0], "un_of_rec") == 0) {
+		root_device_main(argv[0]);
+	} else if (strcmp(argv[0], "dedupe_gc") == 0) {
+		nandroid_dedupe_gc("/sdcard/miui_recovery/backup/blobs");
+	} else {
+		// nothing to do in here 
+           }	
+	return miuiIntent_result_set(0,NULL);
+}
+
+
+// INTENT_RUN_ORS scripts.ors | *.ors 
+static intentResult* intent_run_ors(int argc, char *argv[]) {
+	return_intent_result_if_fail(argc == 1);
+	finish_recovery(NULL);
+	if(strstr(argv[0], ".ors") != NULL) {
+	 	if (0 == (check_for_script_file(argv[0]))) {
+			if ( 0 == run_ors_script("/tmp/openrecoveryscript")) {      
+				printf("success run openrecoveryscript....\n");
+			} else {
+				LOGE("cannot run openrecoveryscript...\n");
+			}
+		} else {
+			LOGE("cannot found OpenRecoveryScript in '%s'",argv[0]);
+		}
+	}
+	
+		return miuiIntent_result_set(0, NULL);
+}
+
 static void
 print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
 }
 
-int
-main(int argc, char **argv) {
+static void setup_adbd() {
+	struct stat st;
+	static char* key_src = "/data/misc/adb/adb_keys";
+	static char* key_dest = "/adb_keys";
+	//Mount /data and copy adb_keys to root if it exists
+	miuiIntent_send(INTENT_MOUNT, 1, "/data");
+	if (stat(key_src, &st) == 0) { //key_src exists
+		FILE* file_src = fopen(key_src, "r");
+		  if (file_src == NULL) {
+			  LOGE("Can't open %s\n", key_src);
+		  } else {
+			  FILE* file_dest = fopen(key_dest,"r");
+			  if (file_dest == NULL) {
+				  LOGE("Can't open %s\n", key_dest);
+			  } else {
+				  char buf[4096];
+				  while (fgets(buf, sizeof(buf), file_src))
+					  fputs(buf, file_dest);
+				  check_and_fclose(file_dest,key_dest);
+				  //Disable secure adbd
+				  property_set("ro.adb.secure", "0");
+				  property_set("ro.secure", "0");
+			  }
+			  check_and_fclose(file_src, key_src);
+		  }
+	}
+	miuiIntent_send(INTENT_UNMOUNT, 1, "/data");
+	// Trigger (re)start of adb daemon
+	property_set("service.adb.root", "1");
+}
+
+int main(int argc, char **argv) {
+       
+        if (strcmp(basename(argv[0]), "recovery") != 0) {
+		if (strstr(argv[0], "dedupe") != NULL){
+			return dedupe_main(argc,argv);
+		}
+	}
+
+	
     time_t start = time(NULL);
 
     // If these fail, there's not really anywhere to complain...
@@ -557,6 +590,7 @@ main(int argc, char **argv) {
     freopen(TEMPORARY_LOG_FILE, "a", stdout); setbuf(stdout, NULL);
     freopen(TEMPORARY_LOG_FILE, "a", stderr); setbuf(stderr, NULL);
     printf("Starting recovery on %s", ctime(&start));
+
     //miuiIntent init
     miuiIntent_init(10);
     miuiIntent_register(INTENT_MOUNT, &intent_mount);
@@ -572,6 +606,9 @@ main(int argc, char **argv) {
     miuiIntent_register(INTENT_ADVANCED_BACKUP, &intent_advanced_backup);
     miuiIntent_register(INTENT_SYSTEM, &intent_system);
     miuiIntent_register(INTENT_COPY, &intent_copy);
+    miuiIntent_register(INTENT_ROOT, &intent_root);
+    miuiIntent_register(INTENT_RUN_ORS, &intent_run_ors);
+
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);
@@ -584,6 +621,7 @@ main(int argc, char **argv) {
     const char *send_intent = NULL;
     const char *update_package = NULL;
     int wipe_data = 0, wipe_cache = 0;
+  //  int sideload = 0;
 
     int arg;
     while ((arg = getopt_long(argc, argv, "", OPTIONS, NULL)) != -1) {
@@ -643,9 +681,34 @@ main(int argc, char **argv) {
     } else if (wipe_cache) {
         if (wipe_cache && erase_volume("/cache")) status = INSTALL_ERROR;
         if (status != INSTALL_SUCCESS) ui_print("Cache wipe failed.\n");
+   // } else if (sideload) {
+	   // ui_set_background(BACKGROUND_ICON_INSTALLING);
+	   // if (0 == apply_from_adb()) {
+	//	    status = INSTALL_SUCCESS;
+	  //  }
     } else {
+	    LOGI("Checking for OpenRecoveryScript...\n");
         status = INSTALL_ERROR;  // No command specified
+	//we are starting up in user initiated recovery here
+	//let's set up some defaut options;
+	ui_set_background(BACKGROUND_ICON_INSTALLING);
+	if( 0 == check_for_script_file("/cache/recovery/openrecoveryscript")) {
+		LOGI("Runing openrecoveryscript...\n");
+		int ret;
+		if (0 == (ret = run_ors_script("/tmp/openrecoveryscript"))) {
+			status = INSTALL_SUCCESS;
+			//ui_set_show_text(0);
+		} else {
+			LOGE("Running openrecoveryscript Fail\n");
+		}
+	}
+
+
+
+
+
     }
+    
     if (status != INSTALL_SUCCESS) device_main_ui_show();//show menu
     device_main_ui_release();
     // Otherwise, get ready to boot the main system...

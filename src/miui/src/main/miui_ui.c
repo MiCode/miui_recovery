@@ -184,7 +184,9 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 		snprintf(batt_name, 8, "%2d", 0);
     }
 
-    int txtX = x+4;
+   // int txtX = x+4; 
+    int txtX = x - 60; //add by gaojiquan.com @laoyang //modify by gaojiquan.com @hey 
+
     int txtY = y;
     int txtH = ag_fontheight(0);
     int txtW = ag_fontheight(0)*2;
@@ -1373,8 +1375,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 syhost制作 @anzhi.com", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by syhost @anzhi.com", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 搞机圈－老杨制作 @Gaojiquan", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by Gaojiquan LaoYang @Gaojiquan", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);
@@ -2053,6 +2055,7 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
     
   //-- Force Color Space  
   else if (strcmp(args[0],"force_colorspace") == 0){
+	  snprintf(acfg()->force_colorspace, 4, "%s", args[1]);
          ag_changcolor(args[1][0], args[1][1], args[1][2], args[1][3]);
   }
   else if (strcmp(args[0],"dp") == 0){
@@ -2061,6 +2064,15 @@ Value* MIUI_INI_SET(const char* name, State* state, int argc, Expr* argv[]) {
   else if (strcmp(args[0], "sd_ext")== 0) {
     acfg()->sd_ext=valint;
   }
+ /*
+  else if (acfg()->force_colorspace == NULL) {
+	  ag_changecolor('r','g','b','a');
+	  miui_debug("use color mode RGBA \n");
+  }
+
+  */
+
+
   
   miui_isbgredraw = 1;
   //-- Release Arguments

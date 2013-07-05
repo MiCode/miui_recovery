@@ -29,10 +29,15 @@ typedef enum _intentType{
     INTENT_BACKUP,
     INTENT_ADVANCED_BACKUP,
     INTENT_SYSTEM,
-    INTENT_COPY
+    INTENT_COPY,
+    INTENT_ROOT,
+    INTENT_RUN_ORS,
+    INTENT_ADB_SIDELOAD,
+    INTENT_ADB_SIDELOAD_DISABLE,
+    INTENT_IS_SIDELOAD
 }intentType;
 
-#define INTENT_RESULT_LEN 16
+#define INTENT_RESULT_LEN 17
 typedef struct _intentResult{
     int ret;
     char result[INTENT_RESULT_LEN];

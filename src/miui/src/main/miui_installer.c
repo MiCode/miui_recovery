@@ -376,7 +376,7 @@ void miui_init_install(
   ai_prog_w = pw-((hlfdp*2)+2);
   ai_prog_r = ai_prog_or-(1+hlfdp);
   snprintf(ai_progress_text,63,"Initializing...");
-  snprintf(ai_progress_info,100,"");
+  snprintf(ai_progress_info,100," ");
   pthread_mutex_unlock(&ai_progress_mutex);
   return ;
 }

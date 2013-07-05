@@ -19,6 +19,7 @@ static STATUS battary_menu_show(struct _menuUnit* p)
     }
     return MENU_BACK;
 }
+
 static STATUS permission_menu_show(struct _menuUnit* p)
 {
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
@@ -83,5 +84,6 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
+
     return p;
 }

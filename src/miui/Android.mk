@@ -2,6 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+
 libmiui_common_includes = $(LOCAL_PATH)/include $(LOCAL_PATH)/src
 libmiui_common_src_files :=libs/png/png.c \
     libs/png/pngerror.c \
@@ -71,7 +72,8 @@ libmiui_common_src_files :=libs/png/png.c \
     src/main/tool_ui.c \
     src/main/menu_node.c \
     src/main/miui_installer.c \
-    src/main/miui.c
+    src/main/miui.c \
+    src/main/root_ui.c 
 
 LOCAL_SRC_FILES := \
     $(libmiui_common_src_files)

@@ -29,15 +29,15 @@ typedef int u32;
 
 //
 // MIUI Main Configurations
-//
-#define MIUI_NAME        "MIUI Recovery by syhost"
+
+#define MIUI_NAME        "MIUI Rec by  LaoYang"
 //rom_version
-#define MIUI_VERSION     "2.04"
+#define MIUI_VERSION     "v3.0.0"
 //rom date
-#define MIUI_BUILD       "2012-12-02"
-#define MIUI_BUILD_CN    "Weekend"
-#define MIUI_BUILD_L     "Dennis"
-#define MIUI_BUILD_A     "<yanhao@xiaomi.com>"
+#define MIUI_BUILD       "2013-07-05"
+#define MIUI_BUILD_CN    "Friday"
+#define MIUI_BUILD_L     "sndnvaps"
+#define MIUI_BUILD_A     "<sndnvaps@gmail.com>"
 #define MIUI_BUILD_URL   "http://www.micode.net/"
 #define MIUI_COPY        "(c) 2012 by xiaomi MIUI developers"
 
@@ -214,9 +214,13 @@ typedef struct  {
   PNGCANVASP theme[MIUI_THEME_CNT];
   byte       theme_9p[MIUI_THEME_CNT];
   char themename[64];
+
+  //force colorspace
+  char force_colorspace[4];
 } AC_CONFIG;
 
 AC_CONFIG * acfg();           // Get Config Structure
 void        acfg_init();      // Set Default Config
 void acfg_init_ex(byte themeonly);
+
 #endif

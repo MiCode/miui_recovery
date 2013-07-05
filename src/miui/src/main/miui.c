@@ -22,7 +22,7 @@
  */
 #include "../miui_inter.h"
 #include "../miui.h"
-
+//#include <linux/fb.h> //get the resolution of the framebuffer
 
 struct _menuUnit *g_main_menu;//main menu
 struct _menuUnit *g_root_menu;//language ui
@@ -73,6 +73,9 @@ static struct _menuUnit *tree_init()
     assert_if_fail(menuNode_add(g_main_menu, tool_ui_init()) == RET_OK);
     //add info
     assert_if_fail(menuNode_add(g_main_menu, info_ui_init()) == RET_OK);
+    //add root opertion
+    assert_if_fail(menuNode_add(g_main_menu, root_ui_init()) == RET_OK);
+
 
     struct stat st;
     if (stat(RECOVERY_PATH, &st) != 0)

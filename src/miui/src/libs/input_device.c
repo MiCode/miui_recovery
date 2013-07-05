@@ -48,6 +48,10 @@
  *
  */
 
+
+#include "../utils.h" // To checkout the MIUI_BUILD_DEVICE 
+
+
 /* Input Define */
 #define AIP_DEVICE  "/dev/input"
 #define AIP_MAXDEV              16
@@ -137,7 +141,9 @@ static char * aipStrTokR(char *str, const char *delim, char **save_str){
 /* Init Event Device Properties */
 static byte aipInitEventDev(AIP_EVP e){
   /* Variables */
+
   char    vk_path[PATH_MAX] = "/sys/board_properties/virtualkeys.";
+
   char    vks[2048], *ts    = NULL;
   ssize_t len;
   int     vk_fd;

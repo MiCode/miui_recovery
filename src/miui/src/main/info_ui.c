@@ -16,6 +16,9 @@ STATUS info_mount_show(struct _menuUnit* p)
     miuiIntent_send(INTENT_MOUNT, 1, "/cache");
     miuiIntent_send(INTENT_MOUNT, 1, "/system");
     miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
+    if (acfg()->sd_ext == 1) {
+    miuiIntent_send(INTENT_MOUNT, 1, "/external_sd"); //Add by sndnvaps @Gaojiquan 2013/4/11 20:57:19 
+    } 
     char command[256];
     snprintf(command, 256, "df -hP > %s", MOUNT_LOG);
     miuiIntent_send(INTENT_SYSTEM, 1, command);

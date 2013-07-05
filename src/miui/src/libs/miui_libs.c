@@ -321,3 +321,22 @@ done:
   free(out->data);
   return 0;
 }
+
+//write Enable || Disable to /tmp/gaojiquan/stat 
+// for verification check 
+int signature_set(char* sig) {
+          int *fd = NULL;
+
+          fd = open("/tmp/gaojiquan/stat",O_WRONLY);
+           if (fd <= 0) {
+             printf("Cann't open /tmp/gaojiquan/stat\n");
+              } else {
+             if (write(fd, sig, strlen(sig)) < 0 ) {
+                  printf("write %s to /tmp/gaojiquan/stat Failed..\n");
+                    }
+	      }
+           close(fd);
+           return 0;
+}
+
+

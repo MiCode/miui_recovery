@@ -1,0 +1,7 @@
+#
+# system.prop for ZTE n909 
+#
+
+rild.libpath=/system/lib/libril-qc-1.so
+rild.libargs=-d /dev/smd0
+ro.sf.lcd_density=240

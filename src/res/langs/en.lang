@@ -39,7 +39,7 @@ batt.name=BATTARY
 time.name=TIME
 
 sd.install.name=choose zip from sd
-sdext.install.name=choose zip from external sd
+sdext.install.name=choose zip from internal sd
 sd.update.name=apply /sdcard/update.zip
 sd.log.save=Save Logs
 
@@ -60,8 +60,8 @@ mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
 mount.sdcard.name=mount sdcard
-mount.sdcard.name=mount sd external
 mount.toggle.name=toggle usb storage
+mount.sdext.name= mount internal sd
 
 wipe.name=wipe or format
 wipe.title=wipe data or format partation operation
@@ -101,6 +101,8 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
+tool.root.name= root your device 
+tool.recovery.name=disable restore rec from boot.p 
 
 info.name=info
 info.title=information of miui recovery
@@ -112,3 +114,10 @@ about.device=Device:
 about.name=Name:
 about.version=Version:
 about.date=Date:
+
+root.name=LaoYang toolbox
+root.title=Advantage toolbox 
+root.device=root the device 
+root.un_of_rec=Disable to restore the official recovery
+
+

@@ -13,6 +13,7 @@
 static struct _menuUnit *mount_node;
 static struct _menuUnit *mount_sd_node;
 static struct _menuUnit *mount_sd_ext_node = NULL;
+
 static struct _menuUnit *mount_cache_node = NULL;
 static struct _menuUnit *mount_data_node = NULL;
 static struct _menuUnit *mount_system_node = NULL;
@@ -81,6 +82,7 @@ static STATUS mount_menu_show(menuUnit *p)
             menuUnit_set_icon(mount_sd_ext_node, ICON_DISABLE);
             menuUnit_set_desc(mount_sd_ext_node, MOUNT_DESC_UNMOUNT);
         }
+
     }
 
     //show menu
@@ -223,6 +225,8 @@ struct _menuUnit *mount_ui_init()
         return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
         mount_sd_ext_node = temp;
     }
+
+   
     //toggle usb stroage
     if (acfg()->lun_file[0] != 0)
     {
@@ -238,4 +242,5 @@ struct _menuUnit *mount_ui_init()
     return p;
 
 }
+
 

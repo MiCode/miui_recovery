@@ -1,0 +1,13 @@
+LOCAL_PATH := $(call my-dir)
+include $(MIUI_CLEAR)
+MIUI_PRODUCT := v956
+MIUI_KERNEL := $(LOCAL_PATH)/kernel
+
+MIUI_KERNEL_BASE := 0x00200000
+MIUI_KERNEL_PAGESIZE := 4096
+MIUI_KERNEL_CMDLINE := ttyHSL0,115200,n8 androidboot.hardware=qcom vmalloc=200M
+
+
+MIUI_PRODUCT_ROOT := $(LOCAL_PATH)/root
+MIUI_DEVICE_CONFIG := $(LOCAL_PATH)/device.conf
+include $(MIUI_RECOVERY)
