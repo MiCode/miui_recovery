@@ -1,0 +1,15 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/string/memmem.o: \
+ bionic/libc/string/memmem.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/include/string.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h \
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ bionic/libc/include/malloc.h
+ bionic/libc/string/memmem.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/include/string.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h :
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h :
+ bionic/libc/include/malloc.h :

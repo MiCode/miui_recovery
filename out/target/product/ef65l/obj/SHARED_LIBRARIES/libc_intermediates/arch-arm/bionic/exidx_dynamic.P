@@ -1,0 +1,5 @@
+out/target/product/ef65l/obj/SHARED_LIBRARIES/libc_intermediates/arch-arm/bionic/exidx_dynamic.o: \
+ bionic/libc/arch-arm/bionic/exidx_dynamic.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h
+ bionic/libc/arch-arm/bionic/exidx_dynamic.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :

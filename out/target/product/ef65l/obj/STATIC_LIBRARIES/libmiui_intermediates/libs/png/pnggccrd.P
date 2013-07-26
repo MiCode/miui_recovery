@@ -1,0 +1,5 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libmiui_intermediates/libs/png/pnggccrd.o: \
+ src/miui/libs/png/pnggccrd.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h
+ src/miui/libs/png/pnggccrd.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :

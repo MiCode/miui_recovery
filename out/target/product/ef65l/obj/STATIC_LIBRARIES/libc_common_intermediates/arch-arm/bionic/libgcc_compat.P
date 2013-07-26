@@ -1,0 +1,5 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/bionic/libgcc_compat.o: \
+ bionic/libc/arch-arm/bionic/libgcc_compat.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h
+ bionic/libc/arch-arm/bionic/libgcc_compat.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :

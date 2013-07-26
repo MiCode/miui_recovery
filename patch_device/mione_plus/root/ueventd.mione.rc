@@ -1,0 +1,120 @@
+# Author: Alex.wang (iptux7#gmail.com)
+# Create: 2012-12-06 22:49
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+/dev/rtc0                 0600   system     system
+
+# the DIAG device node is world writable/readable.
+/dev/diag                 0666   root       root
+
+# the genlock client device node is world writable/readable.
+/dev/genlock              0666   root      root
+
+# gpu driver for adreno200 is globally accessible
+/dev/kgsl-3d0             0666   root       root
+/dev/kgsl-2d0             0666   root       root
+/dev/kgsl-2d1             0666   root       root
+
+
+/dev/ttyHS0               0600   bluetooth  bluetooth
+/dev/ttyGS0               0660   system     system
+/dev/sdio_tty_ciq_00      0660   system     system
+
+/dev/msm_rotator          0660   system     graphics
+/dev/pmem_audio           0660   system     audio
+/dev/pmem_smipool*        0660   system     camera
+/dev/oncrpc/*             0660   root       qcom_oncrpc
+/dev/radio0               0644   fm_radio   fm_radio
+/dev/i2c-0                0664   root       system
+/dev/i2c-1                0664   root       system
+/dev/i2c-2                0664   root       system
+/dev/i2c-4                0664   root       system
+/dev/msm_mvs              0660   system     audio
+/dev/msm_voicememo        0660   system     audio
+/dev/tzcom                0660   system     drmrpc
+/dev/qseecom              0660   system     drmrpc
+/dev/qce                  0660   system     drmrpc
+/dev/msm_pcm_lp_dec       0660   system     audio
+/dev/smd4                 0660   system     system
+/dev/smd3                 0660   bluetooth      bluetooth
+/dev/smd2                 0660   bluetooth      bluetooth
+/dev/smd7                 0640   radio      radio
+/dev/smdcntl0             0640   radio      radio
+/dev/smdcntl1             0640   radio      radio
+/dev/smdcntl2             0640   radio      radio
+/dev/smdcntl3             0640   radio      radio
+/dev/smdcntl4             0640   radio      radio
+/dev/smdcntl5             0640   radio      radio
+/dev/smdcntl6             0640   radio      radio
+/dev/smdcntl7             0640   radio      radio
+/dev/sdioctl0             0640   radio      radio
+/dev/sdioctl1             0640   radio      radio
+/dev/sdioctl2             0640   radio      radio
+/dev/sdioctl3             0640   radio      radio
+/dev/sdioctl4             0640   radio      radio
+/dev/sdioctl4             0640   radio      radio
+/dev/sdioctl5             0640   radio      radio
+/dev/sdioctl6             0640   radio      radio
+/dev/sdioctl7             0640   radio      radio
+/dev/sdioctl8             0640   radio      radio
+/dev/rmnet_mux_ctrl       0640   radio      radio
+/dev/hsicctl0             0640   radio      radio
+/dev/hsicctl1             0640   radio      radio
+/dev/hsicctl2             0640   radio      radio
+/dev/hsicctl3             0640   radio      radio
+/dev/qemu_trace           0666   system     system
+/dev/gemini0              0660   system     camera
+/dev/mdm                  0660   system     system
+/dev/ttyHSL1              0660   system     system
+/dev/tty_sdio_00          0660   system     system
+/dev/block/mmcblk0p17     0660   system     system
+/dev/block/mmcblk0p18     0660   system     system
+/dev/video*	          0660   system     camera 
+/dev/oncrpc/300000ba:00010000  0660   system     drmrpc
+#regular apps need to be able to open ion
+/dev/ion                  0664   system     system
+#rfcomm device for Bluetooth DUN
+/dev/rfcomm0              0660   bluetooth   bluetooth
+
+/sys/devices/virtual/input/input*   mode_6d     0660  root   input
+/sys/devices/virtual/input/input*   dump_period  0660  root   input
+/sys/devices/virtual/input/input*   null_value   0660  root   input
+
+#permissions for video
+/dev/msm_vidc_reg         0660  system       audio
+/dev/msm_vidc_dec         0660  system       audio
+/dev/msm_vidc_dec_sec     0660  system       audio
+/dev/msm_vidc_enc         0660  system       audio
+#permissions for audio
+/dev/msm_amrnb            0660  system       audio
+/dev/msm_amrwb            0660  system       audio
+/dev/msm_aac              0660  system       audio
+/dev/msm_multi_aac        0660  system       audio
+/dev/msm_aac_in           0660  system       audio
+/dev/msm_qcelp            0660  system       audio
+/dev/msm_evrc             0660  system       audio
+/dev/msm_fm               0660  system       audio
+/dev/msm_acdb             0660  system       audio
+/dev/msm_rtac             0660  system       audio
+/dev/msm_wma              0660  system       audio
+/dev/msm_wmapro           0660  system       audio
+/dev/msm_qcelp_in         0660  system       audio
+/dev/msm_evrc_in          0660  system       audio
+/dev/msm_preproc_ctl      0660  system       audio
+/dev/msm_a2dp_in          0640  system       audio
+/dev/msm_amrnb_in         0640  system       audio
+/sys/devices/virtual/smdpkt/smdcntl*       open_timeout   0664 radio radio
+#permissions for sensors
+/dev/msm_dsps             0660  system       system
+

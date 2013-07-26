@@ -1,0 +1,17 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libcutils_intermediates/atomic.o: \
+ system/core/libcutils/atomic.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h \
+ system/core/include/cutils/atomic-inline.h \
+ system/core/include/cutils/atomic-arm.h bionic/libc/include/stdint.h \
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h \
+ bionic/libc/arch-arm/include/machine/cpu-features.h
+ system/core/libcutils/atomic.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :
+ system/core/include/cutils/atomic-inline.h :
+ system/core/include/cutils/atomic-arm.h bionic/libc/include/stdint.h :
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h :
+ bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :
+ bionic/libc/arch-arm/include/machine/cpu-features.h :

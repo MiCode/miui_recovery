@@ -1,0 +1,39 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libmincrypt_intermediates/sha.o: \
+ system/core/libmincrypt/sha.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h \
+ system/core/include/mincrypt/sha.h bionic/libc/include/inttypes.h \
+ bionic/libc/include/stdint.h \
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h \
+ bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h \
+ bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h bionic/libc/include/byteswap.h \
+ bionic/libc/arch-arm/include/endian.h bionic/libc/include/sys/types.h \
+ bionic/libc/kernel/common/linux/posix_types.h \
+ bionic/libc/kernel/common/linux/stddef.h \
+ bionic/libc/kernel/common/linux/compiler.h \
+ bionic/libc/kernel/arch-arm/asm/posix_types.h \
+ bionic/libc/kernel/arch-arm/asm/types.h \
+ bionic/libc/kernel/common/linux/types.h \
+ bionic/libc/arch-arm/include/machine/kernel.h \
+ bionic/libc/include/sys/sysmacros.h bionic/libc/include/sys/endian.h \
+ bionic/libc/include/memory.h
+ system/core/libmincrypt/sha.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :
+ system/core/include/mincrypt/sha.h bionic/libc/include/inttypes.h :
+ bionic/libc/include/stdint.h :
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h :
+ bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :
+ bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h bionic/libc/include/byteswap.h :
+ bionic/libc/arch-arm/include/endian.h bionic/libc/include/sys/types.h :
+ bionic/libc/kernel/common/linux/posix_types.h :
+ bionic/libc/kernel/common/linux/stddef.h :
+ bionic/libc/kernel/common/linux/compiler.h :
+ bionic/libc/kernel/arch-arm/asm/posix_types.h :
+ bionic/libc/kernel/arch-arm/asm/types.h :
+ bionic/libc/kernel/common/linux/types.h :
+ bionic/libc/arch-arm/include/machine/kernel.h :
+ bionic/libc/include/sys/sysmacros.h bionic/libc/include/sys/endian.h :
+ bionic/libc/include/memory.h :

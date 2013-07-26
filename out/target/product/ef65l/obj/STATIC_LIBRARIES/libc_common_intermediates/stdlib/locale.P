@@ -1,0 +1,11 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/stdlib/locale.o: \
+ bionic/libc/stdlib/locale.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/include/locale.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h
+ bionic/libc/stdlib/locale.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/include/locale.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h :

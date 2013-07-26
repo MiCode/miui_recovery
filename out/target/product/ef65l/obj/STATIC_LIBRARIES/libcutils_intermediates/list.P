@@ -1,0 +1,9 @@
+out/target/product/ef65l/obj/STATIC_LIBRARIES/libcutils_intermediates/list.o: \
+ system/core/libcutils/list.c \
+ system/core/include/arch/linux-arm/AndroidConfig.h \
+ system/core/include/cutils/list.h \
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h
+ system/core/libcutils/list.c :
+ system/core/include/arch/linux-arm/AndroidConfig.h :
+ system/core/include/cutils/list.h :
+ prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/include/stddef.h :

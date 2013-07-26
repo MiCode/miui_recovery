@@ -1,0 +1,25 @@
+out/host/linux-x86/obj/STATIC_LIBRARIES/libmincrypt_intermediates/rsa.o: \
+ system/core/libmincrypt/rsa.c \
+ system/core/include/arch/linux-x86/AndroidConfig.h \
+ system/core/include/mincrypt/rsa.h /usr/include/inttypes.h \
+ /usr/include/features.h /usr/include/stdc-predef.h \
+ /usr/include/i386-linux-gnu/bits/predefs.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdint.h /usr/include/stdint.h \
+ /usr/include/i386-linux-gnu/bits/wchar.h \
+ system/core/include/mincrypt/sha.h
+ system/core/libmincrypt/rsa.c :
+ system/core/include/arch/linux-x86/AndroidConfig.h :
+ system/core/include/mincrypt/rsa.h /usr/include/inttypes.h :
+ /usr/include/features.h /usr/include/stdc-predef.h :
+ /usr/include/i386-linux-gnu/bits/predefs.h :
+ /usr/include/i386-linux-gnu/sys/cdefs.h :
+ /usr/include/i386-linux-gnu/bits/wordsize.h :
+ /usr/include/i386-linux-gnu/gnu/stubs.h :
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h :
+ /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdint.h /usr/include/stdint.h :
+ /usr/include/i386-linux-gnu/bits/wchar.h :
+ system/core/include/mincrypt/sha.h :

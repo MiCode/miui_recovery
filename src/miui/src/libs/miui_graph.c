@@ -158,7 +158,6 @@ static void ag_changecolorspace(int r, int g, int b, int a){
     
   }
 }
-
 int ag_changcolor(char ch1, char ch2, char ch3, char ch4)
 {
     int i = 0;
@@ -210,7 +209,9 @@ byte ag_init(){
     //-- Init Info from IO
     ioctl(ag_fb, FBIOGET_FSCREENINFO, &ag_fbf);
     ioctl(ag_fb, FBIOGET_VSCREENINFO, &ag_fbv);
-    
+#ifdef PIXEL_FORMAT_BGR565
+    ag_fbv.bits_per_pixel = 16;
+#endif
     //-- Init 32 Buffer
     ag_canvas(&ag_c,ag_fbv.xres,ag_fbv.yres);
     ag_dp = floor( min(ag_fbv.xres,ag_fbv.yres) / 160);
@@ -218,7 +219,7 @@ byte ag_init(){
     //-- Init Frame Buffer Size
     agclp    = (ag_fbv.bits_per_pixel>>3);
     ag_fbsz  = (ag_fbv.xres * ag_fbv.yres * ((agclp==3)?4:agclp));
-    
+
     //-- Init Frame Buffer
     miui_debug("ag_fbv.bits_per_pixel = %d\n", ag_fbv.bits_per_pixel);
     if (ag_fbv.bits_per_pixel==16){
