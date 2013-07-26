@@ -174,26 +174,32 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
 static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 {
     char batt_name[8];
+    float batt_percent;
     struct stat st;
-    if (stat(BATTERY_CAPACITY_PATH, &st) >= 0)
+    if (stat(BATTERY_CAPACITY_PATH, &st) >= 0) {
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
-    else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0)
+        batt_percent = 1.0 * read_int(BATTERY_CAPACITY_PATH) / 100;
+    }
+    else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0) {
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH_1));
+        batt_percent = 1.0 * read_int(BATTERY_CAPACITY_PATH_1) / 100;
+    }
     else{
         miui_error("BATTERY_CAPACITY_PATH error\n"); 
 		snprintf(batt_name, 8, "%2d", 0);
     }
-
     int txtX = x+4;
     int txtY = y;
     int txtH = ag_fontheight(0);
     int txtW = ag_fontheight(0)*2;
-    int battW = 12*agdp();
-    ag_rect(win, txtX, y+1, battW, txtH-3, fg);
-    ag_rect(win, txtX+1, y+2, battW-2, txtH-5, bg);
+    int battW = 10*agdp();
+    float fillW = batt_percent * battW;
+    ag_rect(win, txtX-2, y+1, battW, txtH-3, fg);
+    ag_rect(win, txtX-1, y+2, battW-2, txtH-5, bg);
+    ag_rect(win, txtX, y+3, fillW-3, txtH-7, fg);
     txtX += agdp();
-    ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
-    ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
+    //ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
+    //ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
     int rectH = agdp() * 3;
     int rectW = agdp();
     txtY += (txtH - rectH)/2;
