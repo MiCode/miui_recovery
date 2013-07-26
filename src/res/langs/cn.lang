@@ -51,6 +51,8 @@ reboot.null=重启
 reboot.null.title=现在重启
 reboot.recovery=重启到recovery
 reboot.bootloader=重启到bootloader
+reboot.system0=重启到系统一
+reboot.system1=重启到系统二
 reboot.poweroff=关机
 
 alert.result=错误
@@ -61,6 +63,7 @@ mount.title=挂载各分区和启用USB存储
 mount.cache.name=挂载cache分区
 mount.data.name=挂载data分区
 mount.system.name=挂载system分区
+mount.system1.name=挂载system1分区
 mount.sdcard.name=挂载sdcard分区
 mount.sdext.name=挂载外置sdcard分区
 mount.toggle.name=USB 存储
@@ -95,7 +98,7 @@ advanced_restore.system.name=恢复system
 advanced_restore.boot.name=恢复boot
 advanced_restore.recovery.name=恢复recovery
 
-tool.name=工具
+tool.name=高级选项
 tool.title=提供高级的操作
 tool.key.name=按键测试
 tool.time.name=时间区域设置

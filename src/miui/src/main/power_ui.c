@@ -7,7 +7,30 @@
 #define POWER_RECOVERY               1
 #define POWER_BOOTLOADER             2
 #define POWER_POWEROFF               3
+#ifdef DUALSYSTEM_PARTITIONS
+#define POWER_REBOOT_SYSTEM0         4
+#define POWER_REBOOT_SYSTEM1         5
 
+static int setbootmode(char* bootmode) {
+   // open misc-partition
+   FILE* misc = fopen("/dev/block/platform/msm_sdcc.1/by-name/misc", "wb");
+   if (misc == NULL) {
+      printf("Error opening misc partition.\n");
+      return -1;
+   }
+
+   // write bootmode
+   fseek(misc, 0x1000, SEEK_SET);
+   if(fputs(bootmode, misc)<0) {
+      printf("Error writing bootmode to misc partition.\n");
+      return -1;
+   }
+
+   // close
+   fclose(misc);
+   return 0;
+}
+#endif
 static STATUS power_child_show(menuUnit *p)
 {
     //confirm
@@ -25,6 +48,16 @@ static STATUS power_child_show(menuUnit *p)
             case POWER_POWEROFF:
                 miuiIntent_send(INTENT_REBOOT, 1, "poweroff");
                 break;
+#ifdef DUALSYSTEM_PARTITIONS
+            case POWER_REBOOT_SYSTEM0:
+                setbootmode("boot-system0");
+                miuiIntent_send(INTENT_REBOOT, 1, "reboot");
+                break;
+            case POWER_REBOOT_SYSTEM1:
+                setbootmode("boot-system1");
+                miuiIntent_send(INTENT_REBOOT, 1, "reboot");
+                break;
+#endif
             default:
                 assert_if_fail(0);
             break;
@@ -80,6 +113,27 @@ struct _menuUnit * power_ui_init()
     temp->result = POWER_RECOVERY;
     temp->show = &power_child_show;
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
+#ifdef DUALSYSTEM_PARTITIONS
+    //reboot to system0
+    temp = common_ui_init();
+    return_null_if_fail(temp != NULL);
+    strncpy(temp->name, "<~reboot.system0>", MENU_LEN);
+    menuUnit_set_title(temp, "<~reboot.system0.title>");
+    menuUnit_set_icon(temp, "@reboot");
+    temp->result = POWER_REBOOT_SYSTEM0;
+    temp->show = &power_child_show;
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+
+    //reboot to system1
+    temp = common_ui_init();
+    return_null_if_fail(temp != NULL);
+    strncpy(temp->name, "<~reboot.system1>", MENU_LEN);
+    menuUnit_set_title(temp, "<~reboot.system1.title>");
+    menuUnit_set_icon(temp, "@reboot");
+    temp->result = POWER_REBOOT_SYSTEM1;
+    temp->show = &power_child_show;
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+#endif
     //poweroff
     temp = common_ui_init();
     return_null_if_fail(temp != NULL);

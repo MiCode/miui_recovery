@@ -49,6 +49,8 @@ reboot.null= reboot
 reboot.null.title= reboot now
 reboot.recovery= reboot to recovery
 reboot.bootloader= reboot to bootloader
+reboot.system0=reboot to system1
+reboot.system1=reboot to system2
 reboot.poweroff= poweroff
 
 alert.result=FAIL!
@@ -59,6 +61,7 @@ mount.title=mount and toogle usb storage
 mount.cache.name=mount cache
 mount.data.name=mount data
 mount.system.name=mount system
+mount.system1.name=mount system1
 mount.sdcard.name=mount sdcard
 mount.sdcard.name=mount sd external
 mount.toggle.name=toggle usb storage
@@ -93,7 +96,7 @@ advanced_restore.system.name=restore system
 advanced_restore.boot.name=restore boot
 advanced_restore.recovery.name=restore recovery
 
-tool.name=tool
+tool.name=advanced
 tool.title=advanced tools
 tool.key.name=key test
 tool.time.name=timer setting

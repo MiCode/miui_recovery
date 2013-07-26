@@ -196,7 +196,7 @@ static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
     float fillW = batt_percent * battW;
     ag_rect(win, txtX-2, y+1, battW, txtH-3, fg);
     ag_rect(win, txtX-1, y+2, battW-2, txtH-5, bg);
-    ag_rect(win, txtX, y+3, fillW-3, txtH-7, fg);
+    ag_rect(win, txtX, y+3, fillW-4, txtH-7, fg);
     txtX += agdp();
     //ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
     //ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
