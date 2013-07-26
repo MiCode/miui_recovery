@@ -17,7 +17,7 @@
 #define RECOVERY_COMMON_H
 
 #include <stdio.h>
-
+#include <sys/stat.h>
 
 // Initialize the graphics system.
 
@@ -96,6 +96,8 @@ typedef struct {
     const char* fs_options;
 
     const char* fs_options2;
+
+    struct stat stat;
 } Volume;
 
 typedef struct {
@@ -119,5 +121,9 @@ typedef struct {
 
 // fopen a file, mounting volumes and making parent dirs as necessary.
 FILE* fopen_path(const char *path, const char *mode);
-
+#define DUALBOOT_ITEM_INTERCHANGED    -2
+#define DUALBOOT_ITEM_ABORT           -1
+#define DUALBOOT_ITEM_BOTH             0
+#define DUALBOOT_ITEM_SYSTEM0          1
+#define DUALBOOT_ITEM_SYSTEM1          2
 #endif  // RECOVERY_COMMON_H

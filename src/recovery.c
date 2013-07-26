@@ -540,6 +540,17 @@ static intentResult* intent_copy(int argc, char* argv[])
     copy_log_file(argv[0], argv[1], false);
     return miuiIntent_result_set(0, NULL);
 }
+static intentResult* intent_setsystem(int argc, char* argv[])
+{
+    if (strstr(argv[0], "0") != NULL) {
+        set_active_system(DUALBOOT_ITEM_BOTH);
+    } else if (strstr(argv[0], "1") != NULL) {
+        set_active_system(DUALBOOT_ITEM_SYSTEM0);
+    } else if (strstr(argv[0], "2") != NULL) {
+        set_active_system(DUALBOOT_ITEM_SYSTEM1);
+    }
+    return miuiIntent_result_set(0, NULL);
+}
 static void
 print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
@@ -572,6 +583,7 @@ main(int argc, char **argv) {
     miuiIntent_register(INTENT_ADVANCED_BACKUP, &intent_advanced_backup);
     miuiIntent_register(INTENT_SYSTEM, &intent_system);
     miuiIntent_register(INTENT_COPY, &intent_copy);
+    miuiIntent_register(INTENT_SETSYSTEM, &intent_setsystem);
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);

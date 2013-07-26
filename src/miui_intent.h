@@ -29,7 +29,8 @@ typedef enum _intentType{
     INTENT_BACKUP,
     INTENT_ADVANCED_BACKUP,
     INTENT_SYSTEM,
-    INTENT_COPY
+    INTENT_COPY,
+    INTENT_SETSYSTEM
 }intentType;
 
 #define INTENT_RESULT_LEN 16

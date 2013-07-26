@@ -104,6 +104,8 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
+tool.force.system0=force flash packages to system1
+tool.force.system1=force flash packages to system2
 
 info.name=info
 info.title=information of miui recovery
