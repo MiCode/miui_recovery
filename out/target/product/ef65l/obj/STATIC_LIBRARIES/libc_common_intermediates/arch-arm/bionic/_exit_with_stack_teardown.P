@@ -1,9 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/bionic/_exit_with_stack_teardown.o: \
- bionic/libc/arch-arm/bionic/_exit_with_stack_teardown.S \
- system/core/include/arch/linux-arm/AndroidConfig.h \
- bionic/libc/kernel/arch-arm/asm/unistd.h \
- bionic/libc/arch-arm/include/machine/asm.h
- bionic/libc/arch-arm/bionic/_exit_with_stack_teardown.S :
- system/core/include/arch/linux-arm/AndroidConfig.h :
- bionic/libc/kernel/arch-arm/asm/unistd.h :
- bionic/libc/arch-arm/include/machine/asm.h :

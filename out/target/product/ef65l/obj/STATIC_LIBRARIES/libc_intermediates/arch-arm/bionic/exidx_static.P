@@ -1,5 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_intermediates/arch-arm/bionic/exidx_static.o: \
- bionic/libc/arch-arm/bionic/exidx_static.c \
- system/core/include/arch/linux-arm/AndroidConfig.h
- bionic/libc/arch-arm/bionic/exidx_static.c :
- system/core/include/arch/linux-arm/AndroidConfig.h :

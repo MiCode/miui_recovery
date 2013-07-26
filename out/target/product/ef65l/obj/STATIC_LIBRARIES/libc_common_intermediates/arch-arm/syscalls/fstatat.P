@@ -1,9 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/syscalls/fstatat.o: \
- bionic/libc/arch-arm/syscalls/fstatat.S \
- system/core/include/arch/linux-arm/AndroidConfig.h \
- bionic/libc/arch-arm/include/machine/asm.h \
- bionic/libc/include/sys/linux-syscalls.h
- bionic/libc/arch-arm/syscalls/fstatat.S :
- system/core/include/arch/linux-arm/AndroidConfig.h :
- bionic/libc/arch-arm/include/machine/asm.h :
- bionic/libc/include/sys/linux-syscalls.h :

@@ -1,9 +1,0 @@
-out/target/product/ef65l/obj/SHARED_LIBRARIES/libdl_intermediates/libdl.o: \
- bionic/libdl/libdl.c system/core/include/arch/linux-arm/AndroidConfig.h \
- bionic/libc/include/dlfcn.h bionic/libc/include/sys/cdefs.h \
- bionic/libc/include/sys/cdefs_elf.h \
- bionic/libc/include/android/api-level.h
- bionic/libdl/libdl.c system/core/include/arch/linux-arm/AndroidConfig.h :
- bionic/libc/include/dlfcn.h bionic/libc/include/sys/cdefs.h :
- bionic/libc/include/sys/cdefs_elf.h :
- bionic/libc/include/android/api-level.h :

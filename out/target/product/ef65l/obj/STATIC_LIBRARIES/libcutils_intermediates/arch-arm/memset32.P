@@ -1,5 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libcutils_intermediates/arch-arm/memset32.o: \
- system/core/libcutils/arch-arm/memset32.S \
- system/core/include/arch/linux-arm/AndroidConfig.h
- system/core/libcutils/arch-arm/memset32.S :
- system/core/include/arch/linux-arm/AndroidConfig.h :

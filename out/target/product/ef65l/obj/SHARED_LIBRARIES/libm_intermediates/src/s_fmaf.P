@@ -1,9 +1,0 @@
-out/target/product/ef65l/obj/SHARED_LIBRARIES/libm_intermediates/src/s_fmaf.o: \
- bionic/libm/src/s_fmaf.c \
- system/core/include/arch/linux-arm/AndroidConfig.h \
- bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h \
- bionic/libc/include/android/api-level.h
- bionic/libm/src/s_fmaf.c :
- system/core/include/arch/linux-arm/AndroidConfig.h :
- bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h :
- bionic/libc/include/android/api-level.h :

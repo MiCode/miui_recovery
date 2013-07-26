@@ -1,5 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/bionic/__get_sp.o: \
- bionic/libc/arch-arm/bionic/__get_sp.S \
- system/core/include/arch/linux-arm/AndroidConfig.h
- bionic/libc/arch-arm/bionic/__get_sp.S :
- system/core/include/arch/linux-arm/AndroidConfig.h :

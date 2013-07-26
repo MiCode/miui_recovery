@@ -1,9 +1,0 @@
-out/target/product/ef65l/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/bionic/memcmp16.o: \
- bionic/libc/arch-arm/bionic/memcmp16.S \
- system/core/include/arch/linux-arm/AndroidConfig.h \
- bionic/libc/arch-arm/include/machine/cpu-features.h \
- bionic/libc/arch-arm/include/machine/asm.h
- bionic/libc/arch-arm/bionic/memcmp16.S :
- system/core/include/arch/linux-arm/AndroidConfig.h :
- bionic/libc/arch-arm/include/machine/cpu-features.h :
- bionic/libc/arch-arm/include/machine/asm.h :
