@@ -39,7 +39,11 @@ static STATUS backup_restore(char* path)
     miui_busy_process();
     switch(p_current->result) {
         case RESTORE_ALL:
+#ifdef DUALSYSTEM_PARTITIONS
             miuiIntent_send(INTENT_RESTORE, 9, path, "1", "1", "1", "1", "0", "0", "1", "1");
+#else
+            miuiIntent_send(INTENT_RESTORE, 9, path, "1", "1", "1", "1", "0", "0", "0", "0");
+#endif
             break;
         case RESTORE_CACHE:
             miuiIntent_send(INTENT_RESTORE, 9, path, "0", "0", "0", "1", "0", "0", "0", "0");
