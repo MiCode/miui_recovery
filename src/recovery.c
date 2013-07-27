@@ -494,10 +494,10 @@ static intentResult* intent_install(int argc, char *argv[])
  */
 static intentResult* intent_restore(int argc, char* argv[])
 {
-    return_intent_result_if_fail(argc == 7);
+    return_intent_result_if_fail(argc == 9);
     return_intent_result_if_fail(argv != NULL);
     int result = nandroid_restore(argv[0], atoi(argv[1]), atoi(argv[2]), atoi(argv[3]),
-                                  atoi(argv[4]), atoi(argv[5]), atoi(argv[6]));
+                                  atoi(argv[4]), atoi(argv[5]), atoi(argv[6]), atoi(argv[7]), atoi(argv[8]));
     assert_ui_if_fail(result == 0);
     return miuiIntent_result_set(result, NULL);
 }

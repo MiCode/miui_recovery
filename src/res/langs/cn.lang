@@ -11,6 +11,7 @@ text_quit=退出
 text_quit_msg=你确定要退出吗？
 text_done=完成
 global_done=操作完成
+text_wait=请稍候...
 
 #
 #-- CUSTOM STRING RESOURCE
@@ -19,7 +20,7 @@ lang.name=选择语言
 lang.title_name=请选择语言
 lang.desc=lang selected
 default_name=选项
-default_title=选项标题
+default_title=默认标题
 default_desc=你确定要这样做吗？
 
 mainmenu.name=主菜单
@@ -93,13 +94,17 @@ advanced_backup.name=高级备份
 advanced_backup.cache.name=备份cache
 advanced_backup.data.name=备份data
 advanced_backup.system.name=备份system
+advanced_backup.system1.name=备份system1
 advanced_backup.boot.name=备份boot
+advanced_backup.boot1.name=备份boot1
 advanced_backup.recovery.name=备份recovery
 advanced_restore.name=高级恢复
 advanced_restore.cache.name=恢复cache
 advanced_restore.data.name=恢复data
 advanced_restore.system.name=恢复system
+advanced_restore.sys.name=恢复system1
 advanced_restore.boot.name=恢复boot
+advanced_restore.boot1.name=恢复boot1
 advanced_restore.recovery.name=恢复recovery
 
 tool.name=高级选项
@@ -110,8 +115,8 @@ tool.battary.name=电池信息初始化
 tool.log.name=拷贝LOG到SD卡
 tool.log.desc=是否将日志拷贝到
 tool.permission.name=修复权限
-tool.force.system0=强制刷机包刷入系统一
-tool.force.system1=强制刷机包刷入系统二
+tool.force.system0=所有刷机包刷入系统一
+tool.force.system1=所有刷机包刷入系统二
 tool.enable.tdb=打开 双系统共存
 tool.disable.tdb=关闭 双系统共存
 tool.tdb.desc=这将清空所有数据！

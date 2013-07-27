@@ -12,6 +12,7 @@ text_quit=Quit
 text_quit_msg=Are you sure to quit?
 text_done=done
 global_done=done
+text_wait=Please wait...
 
 
 lang.name=选择语言/Select Language
@@ -91,13 +92,17 @@ advanced_backup.name=advanced backup
 advanced_backup.cache.name=backup cache
 advanced_backup.data.name=backup data
 advanced_backup.system.name=backup system
+advanced_backup.system1.name=backup system1
 advanced_backup.boot.name=backup boot
+advanced_backup.boot1.name=backup boot1
 advanced_backup.recovery.name=backup recovery
 advanced_restore.name=advanced restore
 advanced_restore.cache.name=restore cache
 advanced_restore.data.name=restore data
 advanced_restore.system.name=restore system
+advanced_restore.sys.name=restore system1
 advanced_restore.boot.name=restore boot
+advanced_restore.boot1.name=restore boot1
 advanced_restore.recovery.name=restore recovery
 
 tool.name=advanced
@@ -108,8 +113,8 @@ tool.battary.name=wip battary
 tool.log.name=cope log to sdcard
 tool.log.desc=are you sure cope log to 
 tool.permission.name=fix permission
-tool.force.system0=force flash packages to system1
-tool.force.system1=force flash packages to system2
+tool.force.system0=flash all packages to system1
+tool.force.system1=flash all packages to system2
 tool.enable.tdb=enable truedualboot
 tool.disable.tdb=disable truedualboot
 tool.tdb.desc=This will wipe all data!

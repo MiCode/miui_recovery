@@ -24,6 +24,13 @@
 #define RESTORE_BOOT          15
 #define RESTORE_RECOVERY      16
 
+#ifdef DUALSYSTEM_PARTITIONS
+#define BACKUP_SYSTEM1         17
+#define BACKUP_BOOT1           18
+#define RESTORE_SYSTEM1        19
+#define RESTORE_BOOT1          20
+#endif
+
 static struct _menuUnit* p_current = NULL;
 static struct _menuUnit* backup_menu = NULL;
 static STATUS backup_restore(char* path)
@@ -32,20 +39,28 @@ static STATUS backup_restore(char* path)
     miui_busy_process();
     switch(p_current->result) {
         case RESTORE_ALL:
-            miuiIntent_send(INTENT_RESTORE, 7, path, "1", "1", "1", "1", "0", "0");
+            miuiIntent_send(INTENT_RESTORE, 9, path, "1", "1", "1", "1", "0", "0", "1", "1");
             break;
         case RESTORE_CACHE:
-            miuiIntent_send(INTENT_RESTORE, 7, path, "0", "0", "0", "1", "0", "0");
+            miuiIntent_send(INTENT_RESTORE, 9, path, "0", "0", "0", "1", "0", "0", "0", "0");
             break;
         case RESTORE_DATA:
-            miuiIntent_send(INTENT_RESTORE, 7, path, "0", "0", "1", "0", "0", "0");
+            miuiIntent_send(INTENT_RESTORE, 9, path, "0", "0", "1", "0", "0", "0", "0", "0");
             break;
         case RESTORE_SYSTEM:
-            miuiIntent_send(INTENT_RESTORE, 7, path, "0", "1", "0", "0", "0", "0");
+            miuiIntent_send(INTENT_RESTORE, 9, path, "0", "1", "0", "0", "0", "0", "0", "0");
            break;
         case RESTORE_BOOT:
-            miuiIntent_send(INTENT_RESTORE, 7, path, "1", "0", "0", "0", "0", "0");
+            miuiIntent_send(INTENT_RESTORE, 9, path, "1", "0", "0", "0", "0", "0", "0", "0");
             break;
+#ifdef DUALSYSTEM_PARTITIONS
+        case RESTORE_SYSTEM1:
+            miuiIntent_send(INTENT_RESTORE, 9, path, "0", "0", "0", "0", "0", "0", "0", "1");
+           break;
+        case RESTORE_BOOT1:
+            miuiIntent_send(INTENT_RESTORE, 9, path, "0", "0", "0", "0", "0", "0", "1", "0");
+            break;
+#endif
         default:
             miui_error("p->resulte %d should not be the value\n", p_current->result);
             break;
@@ -187,6 +202,14 @@ static STATUS restore_child_show(menuUnit* p)
         case RESTORE_BOOT:
             snprintf(path_name,PATH_MAX, "%s/backup/boot", RECOVERY_PATH);
             break;
+#ifdef DUALSYSTEM_PARTITIONS
+        case RESTORE_SYSTEM1:
+            snprintf(path_name,PATH_MAX, "%s/backup/system1", RECOVERY_PATH);
+            break;
+        case RESTORE_BOOT1:
+            snprintf(path_name,PATH_MAX, "%s/backup/boot1", RECOVERY_PATH);
+            break;
+#endif
         default:
             miui_error("p->resulte %d should not be the value\n", p->result);
             return MENU_BACK;
@@ -238,6 +261,20 @@ static STATUS backup_child_show(menuUnit* p)
                         time_tm->tm_mon + 1, time_tm->tm_mday, time_tm->tm_hour, time_tm->tm_min);
                 miuiIntent_send(INTENT_ADVANCED_BACKUP, 2 , path_name, "/boot");
                 break;
+#ifdef DUALSYSTEM_PARTITIONS
+            case BACKUP_SYSTEM1:
+                snprintf(path_name,PATH_MAX, "%s/backup/system1/%02d%02d%02d-%02d%02d",
+                        RECOVERY_PATH, time_tm->tm_year,
+                        time_tm->tm_mon + 1, time_tm->tm_mday, time_tm->tm_hour, time_tm->tm_min);
+                miuiIntent_send(INTENT_ADVANCED_BACKUP, 2 , path_name, "/system1");
+                break;
+            case BACKUP_BOOT1:
+                snprintf(path_name,PATH_MAX, "%s/backup/boot1/%02d%02d%02d-%02d%02d",
+                        RECOVERY_PATH, time_tm->tm_year,
+                        time_tm->tm_mon + 1, time_tm->tm_mday, time_tm->tm_hour, time_tm->tm_min);
+                miuiIntent_send(INTENT_ADVANCED_BACKUP, 2 , path_name, "/boot1");
+                break;
+#endif
             default:
                 miui_error("p->resulte %d should not be the value\n", p->result);
                 break;
@@ -258,12 +295,27 @@ struct _menuUnit* advanced_backup_ui_init()
     menuUnit_set_name(temp, "<~advanced_backup.boot.name>");
     menuUnit_set_result(temp, BACKUP_BOOT);
     menuUnit_set_show(temp, &backup_child_show);
+#ifdef DUALSYSTEM_PARTITIONS
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    menuUnit_set_name(temp, "<~advanced_backup.boot1.name>");
+    menuUnit_set_result(temp, BACKUP_BOOT1);
+    menuUnit_set_show(temp, &backup_child_show);
+#endif
     //backup system
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     menuUnit_set_name(temp, "<~advanced_backup.system.name>");
     menuUnit_set_result(temp, BACKUP_SYSTEM);
     menuUnit_set_show(temp, &backup_child_show);
+#ifdef DUALSYSTEM_PARTITIONS
+    //backup system
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    menuUnit_set_name(temp, "<~advanced_backup.system1.name>");
+    menuUnit_set_result(temp, BACKUP_SYSTEM1);
+    menuUnit_set_show(temp, &backup_child_show);
+#endif
     //backup data
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
@@ -291,12 +343,28 @@ struct _menuUnit* advanced_restore_ui_init()
     menuUnit_set_name(temp, "<~advanced_restore.boot.name>");
     menuUnit_set_result(temp, RESTORE_BOOT);
     menuUnit_set_show(temp, &restore_child_show);
+#ifdef DUALSYSTEM_PARTITIONS
+    //restore boot1
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    menuUnit_set_name(temp, "<~advanced_restore.boot1.name>");
+    menuUnit_set_result(temp, RESTORE_BOOT1);
+    menuUnit_set_show(temp, &restore_child_show);
+#endif
     //restore system
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     menuUnit_set_name(temp, "<~advanced_restore.system.name>");
     menuUnit_set_result(temp, RESTORE_SYSTEM);
     menuUnit_set_show(temp, &restore_child_show);
+#ifdef DUALSYSTEM_PARTITIONS
+    //restore system
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    menuUnit_set_name(temp, "<~advanced_restore.sys.name>");
+    menuUnit_set_result(temp, RESTORE_SYSTEM1);
+    menuUnit_set_show(temp, &restore_child_show);
+#endif
     //restore data
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);

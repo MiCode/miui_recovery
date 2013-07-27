@@ -32,14 +32,14 @@ typedef int u32;
 //
 #define MIUI_NAME        "MIUI Recovery"
 //rom_version
-#define MIUI_VERSION     "2.04"
+#define MIUI_VERSION     "2.05"
 //rom date
-#define MIUI_BUILD       "2012-12-02"
+#define MIUI_BUILD       "2013-07"
 #define MIUI_BUILD_CN    "Weekend"
 #define MIUI_BUILD_L     "Dennis"
 #define MIUI_BUILD_A     "<yanhao@xiaomi.com>"
 #define MIUI_BUILD_URL   "http://www.micode.net/"
-#define MIUI_COPY        "(c) 2012 by xiaomi MIUI developers"
+#define MIUI_COPY        "(c) 2013 by xiaomi MIUI developers"
 
 //-- Temporary Dir - Move from /tmp/miui-data to /tmp/miui symlink to /tmp/miui-data for backward compatibility
 #define MIUI_SYSTMP      "/tmp"
@@ -184,7 +184,7 @@ typedef struct  {
   char  text_ok[64];          // OK
   char  text_next[64];        // Next >
   char  text_back[64];        // < Back
-  
+  char  text_wait[64];        // Please wait...
   char  text_yes[64];         // Yes
   char  text_no[64];          // No
   char  text_about[64];       // About

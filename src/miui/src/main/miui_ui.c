@@ -664,7 +664,7 @@ STATUS miui_busy_process()
   int chkH        = agh();
   int chkY        = miui_setbg_title();
   int chkW          = agw();
-  char *text = "Please wait ....";
+  char *text = miui_ini_get("text_wait");;
 
   chkH -= chkY;
   int big = 1;
@@ -756,6 +756,7 @@ char * miui_ini_get(char *item) {
   else if (strcmp(item,"text_ok") == 0)            snprintf(retval,128,"%s",acfg()->text_ok);
   else if (strcmp(item,"text_next") == 0)          snprintf(retval,128,"%s",acfg()->text_next);
   else if (strcmp(item,"text_back") == 0)          snprintf(retval,128,"%s",acfg()->text_back);
+  else if (strcmp(item,"text_wait") == 0)          snprintf(retval,128,"%s",acfg()->text_wait);
 
   else if (strcmp(item,"text_yes") == 0)           snprintf(retval,128,"%s",acfg()->text_yes);
   else if (strcmp(item,"text_no") == 0)            snprintf(retval,128,"%s",acfg()->text_no);
@@ -1850,6 +1851,7 @@ STATUS miui_loadlang(char * name)
     miui_langloadsave(acfg()->text_ok, 64, "text_ok");
     miui_langloadsave(acfg()->text_next, 64, "text_next");
     miui_langloadsave(acfg()->text_back, 64, "text_back");
+    miui_langloadsave(acfg()->text_wait, 64, "text_wait");
     miui_langloadsave(acfg()->text_yes, 64, "text_yes");
     miui_langloadsave(acfg()->text_no, 64, "text_no");
     miui_langloadsave(acfg()->text_about, 64, "text_about");
