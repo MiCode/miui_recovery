@@ -72,12 +72,16 @@ wipe.name=擦除和格式化分区
 wipe.title=擦除数据操作和格式化分区操作
 wipe.cache.name=擦除cache
 wipe.dalvik-cache.name=擦除dalvik-cache
-wipe.factory.name=擦除cache/恢复出厂设置
+wipe.factory.name=清空所有数据
+wipe.system0.name=清空系统一数据
+wipe.system1.name=清空系统二数据
 wipe.data.name=擦除data
 format.system.name=格式化system分区
+format.system1.name=格式化system1分区
 format.data.name=格式化data分区
 format.cache.name=格式化cache分区
 format.boot.name=格式化boot分区
+format.boot1.name=格式化boot1分区
 format.sdcard.name=格式化sdcard
 format.all.name=全部格式化（不包括boot和sdcard）
 
@@ -108,6 +112,9 @@ tool.log.desc=是否将日志拷贝到
 tool.permission.name=修复权限
 tool.force.system0=强制刷机包刷入系统一
 tool.force.system1=强制刷机包刷入系统二
+tool.enable.tdb=打开 双系统共存
+tool.disable.tdb=关闭 双系统共存
+tool.tdb.desc=这将清空所有数据！
 
 info.name=信息
 info.title=关于MIUI RECOVERY的信息

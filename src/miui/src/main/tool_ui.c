@@ -8,6 +8,7 @@
 #include "../miui_inter.h"
 #include "../miui.h"
 #include "../../../miui_intent.h"
+static struct _menuUnit *tdb_node = NULL;
 
 static STATUS battary_menu_show(struct _menuUnit* p)
 {
@@ -68,6 +69,70 @@ static STATUS system1_set_menu_show(struct _menuUnit* p)
     miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
     return MENU_BACK;
 }
+int is_tdb_enabled()
+{
+    struct stat st;
+    miuiIntent_send(INTENT_MOUNT, 1, "/data");
+    return (lstat("/data/.truedualboot",&st)==0);
+}
+static STATUS enable_or_disable_tdb(struct _menuUnit* p)
+{
+    if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+        miui_busy_process();
+        if(is_tdb_enabled()) {
+            miuiIntent_send(INTENT_UNMOUNT, 1, "/data");
+            miuiIntent_send(INTENT_FORMAT, 1, "/data");
+            menuUnit_set_name(tdb_node,"<~tool.enable.tdb>");
+        } else {
+            miuiIntent_send(INTENT_UNMOUNT, 1, "/data");
+            miuiIntent_send(INTENT_FORMAT, 1, "/data");
+            miuiIntent_send(INTENT_MOUNT, 1, "/data");
+            menuUnit_set_name(tdb_node,"<~tool.disable.tdb>");
+            FILE * pFile = fopen("/data/.truedualboot","w");
+            fclose(pFile);
+        }
+    }
+    return MENU_BACK;
+}
+static STATUS tool_menu_show(struct _menuUnit* p)
+{
+    if (is_tdb_enabled()) {
+        menuUnit_set_name(tdb_node, "<~tool.disable.tdb>");
+        menuUnit_set_icon(tdb_node, "@alert");
+    } else {
+        menuUnit_set_name(tdb_node, "<~tool.enable.tdb>");
+        menuUnit_set_icon(tdb_node, "@alert");
+    }
+    //show menu
+    return_val_if_fail(p != NULL, RET_FAIL);
+    int n = p->get_child_count(p);
+    return_val_if_fail(n > 0, RET_FAIL);
+    int selindex = 0;
+    return_val_if_fail(n >= 1, RET_FAIL);
+    return_val_if_fail(n < ITEM_COUNT, RET_FAIL);
+    struct _menuUnit *temp = p->child;
+    return_val_if_fail(temp != NULL, RET_FAIL);
+    char **menu_item = malloc(n * sizeof(char *));
+    assert_if_fail(menu_item != NULL);
+    char **icon_item=malloc(n * sizeof(char *));
+    assert_if_fail(icon_item != NULL);
+    char **title_item= malloc(n * sizeof(char *));
+    assert_if_fail(title_item != NULL);
+    int i = 0;
+    for (i = 0; i < n; i++)
+    {
+        menu_item[i] = temp->name;
+        title_item[i] = temp->title_name;
+        icon_item[i] = temp->icon;
+        temp = temp->nextSilbing;
+    }
+    selindex = miui_menubox(p->name, menu_item, n);
+    p->result = selindex;
+    if (menu_item != NULL) free(menu_item);
+    if (title_item != NULL) free(title_item);
+    if (icon_item != NULL) free(icon_item);
+    return p->result;
+}
 #endif
 struct _menuUnit* tool_ui_init()
 {
@@ -76,6 +141,9 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_name(p, "<~tool.name>");
     menuUnit_set_title(p, "<~tool.title>");
     menuUnit_set_icon(p, "@tool");
+#ifdef DUALSYSTEM_PARTITIONS
+    menuUnit_set_show(p, &tool_menu_show);
+#endif
     assert_if_fail(menuNode_init(p) != NULL);
     //batarry wipe
     struct _menuUnit *temp = common_ui_init();
@@ -109,6 +177,18 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &system1_set_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    //truedualboot
+    temp = common_ui_init();
+    if (is_tdb_enabled()) {
+        menuUnit_set_name(temp, "<~tool.disable.tdb>");
+        menuUnit_set_icon(temp, "@alert");
+    } else {
+        menuUnit_set_name(temp, "<~tool.enable.tdb>");
+        menuUnit_set_icon(temp, "@alert");
+    }
+    menuUnit_set_show(temp, &enable_or_disable_tdb);
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    tdb_node = temp;
 #endif
     return p;
 }

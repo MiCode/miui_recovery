@@ -10,7 +10,7 @@
 #ifdef DUALSYSTEM_PARTITIONS
 #define POWER_REBOOT_SYSTEM0         4
 #define POWER_REBOOT_SYSTEM1         5
-
+extern int is_tdb_enabled();
 static int setbootmode(char* bootmode) {
    // open misc-partition
    FILE* misc = fopen("/dev/block/platform/msm_sdcc.1/by-name/misc", "wb");
@@ -35,6 +35,30 @@ static STATUS power_child_show(menuUnit *p)
 {
     //confirm
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+#ifdef DUALSYSTEM_PARTITIONS
+        //set truedualboot script
+        miuiIntent_send(INTENT_UNMOUNT, 1, "/system");
+        miuiIntent_send(INTENT_UNMOUNT, 1, "/system1");
+        miuiIntent_send(INTENT_SETSYSTEM,1,"0");
+        miuiIntent_send(INTENT_MOUNT, 1, "/system");
+        miuiIntent_send(INTENT_MOUNT, 1, "/system1");
+        __system("rm /system/bin/mount_ext4.sh");
+        __system("rm /system1/bin/mount_ext4.sh");
+        if (is_tdb_enabled()) {
+            __system("cp /res/dualsystem/mount_ext4_tdb.sh /system/bin/mount_ext4.sh");
+            __system("cp /res/dualsystem/mount_ext4_tdb.sh /system1/bin/mount_ext4.sh");
+        } else {
+            __system("cp /res/dualsystem/mount_ext4_default.sh /system/bin/mount_ext4.sh");
+            __system("cp /res/dualsystem/mount_ext4_default.sh /system1/bin/mount_ext4.sh");
+        }
+        __system("chmod 777 /system/bin/mount_ext4.sh");
+        __system("chmod 777 /system1/bin/mount_ext4.sh");
+#endif
+        //disable recovery flash
+        miuiIntent_send(INTENT_MOUNT, 1, "/system");
+        miuiIntent_send(INTENT_MOUNT, 1, "/system1");
+        __system("rm /system/etc/install_recovery.sh");
+        __system("rm /system1/etc/install_recovery.sh");
         switch(p->result) {
             case POWER_REBOOT:
                 miuiIntent_send(INTENT_REBOOT, 1, "reboot");
