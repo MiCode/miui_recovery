@@ -250,7 +250,6 @@ byte ag_init(){
       ag_16w    = ag_fbf.line_length/2;
       if (ag_16w!=ag_fbv.xres){
         if (ag_16w/2==ag_fbv.xres){
-          ag_fbf.line_length = ag_fbf.line_length / 2;
           ag_16strd = 0;
           ag_16w    = ag_fbv.xres;
         }
@@ -261,8 +260,8 @@ byte ag_init(){
       
       if (ag_16strd==0){
         //-- Can Use memcpy
-        memcpy(ag_b,ag_fbuf,ag_fbsz*2);
-        memcpy(ag_c.data,ag_fbuf,ag_fbsz*2);
+        memcpy(ag_b,ag_fbuf,ag_fbsz);
+        memcpy(ag_c.data,ag_fbuf,ag_fbsz);
       }
       else{
         //-- Should Bit per bit
