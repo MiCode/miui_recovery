@@ -57,18 +57,6 @@ static STATUS log_menu_show(struct _menuUnit* p)
     return MENU_BACK;
 }
 #ifdef DUALSYSTEM_PARTITIONS
-static STATUS system0_set_menu_show(struct _menuUnit* p)
-{
-    miuiIntent_send(INTENT_SETSYSTEM,1,"1");
-    miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
-    return MENU_BACK;
-}
-static STATUS system1_set_menu_show(struct _menuUnit* p)
-{
-    miuiIntent_send(INTENT_SETSYSTEM,1,"2");
-    miui_alert(4, p->name, "<~global_done>", "@alert", acfg()->text_ok);
-    return MENU_BACK;
-}
 int is_tdb_enabled()
 {
     struct stat st;
@@ -166,17 +154,6 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_show(temp, &permission_menu_show);
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
 #ifdef DUALSYSTEM_PARTITIONS
-    //setsystem
-    temp = common_ui_init();
-    menuUnit_set_name(temp, "<~tool.force.system0>"); 
-    menuUnit_set_icon(temp, "@tool.permission");
-    menuUnit_set_show(temp, &system0_set_menu_show);
-    assert_if_fail(menuNode_add(p, temp) == RET_OK);
-    temp = common_ui_init();
-    menuUnit_set_name(temp, "<~tool.force.system1>"); 
-    menuUnit_set_icon(temp, "@tool.permission");
-    menuUnit_set_show(temp, &system1_set_menu_show);
-    assert_if_fail(menuNode_add(p, temp) == RET_OK);
     //truedualboot
     temp = common_ui_init();
     if (is_tdb_enabled()) {

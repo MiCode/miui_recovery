@@ -21,12 +21,27 @@ int file_install(char *file_name, int file_len, void *data)
     return_val_if_fail(file_name != NULL, RET_FAIL);
     return_val_if_fail(strlen(file_name) <= file_len, RET_INVALID_ARG);
     return_val_if_fail(data != NULL, RET_FAIL);
+#ifdef DUALSYSTEM_PARTITIONS
+    int choose_system_num;
+    if (is_tdb_enabled()) {
+        if (RET_YES == miui_confirm(5, "<~choose.system.title>", "<~choose.system.text>", "@alert", "<~choice.system0.name>", "<~choice.system1.name>")) {
+            miuiIntent_send(INTENT_SETSYSTEM,1,"1");
+        } else {
+            miuiIntent_send(INTENT_SETSYSTEM,1,"2");
+        }
+    
+    }
+#endif
     struct _menuUnit *p = (pmenuUnit)data;
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
         miuiIntent_send(INTENT_INSTALL, 3, file_name, "0", "1");
+        miuiIntent_send(INTENT_SETSYSTEM,1,"0");
         return 0;
     }
-    else return -1;
+    else {
+        miuiIntent_send(INTENT_SETSYSTEM,1,"1");
+        return -1;
+    }
 }
 //callback funtion file filter, if access ,return 0; others return -1
 int file_filter(char *file, int file_len)
