@@ -35,11 +35,15 @@ int file_install(char *file_name, int file_len, void *data)
     struct _menuUnit *p = (pmenuUnit)data;
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
         miuiIntent_send(INTENT_INSTALL, 3, file_name, "0", "1");
+#ifdef DUALSYSTEM_PARTITIONS
         miuiIntent_send(INTENT_SETSYSTEM,1,"0");
+#endif
         return 0;
     }
     else {
+#ifdef DUALSYSTEM_PARTITIONS
         miuiIntent_send(INTENT_SETSYSTEM,1,"0");
+#endif
         return -1;
     }
 }

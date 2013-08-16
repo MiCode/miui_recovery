@@ -185,6 +185,7 @@ typedef struct  {
   char  text_next[64];        // Next >
   char  text_back[64];        // < Back
   char  text_wait[64];        // Please wait...
+  char  text_wait_sideload[64];        // Please send zip via "adb sideload"...
   char  text_yes[64];         // Yes
   char  text_no[64];          // No
   char  text_about[64];       // About

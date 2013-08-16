@@ -679,6 +679,30 @@ STATUS miui_busy_process()
   return RET_OK;
 }
 
+STATUS miui_sideload_process()
+{
+  //-- Set Busy before everythings ready
+  ag_setbusy();
+  miui_isbgredraw = 1;
+
+  int chkH        = agh();
+  int chkY        = miui_setbg_title();
+  int chkW          = agw();
+  char *text = miui_ini_get("text_wait_sideload");;
+
+  chkH -= chkY;
+  int big = 1;
+  int txtW = ag_txtwidth(text, big);
+  int txtH = ag_fontheight(big);
+  int txtX = (agw()/2) - (txtW/2);
+  int txtY = (agh()/2) - (txtH/2) - (agdp() *2);
+  ag_rect(&miui_win_bg, 0, chkY, chkW, chkH, acfg()->titlebg_g);
+  ag_textf(&miui_win_bg, txtW, txtX, txtY, text, acfg()->titlefg, big);
+  ag_draw(NULL, &miui_win_bg, 0, 0);
+  ag_sync();
+  return RET_OK;
+}
+
 
 
 //* 
@@ -757,6 +781,7 @@ char * miui_ini_get(char *item) {
   else if (strcmp(item,"text_next") == 0)          snprintf(retval,128,"%s",acfg()->text_next);
   else if (strcmp(item,"text_back") == 0)          snprintf(retval,128,"%s",acfg()->text_back);
   else if (strcmp(item,"text_wait") == 0)          snprintf(retval,128,"%s",acfg()->text_wait);
+  else if (strcmp(item,"text_wait_sideload") == 0)          snprintf(retval,128,"%s",acfg()->text_wait_sideload);
 
   else if (strcmp(item,"text_yes") == 0)           snprintf(retval,128,"%s",acfg()->text_yes);
   else if (strcmp(item,"text_no") == 0)            snprintf(retval,128,"%s",acfg()->text_no);
@@ -1852,6 +1877,7 @@ STATUS miui_loadlang(char * name)
     miui_langloadsave(acfg()->text_next, 64, "text_next");
     miui_langloadsave(acfg()->text_back, 64, "text_back");
     miui_langloadsave(acfg()->text_wait, 64, "text_wait");
+    miui_langloadsave(acfg()->text_wait_sideload, 64, "text_wait_sideload");
     miui_langloadsave(acfg()->text_yes, 64, "text_yes");
     miui_langloadsave(acfg()->text_no, 64, "text_no");
     miui_langloadsave(acfg()->text_about, 64, "text_about");

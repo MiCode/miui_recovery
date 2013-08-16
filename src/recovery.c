@@ -38,6 +38,8 @@
 #include "miui/src/miui.h"
 #include "miui_intent.h"
 #include "mtdutils/mounts.h"
+#include "sideload.h"
+#include "minadbd/adb.h"
 
 #include "nandroid.h"
 static const struct option OPTIONS[] = {
@@ -551,6 +553,10 @@ static intentResult* intent_setsystem(int argc, char* argv[])
     }
     return miuiIntent_result_set(0, NULL);
 }
+static intentResult* intent_sideload(int argc, char* argv[])
+{
+    return miuiIntent_result_set(start_adb_sideload(), NULL);
+}
 static void
 print_property(const char *key, const char *name, void *cookie) {
     printf("%s=%s\n", key, name);
@@ -558,6 +564,12 @@ print_property(const char *key, const char *name, void *cookie) {
 
 int
 main(int argc, char **argv) {
+
+    if (argc == 2 && strcmp(argv[1], "adbd") == 0) {
+        adb_main();
+        return 0;
+    }
+
     time_t start = time(NULL);
 
     // If these fail, there's not really anywhere to complain...
@@ -584,6 +596,7 @@ main(int argc, char **argv) {
     miuiIntent_register(INTENT_SYSTEM, &intent_system);
     miuiIntent_register(INTENT_COPY, &intent_copy);
     miuiIntent_register(INTENT_SETSYSTEM, &intent_setsystem);
+    miuiIntent_register(INTENT_SIDELOAD, &intent_sideload);
     device_ui_init();
     load_volume_table();
     get_args(&argc, &argv);

@@ -13,6 +13,7 @@ text_quit_msg=Are you sure to quit?
 text_done=done
 global_done=done
 text_wait=Please wait...
+text_wait_sideload=Please send zip via "adb sideload"...
 
 
 lang.name=选择语言/Select Language
@@ -117,6 +118,8 @@ tool.permission.name=fix permission
 tool.enable.tdb=enable truedualboot
 tool.disable.tdb=disable truedualboot
 tool.tdb.desc=This will wipe all data!
+tool.sideload.name=install package via sideload
+tool.sideload.desc=package received, confirm install?
 
 info.name=info
 info.title=information of miui recovery

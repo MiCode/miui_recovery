@@ -56,6 +56,29 @@ static STATUS log_menu_show(struct _menuUnit* p)
     }
     return MENU_BACK;
 }
+static STATUS sideload_menu_show(struct _menuUnit *p) {
+    miui_sideload_process();
+    miuiIntent_send(INTENT_SIDELOAD, 1, NULL);
+#ifdef DUALSYSTEM_PARTITIONS
+    int choose_system_num;
+    if (is_tdb_enabled()) {
+        if (RET_YES == miui_confirm(5, "<~choose.system.title>", "<~choose.system.text>", "@alert", "<~choice.system0.name>", "<~choice.system1.name>")) {
+            miuiIntent_send(INTENT_SETSYSTEM,1,"1");
+        } else {
+            miuiIntent_send(INTENT_SETSYSTEM,1,"2");
+        }
+    
+    }
+#endif
+    if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
+        miuiIntent_send(INTENT_INSTALL, 3, "/tmp/update.zip", "0", "1");
+    }
+#ifdef DUALSYSTEM_PARTITIONS
+    miuiIntent_send(INTENT_SETSYSTEM,1,"0");
+#endif
+    __system("rm /tmp/update.zip");
+    return MENU_BACK;
+}
 #ifdef DUALSYSTEM_PARTITIONS
 int is_tdb_enabled()
 {
@@ -152,6 +175,14 @@ struct _menuUnit* tool_ui_init()
     menuUnit_set_name(temp, "<~tool.permission.name>"); 
     menuUnit_set_icon(temp, "@tool.permission");
     menuUnit_set_show(temp, &permission_menu_show);
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+
+    //adb sideload
+    temp = common_ui_init();
+    menuUnit_set_name(temp, "<~tool.sideload.name>"); 
+    menuUnit_set_icon(temp, "@alert");
+    menuUnit_set_show(temp, &sideload_menu_show);
+    menuUnit_set_desc(temp, "<~tool.sideload.desc>");
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
 #ifdef DUALSYSTEM_PARTITIONS
     //truedualboot
