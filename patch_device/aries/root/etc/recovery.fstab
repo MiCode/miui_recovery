@@ -1,0 +1,17 @@
+/boot       emmc        /dev/block/platform/msm_sdcc.1/by-name/boot
+/boot1      emmc        /dev/block/platform/msm_sdcc.1/by-name/boot1
+/recovery   emmc        /dev/block/platform/msm_sdcc.1/by-name/recovery
+/misc       emmc        /dev/block/platform/msm_sdcc.1/by-name/misc
+/system     ext4        /dev/block/platform/msm_sdcc.1/by-name/system
+/system1    ext4        /dev/block/platform/msm_sdcc.1/by-name/system1
+/data       ext4        /dev/block/platform/msm_sdcc.1/by-name/userdata     length=-16384
+/cache      ext4        /dev/block/platform/msm_sdcc.1/by-name/cache
+/radio      emmc	/dev/block/platform/msm_sdcc.1/by-name/modem
+/radio1     emmc	/dev/block/platform/msm_sdcc.1/by-name/modem1
+/sbl1	    emmc	/dev/block/platform/msm_sdcc.1/by-name/sbl1
+/sbl2	    emmc	/dev/block/platform/msm_sdcc.1/by-name/sbl2
+/sbl3	    emmc	/dev/block/platform/msm_sdcc.1/by-name/sbl3
+/tz	        emmc	/dev/block/platform/msm_sdcc.1/by-name/tz
+/rpm	    emmc	/dev/block/platform/msm_sdcc.1/by-name/rpm
+/aboot	    emmc	/dev/block/platform/msm_sdcc.1/by-name/aboot
+/sdcard     ext4        /dev/block/platform/msm_sdcc.1/by-name/storage

@@ -174,30 +174,36 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
 static int _miui_draw_battery(CANVAS *win, int x, int y, color fg, color bg)
 {
     char batt_name[8];
+    float batt_percent;
     struct stat st;
-    if (stat(BATTERY_CAPACITY_PATH, &st) >= 0)
+    if (stat(BATTERY_CAPACITY_PATH, &st) >= 0) {
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH));
-    else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0)
+        batt_percent = 1.0 * read_int(BATTERY_CAPACITY_PATH) / 100;
+    }
+    else if (stat(BATTERY_CAPACITY_PATH_1, &st) >= 0) {
         snprintf(batt_name, 8, "%2d", read_int(BATTERY_CAPACITY_PATH_1));
+        batt_percent = 1.0 * read_int(BATTERY_CAPACITY_PATH_1) / 100;
+    }
     else{
         miui_error("BATTERY_CAPACITY_PATH error\n"); 
 		snprintf(batt_name, 8, "%2d", 0);
     }
-
     int txtX = x+4;
     int txtY = y;
     int txtH = ag_fontheight(0);
     int txtW = ag_fontheight(0)*2;
-    int battW = 12*agdp();
-    ag_rect(win, txtX, y+1, battW, txtH-3, fg);
-    ag_rect(win, txtX+1, y+2, battW - 2, txtH-5, bg);
+    int battW = 10*agdp();
+    float fillW = batt_percent * battW;
+    ag_rect(win, txtX-2, y+1, battW, txtH-3, fg);
+    ag_rect(win, txtX-1, y+2, battW-2, txtH-5, bg);
+    ag_rect(win, txtX, y+3, fillW-4, txtH-7, fg);
     txtX += agdp();
-    ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
-    ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
+    //ag_textf(win, txtW, txtX+1, txtY+1, batt_name, bg, 0);
+    //ag_textf(win, txtW, txtX, txtY, batt_name, fg, 0);
     int rectH = agdp() * 3;
     int rectW = agdp();
     txtY += (txtH - rectH)/2;
-    ag_rect(win, txtX - 3* agdp()+5, txtY, rectW, rectH, fg);
+    ag_rect(win, txtX - 3* agdp(), txtY, rectW, rectH, fg);
     return txtH + 2*agdp();
 }
 
@@ -218,9 +224,9 @@ static int _miui_setbg_title(CANVAS *win, CANVAS *bg) {
   ag_textf(win,titW,elmP + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
   ag_text(win,titW,elmP,elmP,bg_title,acfg()->titlefg,0);
   //draw battery
-  _miui_draw_battery(win, agw()/2 + 8*elmP, elmP, acfg()->titlefg, acfg()->titlebg_g);
+  _miui_draw_battery(win, agw()/2 + 12*elmP, elmP, acfg()->titlefg, acfg()->titlebg_g);
   //draw time
-  snprintf(bg_title, 64, "%4d-%02d-%02d %02d:%02d", 1900+p->tm_year, p->tm_mon+1, p->tm_mday, (p->tm_hour + 8) % 24, p->tm_min);
+  snprintf(bg_title, 64, "%02d:%02d", (p->tm_hour + 8) % 24, p->tm_min);
   titW = ag_txtwidth(bg_title, 0);
   int timeX = agw() - titW - elmP;
   ag_textf(win,titW,timeX + 1,elmP+1,bg_title,acfg()->titlebg_g,0);
@@ -658,7 +664,31 @@ STATUS miui_busy_process()
   int chkH        = agh();
   int chkY        = miui_setbg_title();
   int chkW          = agw();
-  char *text = "Please wait ....";
+  char *text = miui_ini_get("text_wait");;
+
+  chkH -= chkY;
+  int big = 1;
+  int txtW = ag_txtwidth(text, big);
+  int txtH = ag_fontheight(big);
+  int txtX = (agw()/2) - (txtW/2);
+  int txtY = (agh()/2) - (txtH/2) - (agdp() *2);
+  ag_rect(&miui_win_bg, 0, chkY, chkW, chkH, acfg()->titlebg_g);
+  ag_textf(&miui_win_bg, txtW, txtX, txtY, text, acfg()->titlefg, big);
+  ag_draw(NULL, &miui_win_bg, 0, 0);
+  ag_sync();
+  return RET_OK;
+}
+
+STATUS miui_sideload_process()
+{
+  //-- Set Busy before everythings ready
+  ag_setbusy();
+  miui_isbgredraw = 1;
+
+  int chkH        = agh();
+  int chkY        = miui_setbg_title();
+  int chkW          = agw();
+  char *text = miui_ini_get("text_wait_sideload");;
 
   chkH -= chkY;
   int big = 1;
@@ -750,6 +780,8 @@ char * miui_ini_get(char *item) {
   else if (strcmp(item,"text_ok") == 0)            snprintf(retval,128,"%s",acfg()->text_ok);
   else if (strcmp(item,"text_next") == 0)          snprintf(retval,128,"%s",acfg()->text_next);
   else if (strcmp(item,"text_back") == 0)          snprintf(retval,128,"%s",acfg()->text_back);
+  else if (strcmp(item,"text_wait") == 0)          snprintf(retval,128,"%s",acfg()->text_wait);
+  else if (strcmp(item,"text_wait_sideload") == 0)          snprintf(retval,128,"%s",acfg()->text_wait_sideload);
 
   else if (strcmp(item,"text_yes") == 0)           snprintf(retval,128,"%s",acfg()->text_yes);
   else if (strcmp(item,"text_no") == 0)            snprintf(retval,128,"%s",acfg()->text_no);
@@ -1373,8 +1405,8 @@ STATUS miui_langmenu(char *title_name, char *title_icon) {
   //-- Check Box
   ACONTROLP menu1  = acsdmenu(hWin,0,chkY,chkW,chkH,6);
   //-- Populate Checkbox Items
-  acsdmenu_add(menu1, "简体中文", "欢迎使用中文恢复系统 syhost制作 @anzhi.com", "@lang.cn");
-  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery by syhost @anzhi.com", "@lang.en");
+  acsdmenu_add(menu1, "简体中文", "欢迎使用MIUI Recovery", "@lang.cn");
+  acsdmenu_add(menu1, "English", "Welcome to MIUI Recovery", "@lang.en");
 
   //-- Dispatch Message
   aw_show(hWin);
@@ -1844,6 +1876,8 @@ STATUS miui_loadlang(char * name)
     miui_langloadsave(acfg()->text_ok, 64, "text_ok");
     miui_langloadsave(acfg()->text_next, 64, "text_next");
     miui_langloadsave(acfg()->text_back, 64, "text_back");
+    miui_langloadsave(acfg()->text_wait, 64, "text_wait");
+    miui_langloadsave(acfg()->text_wait_sideload, 64, "text_wait_sideload");
     miui_langloadsave(acfg()->text_yes, 64, "text_yes");
     miui_langloadsave(acfg()->text_no, 64, "text_no");
     miui_langloadsave(acfg()->text_about, 64, "text_about");

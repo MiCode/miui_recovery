@@ -18,7 +18,10 @@ on init
     mkdir /data
     mkdir /cache
     mkdir /cust
-    mount /tmp /tmp tmpfs
+    mkdir /tmp
+
+    chown root shell /tmp
+    chmod 0777 /tmp
 
     setprop ro.hwboottype boot_recovery
 

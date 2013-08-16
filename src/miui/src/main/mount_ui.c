@@ -7,7 +7,8 @@
 #define MOUNT_SYSTEM    3
 #define MOUNT_SDCARD    4
 #define MOUNT_TOGGLE    5
-#define MOUNT_SDEXT    6
+#define MOUNT_SDEXT     6
+#define MOUNT_SYSTEM1   7
 #define MOUNT_DESC_MOUNT       "1"
 #define MOUNT_DESC_UNMOUNT     "0"
 static struct _menuUnit *mount_node;
@@ -55,6 +56,20 @@ static STATUS mount_menu_show(menuUnit *p)
         menuUnit_set_icon(mount_system_node, ICON_DISABLE);
         menuUnit_set_desc(mount_system_node, MOUNT_DESC_UNMOUNT);
     }
+#ifdef DUALSYSTEM_PARTITIONS
+    //ensure system1
+    miuiIntent_send(INTENT_ISMOUNT, 1, "/system1");
+    if (miuiIntent_result_get_int() == 1)
+    {
+        menuUnit_set_icon(mount_system_node, ICON_ENABLE);
+        menuUnit_set_desc(mount_system_node, MOUNT_DESC_MOUNT);
+    }
+    else
+    {
+        menuUnit_set_icon(mount_system_node, ICON_DISABLE);
+        menuUnit_set_desc(mount_system_node, MOUNT_DESC_UNMOUNT);
+    }
+#endif
     //ensure sdcard 
     miuiIntent_send(INTENT_ISMOUNT, 1, "/sdcard");
     if (miuiIntent_result_get_int() == 1)
@@ -134,6 +149,11 @@ static STATUS mount_child_show(menuUnit *p)
         case MOUNT_SDEXT:
             miuiIntent_send(intent_type, 1, "/external_sd");
             break;
+#ifdef DUALSYSTEM_PARTITIONS
+        case MOUNT_SYSTEM1:
+            miuiIntent_send(intent_type, 1, "/system1");
+            break;
+#endif
         case MOUNT_TOGGLE:
         {
             if (intent_type == INTENT_MOUNT)
@@ -191,7 +211,6 @@ struct _menuUnit *mount_ui_init()
     return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
     mount_data_node = temp;
-
     //mount system
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
@@ -201,6 +220,17 @@ struct _menuUnit *mount_ui_init()
     return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
     mount_system_node = temp;
+#ifdef DUALSYSTEM_PARTITIONS
+    //mount system1
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    return_null_if_fail(menuUnit_set_name(temp, "<~mount.system1.name>") == RET_OK);
+    return_null_if_fail(menuUnit_set_result(temp, MOUNT_SYSTEM1) == RET_OK);
+    return_null_if_fail(menuUnit_set_icon(temp, ICON_DISABLE) == RET_OK);
+    return_null_if_fail(menuUnit_set_desc(temp, MOUNT_DESC_UNMOUNT) == RET_OK);
+    return_null_if_fail(RET_OK == menuUnit_set_show(temp, &mount_child_show));
+    mount_system_node = temp;
+#endif
     //mount sdcard
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);

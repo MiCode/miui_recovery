@@ -18,7 +18,10 @@ on init
     mkdir /system
     mkdir /sdcard
 
-    mount /tmp /tmp tmpfs
+    mkdir /tmp
+
+    chown root shell /tmp
+    chmod 0777 /tmp
 
 on boot
 

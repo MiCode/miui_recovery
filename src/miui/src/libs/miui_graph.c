@@ -24,6 +24,8 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <linux/fb.h>
+#include <linux/kd.h>
+#include <pixelflinger/pixelflinger.h>
 #include <sys/mman.h>
 #include <pthread.h>
 #include <math.h>
@@ -158,7 +160,6 @@ static void ag_changecolorspace(int r, int g, int b, int a){
     
   }
 }
-
 int ag_changcolor(char ch1, char ch2, char ch3, char ch4)
 {
     int i = 0;
@@ -196,7 +197,6 @@ int ag_changcolor(char ch1, char ch2, char ch3, char ch4)
     ag_changecolorspace(arg[0], arg[1], arg[2], arg[3]);
     return 0;
 }
-
 /*********************************[ FUNCTIONS ]********************************/
 //-- INITIALIZING AMARULLZ GRAPHIC
 byte ag_init(){
@@ -210,7 +210,9 @@ byte ag_init(){
     //-- Init Info from IO
     ioctl(ag_fb, FBIOGET_FSCREENINFO, &ag_fbf);
     ioctl(ag_fb, FBIOGET_VSCREENINFO, &ag_fbv);
-    
+#ifdef PIXEL_FORMAT_BGR565
+    ag_fbv.bits_per_pixel = 16;
+#endif
     //-- Init 32 Buffer
     ag_canvas(&ag_c,ag_fbv.xres,ag_fbv.yres);
     ag_dp = floor( min(ag_fbv.xres,ag_fbv.yres) / 160);
@@ -218,7 +220,7 @@ byte ag_init(){
     //-- Init Frame Buffer Size
     agclp    = (ag_fbv.bits_per_pixel>>3);
     ag_fbsz  = (ag_fbv.xres * ag_fbv.yres * ((agclp==3)?4:agclp));
-    
+
     //-- Init Frame Buffer
     miui_debug("ag_fbv.bits_per_pixel = %d\n", ag_fbv.bits_per_pixel);
     if (ag_fbv.bits_per_pixel==16){
@@ -237,11 +239,12 @@ byte ag_init(){
           close(ag_fb);
           return -1;
       }
+
       ag_32   = 0;
       ag_fbuf = (word*) mmap(0,ag_fbf.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,ag_fb,0);
       ag_b    = (word*) malloc(ag_fbsz);
       ag_bz   = (word*) malloc(ag_fbsz);
-      
+
       //-- Resolution with Stride
       ag_16strd = 0;
       ag_16w    = ag_fbf.line_length/2;
@@ -279,7 +282,7 @@ byte ag_init(){
     }
     else{
       ag_32     = 1;
-      
+
       //-- Memory Allocation
       ag_fbuf32 = (byte*) mmap(0,ag_fbf.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,ag_fb,0);
       ag_bf32   = (dword*) malloc(ag_fbsz);
@@ -602,12 +605,20 @@ void ag_refreshrate(){
   //-- Force Refresh Display
   ag_fbv.yoffset   = 0;
   ag_fbv.activate |= FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE;
-  ioctl(ag_fb, FBIOPUT_VSCREENINFO, &ag_fbv);  
+  ioctl(ag_fb, FBIOPUT_VSCREENINFO, &ag_fbv);
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
 }
 
 byte ag_sync_locked = 0;
 //-- Sync Display
 void ag_sync(){
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
   //-- Always On Footer
   // ag_draw_foot();
   ag_isbusy = 0;
@@ -632,12 +643,20 @@ void ag_sync(){
   }
 }
 void ag_sync_force(){
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
   if (ag_sync_locked)
     ag_sync_locked = 0;
   else
     ag_sync();
 }
 static void *ag_sync_fade_thread(void * cookie){
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
   miui_debug("pthread %s start...\n", __FUNCTION__);
   int frame = (int) cookie;
   ag_isbusy = 0;
@@ -701,10 +720,18 @@ static void *ag_sync_fade_thread(void * cookie){
   return NULL;
 }
 void ag_sync_fade_wait(int frame){
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
   ag_sync_fade_thread((void *) frame);
   return; 
 }
 void ag_sync_fade(int frame){
+#ifdef NEEDS_VSYNC
+  int e;
+  ioctl(ag_fb, MSMFB_OVERLAY_VSYNC_CTRL, &e);
+#endif
   pthread_t threadsyncfade;
   pthread_create(&threadsyncfade,NULL, ag_sync_fade_thread, (void *) frame);
   pthread_detach(threadsyncfade);

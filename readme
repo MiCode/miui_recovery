@@ -1,10 +1,31 @@
+About
+------------
+MIUI Recovery is a powerful Touch Recovery based on AROMA Installer's code.
+
+How to build
+---------------
 1 the project is build android recovery only;
-2 before building, make sure copy project android_prebuilt, android_bionic and anroid_hardware to the directory ,which from ICS.
+2 before building, make sure copy project android_prebuilt, android_bionic and android_hardware to the directory ,which from ICS.(If you don't have these projects,see https://github.com/PeterCxy)
 3 Steps as following:
     $. build/envsetup.sh
-    $make crespo
-  please see the out/patch_device/crespo/ , find recovery.img 
+    $make <your device>
+  please see the out/patch_device/<your device>/ , find recovery.img 
 4 please check Makefile to obtain the supported devices;
+5 If <your device> hasn't been supported,you can port by yourself.
 
+关于
+---------------
+MIUI Recovery是一个基于AROMA Installler代码制作的强大的触摸版Recovery。
+
+如何编译
+---------------
+1 这个项目仅用于编译Recovery
+2 编译之前，请把ICS源码中的prebuilt bionic hardware复制到本Recovery目录下（没有的话，在 https://github.com/PeterCxy 可以找到）
+3 编译步骤：
+    $. build/envsetup.sh
+    $make <你的设备>
+  请前往 out/patch_device/<你的设备>/ ,找到 recovery.img
+4 请确保Makefile中有您的设备支持
+5 如果您的设备未被支持，请自行适配
  
 

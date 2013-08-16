@@ -12,15 +12,46 @@
 #define FORMAT_BOOT      14
 #define FORMAT_SDCARD    15
 #define FORMAT_ALL       16
+#ifdef DUALSYSTEM_PARTITIONS
+#define FORMAT_SYSTEM1    17
+#define FORMAT_BOOT1      18
+extern int is_tdb_enabled();
+#endif
 
 STATUS wipe_item_show(menuUnit *p)
 {
+#ifdef DUALSYSTEM_PARTITIONS
+int wipe_system_num;
+    if (is_tdb_enabled()) {
+        if (p->result == WIPE_FACTORY) {
+            if (RET_YES == miui_confirm(5, "<~choose.system.title>", "<~choose.system.text>", "@alert", "<~choice.system0.name>", "<~choice.system1.name>")) {
+                wipe_system_num = 0;
+            } else {
+                wipe_system_num = 1;
+            }
+        }
+    }
+#endif
     if (RET_YES == miui_confirm(3, p->name, p->desc, p->icon)) {
         miui_busy_process();
         switch(p->result) {
             case WIPE_FACTORY:
+#ifdef DUALSYSTEM_PARTITIONS
+                if (is_tdb_enabled()) {
+                    miuiIntent_send(INTENT_MOUNT, 1, "/data");
+                    if (wipe_system_num == 0) {
+                        __system("rm -rf /data/system0");
+                    } else {
+                        __system("rm -rf /data/system1");
+                    }
+                } else {
+                    miuiIntent_send(INTENT_WIPE, 1, "/cache");
+                    miuiIntent_send(INTENT_WIPE, 1, "/data");
+                }
+#else
                 miuiIntent_send(INTENT_WIPE, 1, "/cache");
                 miuiIntent_send(INTENT_WIPE, 1, "/data");
+#endif
                 break;
             case WIPE_DATA:
                 miuiIntent_send(INTENT_WIPE, 1, "/data");
@@ -34,6 +65,11 @@ STATUS wipe_item_show(menuUnit *p)
             case FORMAT_SYSTEM:
                 miuiIntent_send(INTENT_FORMAT, 1, "/system");
                 break;
+#ifdef DUALSYSTEM_PARTITIONS
+            case FORMAT_SYSTEM1:
+                miuiIntent_send(INTENT_FORMAT, 1, "/system1");
+                break;
+#endif
             case FORMAT_DATA:
                 miuiIntent_send(INTENT_FORMAT, 1, "/data");
                 break;
@@ -43,6 +79,11 @@ STATUS wipe_item_show(menuUnit *p)
             case FORMAT_BOOT:
                 miuiIntent_send(INTENT_FORMAT, 1, "/boot");
                 break;
+#ifdef DUALSYSTEM_PARTITIONS
+            case FORMAT_BOOT1:
+                miuiIntent_send(INTENT_FORMAT, 1, "/boot1");
+                break;
+#endif
             case FORMAT_SDCARD:
                 miuiIntent_send(INTENT_FORMAT, 1, "/sdcard");
                 break;
@@ -67,7 +108,7 @@ STATUS wipe_menu_show(menuUnit *p)
     int selindex = 0;
     return_val_if_fail(n >= 1, RET_FAIL);
     return_val_if_fail(n < ITEM_COUNT, RET_FAIL);
-    struct _menuUnit *temp = p->child;
+    struct _menuUnit* temp = p->child;
     return_val_if_fail(temp != NULL, RET_FAIL);
     char **menu_item = malloc(n * sizeof(char *));
     assert_if_fail(menu_item != NULL);
@@ -91,7 +132,7 @@ struct _menuUnit* wipe_ui_init()
     return_null_if_fail(menuUnit_set_icon(p, "@wipe") == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(p, &wipe_menu_show));
     return_null_if_fail(menuNode_init(p) != NULL);
-    //wipe_data/factory reset
+    //factory reset
     struct _menuUnit* temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
     return_null_if_fail(menuUnit_set_name(temp, "<~wipe.factory.name>") == RET_OK);
@@ -121,6 +162,14 @@ struct _menuUnit* wipe_ui_init()
     return_null_if_fail(menuUnit_set_name(temp, "<~format.system.name>") == RET_OK);
     return_null_if_fail(menuUnit_set_result(temp, FORMAT_SYSTEM) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
+#ifdef DUALSYSTEM_PARTITIONS
+    //format system1
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    return_null_if_fail(menuUnit_set_name(temp, "<~format.system1.name>") == RET_OK);
+    return_null_if_fail(menuUnit_set_result(temp, FORMAT_SYSTEM1) == RET_OK);
+    return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
+#endif
     //format data
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);
@@ -139,6 +188,14 @@ struct _menuUnit* wipe_ui_init()
     return_null_if_fail(menuUnit_set_name(temp, "<~format.boot.name>") == RET_OK);
     return_null_if_fail(menuUnit_set_result(temp, FORMAT_BOOT) == RET_OK);
     return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
+#ifdef DUALSYSTEM_PARTITIONS
+    //format BOOT1
+    temp = common_ui_init();
+    assert_if_fail(menuNode_add(p, temp) == RET_OK);
+    return_null_if_fail(menuUnit_set_name(temp, "<~format.boot1.name>") == RET_OK);
+    return_null_if_fail(menuUnit_set_result(temp, FORMAT_BOOT) == RET_OK);
+    return_null_if_fail(RET_OK == menuUnit_set_show(temp, &wipe_item_show));
+#endif
     //format SDCARD
     temp = common_ui_init();
     assert_if_fail(menuNode_add(p, temp) == RET_OK);

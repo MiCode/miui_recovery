@@ -13,7 +13,8 @@ LOCAL_SRC_FILES := \
     firmware.c \
     nandroid.c \
     verifier.c \
-    recovery.c
+    recovery.c \
+    sideload.c
 
 LOCAL_MODULE := recovery
 
@@ -35,7 +36,6 @@ LOCAL_CFLAGS += -DUSE_EXT4
 LOCAL_C_INCLUDES += system/extras/ext4_utils
 LOCAL_STATIC_LIBRARIES += libext4_utils libz
 endif
-
 # This binary is in the recovery ramdisk, which is otherwise a copy of root.
 # It gets copied there in config/Makefile.  LOCAL_MODULE_TAGS suppresses
 # a (redundant) copy of the binary in /system/bin for user builds.
@@ -52,7 +52,7 @@ LOCAL_STATIC_LIBRARIES += libminzip libunz libmtdutils libmincrypt
 LOCAL_STATIC_LIBRARIES += libedify libcrecovery libflashutils libmmcutils libbmlutils
 LOCAL_STATIC_LIBRARIES += libmkyaffs2image libunyaffs liberase_image libdump_image libflash_image
 LOCAL_STATIC_LIBRARIES += libmiui libcutils
-LOCAL_STATIC_LIBRARIES += libstdc++ libc libm
+LOCAL_STATIC_LIBRARIES += libstdc++ libc libm libminadbd
 
 
 LOCAL_C_INCLUDES += system/extras/ext4_utils
@@ -104,6 +104,7 @@ include $(commands_recovery_local_path)/bmlutils/Android.mk
 include $(commands_recovery_local_path)/flashutils/Android.mk
 include $(commands_recovery_local_path)/libcrecovery/Android.mk
 #end
+include $(commands_recovery_local_path)/minadbd/Android.mk
 include $(commands_recovery_local_path)/miui/Android.mk
 include $(commands_recovery_local_path)/minelf/Android.mk
 include $(commands_recovery_local_path)/minzip/Android.mk

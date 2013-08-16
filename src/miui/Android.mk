@@ -77,7 +77,15 @@ LOCAL_SRC_FILES := \
     $(libmiui_common_src_files)
 LOCAL_C_INCLUDES += $(libmiui_common_includes)
 LOCAL_CFLAGS := $(MYDEFINE_CFLAGS)
-
+ifeq ($(TARGET_USE_PIXEL_FORMAT_BGR565), true)
+LOCAL_CFLAGS += -DPIXEL_FORMAT_BGR565
+endif
+ifeq ($(BOARD_HAS_DUALSYSTEM_PARTITIONS), true)
+LOCAL_CFLAGS += -DDUALSYSTEM_PARTITIONS
+endif
+ifeq ($(TARGET_NEEDS_VSYNC), true)
+LOCAL_CFLAGS += -DNEEDS_VSYNC
+endif
 LOCAL_STATIC_LIBRARIES += libc libm
 LOCAL_MODULE := libmiui
 
