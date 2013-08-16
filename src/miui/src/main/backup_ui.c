@@ -225,9 +225,6 @@ static STATUS restore_child_show(menuUnit* p)
 static STATUS backup_child_show(menuUnit* p)
 {
     p_current = p;
-    miuiIntent_send(INTENT_MOUNT, 1, "/sdcard");
-    __system("cp /res/prepare_backup.zip /sdcard/miui_recovery/prepare_backup.zip");
-    miuiIntent_send(INTENT_INSTALL, 3, "/sdcard/miui_recovery/prepare_backup.zip", "0", "1");
     char path_name[PATH_MAX];
     static time_t timep;
     static struct tm *time_tm;
